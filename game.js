@@ -344,15 +344,19 @@ $('#btn-pgn-start').click(function() {
     currentMoveIndex = -1;
     updateBoardDisplay();
     updateMoveInfo();
+    $("#square-clicked").text("-"); // ADICIONADO: Limpa o campo "Clicado"
     playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
 });
 
 $('#btn-pgn-prev').click(function() {
     if (currentMoveIndex >= 0) {
-        loadedPgnGame.undo();
+        var undoneMove = loadedPgnGame.undo(); // Captura o movimento desfeito
         currentMoveIndex--;
         updateBoardDisplay();
         updateMoveInfo();
+        if (undoneMove) {
+            $("#square-clicked").text(undoneMove.from); // ADICIONADO: Mostra para onde a peça voltou
+        }
         playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
     }
 });
@@ -364,6 +368,10 @@ $('#btn-pgn-next').click(function() {
         var moveObj = loadedPgnGame.move(moveHistory[currentMoveIndex]);
         updateBoardDisplay();
         updateMoveInfo();
+
+        if (moveObj) {
+            $("#square-clicked").text(moveObj.to); // ADICIONADO: Atualiza o campo com a casa de destino
+        }
 
         // Detecta captura
         if (moveObj.captured) {
@@ -381,12 +389,16 @@ $('#btn-pgn-next').click(function() {
 
 
 $('#btn-pgn-end').click(function() {
+    var lastMoveObj = null;
     while (currentMoveIndex < moveHistory.length - 1) {
         currentMoveIndex++;
-        loadedPgnGame.move(moveHistory[currentMoveIndex]);
+        lastMoveObj = loadedPgnGame.move(moveHistory[currentMoveIndex]);
     }
     updateBoardDisplay();
     updateMoveInfo();
+    if (lastMoveObj) {
+        $("#square-clicked").text(lastMoveObj.to); // ADICIONADO: Mostra o destino do último lance
+    }
     playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
 });
 
@@ -759,6 +771,3 @@ function drawArrow(fromSquareId, toSquareId) {
     arrow.setAttribute('fill','red');
     svg.appendChild(arrow);
 }
-
-
-

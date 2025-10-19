@@ -239,6 +239,9 @@ a {
 }
 #square-clicked {
     font-style: normal;
+    font-size: 15rem;      /* Aumenta o tamanho da fonte drasticamente */
+    font-weight: bold;    /* Deixa o texto em negrito */
+    color: #e04107;       /* Usa a cor das casas claras para combinar */
 }
 #square-score {
     font-style: normal;
