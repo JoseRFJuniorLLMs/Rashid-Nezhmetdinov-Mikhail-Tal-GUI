@@ -333,16 +333,16 @@ $('#btn-pgn-prev').click(function() {
         if (undoneMove) {
             $("#square-clicked").text(undoneMove.san);
             
-            // Toca os sons ao voltar
+            // Sistema de sons ao voltar: PRIMEIRO movimento, DEPOIS a casa
             if (soundsOn) {
-                // Som da casa de origem
-                var soundUrl = `sounds/${undoneMove.from}.mp3`;
-                playSound(soundUrl);
+                // 1º: Som de movimento
+                playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
                 
-                // Som de movimento depois
+                // 2º: Depois toca o som da casa de origem
                 setTimeout(function() {
-                    playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
-                }, 400);
+                    var soundUrl = `sounds/${undoneMove.from}.mp3`;
+                    playSound(soundUrl);
+                }, 500);
             }
         }
         
@@ -365,23 +365,20 @@ $('#btn-pgn-next').click(function() {
             // Desenha seta do movimento
             drawArrow(moveObj.from, moveObj.to);
             
-            // Sistema de sons: primeiro o som da casa, depois o som especial se houver
+            // Sistema de sons: PRIMEIRO o som do movimento, DEPOIS o som da casa
             if (soundsOn) {
-                // Sempre toca o som da casa de destino
-                var soundUrl = `sounds/${moveObj.to}.mp3`;
-                playSound(soundUrl);
-                
-                // Se houver captura, toca o som de captura depois
+                // 1º: Toca o som do movimento (captura ou normal)
                 if (moveObj.captured) {
-                    setTimeout(function() {
-                        playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/capture.mp3");
-                    }, 400);
+                    playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/capture.mp3");
                 } else {
-                    // Se não houver captura, toca o som de movimento normal depois
-                    setTimeout(function() {
-                        playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
-                    }, 400);
+                    playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
                 }
+                
+                // 2º: Depois de 500ms, toca o som da casa de destino
+                setTimeout(function() {
+                    var soundUrl = `sounds/${moveObj.to}.mp3`;
+                    playSound(soundUrl);
+                }, 500);
             }
         }
 
@@ -416,20 +413,20 @@ $('#btn-pgn-end').click(function() {
         // Desenha seta do último movimento
         drawArrow(lastMoveObj.from, lastMoveObj.to);
         
-        // Toca os sons
+        // Sistema de sons: PRIMEIRO movimento, DEPOIS a casa
         if (soundsOn) {
-            // Som da casa de destino
-            var soundUrl = `sounds/${lastMoveObj.to}.mp3`;
-            playSound(soundUrl);
+            // 1º: Som do movimento ou captura
+            if (lastMoveObj.captured) {
+                playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/capture.mp3");
+            } else {
+                playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
+            }
             
-            // Som de movimento ou captura depois
+            // 2º: Depois toca o som da casa de destino
             setTimeout(function() {
-                if (lastMoveObj.captured) {
-                    playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/capture.mp3");
-                } else {
-                    playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
-                }
-            }, 400);
+                var soundUrl = `sounds/${lastMoveObj.to}.mp3`;
+                playSound(soundUrl);
+            }, 500);
         }
     }
 });
