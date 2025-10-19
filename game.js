@@ -716,3 +716,49 @@ $(document).ready(function() {
         console.log('Stockfish pronto?', stockfishReady);
     }, 2000);
 });
+
+
+function drawArrow(fromSquareId, toSquareId) {
+    const svg = document.getElementById('move-arrow-layer');
+    svg.innerHTML = ''; // limpa setas anteriores
+
+    const fromEl = document.getElementById(fromSquareId);
+    const toEl = document.getElementById(toSquareId);
+
+    const fromRect = fromEl.getBoundingClientRect();
+    const toRect = toEl.getBoundingClientRect();
+    
+    const boardRect = document.querySelector('.chess-board').getBoundingClientRect();
+    
+    // coordenadas relativas ao tabuleiro
+    const x1 = fromRect.left + fromRect.width/2 - boardRect.left;
+    const y1 = fromRect.top + fromRect.height/2 - boardRect.top;
+    const x2 = toRect.left + toRect.width/2 - boardRect.left;
+    const y2 = toRect.top + toRect.height/2 - boardRect.top;
+    
+    // linha
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', x1);
+    line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2);
+    line.setAttribute('y2', y2);
+    line.setAttribute('stroke', 'red');
+    line.setAttribute('stroke-width', '4');
+    svg.appendChild(line);
+
+    // ponta da seta (triângulo)
+    const angle = Math.atan2(y2-y1, x2-x1);
+    const size = 12;
+    const arrow = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    const points = [
+        [x2, y2],
+        [x2 - size*Math.cos(angle-Math.PI/6), y2 - size*Math.sin(angle-Math.PI/6)],
+        [x2 - size*Math.cos(angle+Math.PI/6), y2 - size*Math.sin(angle+Math.PI/6)]
+    ];
+    arrow.setAttribute('points', points.map(p => p.join(',')).join(' '));
+    arrow.setAttribute('fill','red');
+    svg.appendChild(arrow);
+}
+
+
+

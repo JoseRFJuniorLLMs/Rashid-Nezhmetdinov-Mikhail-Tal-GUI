@@ -396,6 +396,24 @@ a {
   /* ... suas outras propriedades ... */
   position: relative; /* Essencial para a biblioteca de setas */
 }
+
+#move-arrow {
+    position: absolute; /* Posicionado sobre o tabuleiro */
+    width: 4px;         /* Largura da linha */
+    background-color: red; /* Cor da seta */
+    transform-origin: top left;
+    display: none;      /* Inicialmente escondido */
+    z-index: 100;       /* Sobre as peças */
+}
+
+/* Ponta da seta */
+#move-arrow-layer line, #move-arrow-layer polygon {
+    stroke-width: 4;
+    stroke: red;
+    fill: red;
+}
+
+
 /* ======================================================= */
 /* FIM DO CÓDIGO ADICIONADO                              */
 /* ======================================================= */
