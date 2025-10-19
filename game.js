@@ -25,36 +25,60 @@ var currentEvaluation = null;
 
 // Initialize Stockfish
 function initStockfish() {
-    if (typeof STOCKFISH === 'function') {
-        stockfish = STOCKFISH();
-        
-        stockfish.onmessage = function(event) {
-            var line = event.data || event;
+    console.log('Função initStockfish() chamada');
+    
+    // Verificar se STOCKFISH está disponível
+    if (typeof STOCKFISH === 'undefined') {
+        console.error('STOCKFISH não está definido. Verifique se o script foi carregado.');
+        $('#stockfish-status').html('❌ Engine não disponível<br><small>Certifique-se de usar um servidor local (http://)</small>').css('color', '#ff0000');
+        $('#btn-analyze').prop('disabled', true).text('Engine Indisponível');
+        return;
+    }
+    
+    try {
+        if (typeof STOCKFISH === 'function') {
+            console.log('Criando instância do Stockfish...');
+            stockfish = STOCKFISH();
             
-            // Stockfish está pronto
-            if (line === 'uciok') {
-                stockfishReady = true;
-                $('#stockfish-status').text('✓ Engine pronto').css('color', '#00ff00');
-            }
+            stockfish.onmessage = function(event) {
+                var line = event.data || event;
+                console.log('Stockfish:', line);
+                
+                // Stockfish está pronto
+                if (line === 'uciok') {
+                    stockfishReady = true;
+                    $('#stockfish-status').text('✓ Engine pronto').css('color', '#00ff00');
+                    $('#btn-analyze').prop('disabled', false);
+                    console.log('Stockfish inicializado com sucesso!');
+                }
+                
+                // Resposta de análise
+                if (line.startsWith('info') && line.includes('score')) {
+                    parseStockfishInfo(line);
+                }
+                
+                // Melhor jogada encontrada
+                if (line.startsWith('bestmove')) {
+                    var bestMove = line.split(' ')[1];
+                    displayBestMove(bestMove);
+                }
+            };
             
-            // Resposta de análise
-            if (line.startsWith('info') && line.includes('score')) {
-                parseStockfishInfo(line);
-            }
+            // Inicializar UCI
+            console.log('Enviando comandos UCI...');
+            stockfish.postMessage('uci');
+            stockfish.postMessage('setoption name Skill Level value 20');
+            stockfish.postMessage('ucinewgame');
             
-            // Melhor jogada encontrada
-            if (line.startsWith('bestmove')) {
-                var bestMove = line.split(' ')[1];
-                displayBestMove(bestMove);
-            }
-        };
-        
-        // Inicializar UCI
-        stockfish.postMessage('uci');
-        stockfish.postMessage('setoption name Skill Level value 20');
-        stockfish.postMessage('ucinewgame');
-    } else {
-        $('#stockfish-status').text('⚠ Engine não disponível').css('color', '#ff9800');
+            $('#stockfish-status').text('⏳ Aguardando resposta...').css('color', '#ffaa00');
+            
+        } else {
+            throw new Error('STOCKFISH não é uma função');
+        }
+    } catch (e) {
+        console.error('Erro ao inicializar Stockfish:', e);
+        $('#stockfish-status').html('❌ Erro ao carregar engine<br><small>' + e.message + '</small>').css('color', '#ff0000');
+        $('#btn-analyze').prop('disabled', true).text('Engine com Erro');
     }
 }
 
@@ -299,6 +323,12 @@ $('#btn-load-pgn').click(function() {
             
             // Mostrar controles de navegação
             $('.pgn-navigation').show();
+            $('.stockfish-panel').show();
+            
+            // Analisar posição inicial
+            if (stockfishReady) {
+                setTimeout(analyzePosition, 500);
+            }
             
             playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/game-start.mp3");
         } else {
@@ -330,12 +360,25 @@ $('#btn-pgn-prev').click(function() {
 $('#btn-pgn-next').click(function() {
     if (currentMoveIndex < moveHistory.length - 1) {
         currentMoveIndex++;
-        loadedPgnGame.move(moveHistory[currentMoveIndex]);
+        // Retorna objeto do movimento
+        var moveObj = loadedPgnGame.move(moveHistory[currentMoveIndex]);
         updateBoardDisplay();
         updateMoveInfo();
-        playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
+
+        // Detecta captura
+        if (moveObj.captured) {
+            playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/capture.mp3");
+        } else {
+            playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
+        }
+
+        // Analisar nova posição
+        if (stockfishReady) {
+            setTimeout(analyzePosition, 300);
+        }
     }
 });
+
 
 $('#btn-pgn-end').click(function() {
     while (currentMoveIndex < moveHistory.length - 1) {
@@ -659,4 +702,17 @@ function setLanguage(lang) {
     });
 }
 
-setLanguage('pt');
+// Inicializar quando a página estiver totalmente carregada
+$(document).ready(function() {
+    // Definir idioma
+    setLanguage('pt');
+    
+    // Inicializar Stockfish
+    console.log('Tentando inicializar Stockfish...');
+    initStockfish();
+    
+    // Log para debug
+    setTimeout(function() {
+        console.log('Stockfish pronto?', stockfishReady);
+    }, 2000);
+});

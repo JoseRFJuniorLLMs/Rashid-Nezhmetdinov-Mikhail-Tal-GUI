@@ -390,6 +390,12 @@ a {
     font-size: 0.9em;
     color: #B58863;
 }
+
+/* Adicione esta regra em styles.css */
+.chess-square {
+  /* ... suas outras propriedades ... */
+  position: relative; /* Essencial para a biblioteca de setas */
+}
 /* ======================================================= */
 /* FIM DO CÓDIGO ADICIONADO                              */
 /* ======================================================= */

@@ -12,11 +12,182 @@ var timePassed = 0;
 var timeLeft = timeLimit;
 var timerInterval = null;
 
-// =======================================================
-// VARIÁVEIS ADICIONADAS PARA O PGN                      
-// =======================================================
-var loadedGame = new Chess(); // Objeto chess.js para gerir o PGN
-// =======================================================
+// PGN Variables
+var loadedPgnGame = new Chess();
+var currentMoveIndex = -1;
+var moveHistory = [];
+
+// Stockfish Variables
+var stockfish = null;
+var stockfishReady = false;
+var isAnalyzing = false;
+var currentEvaluation = null;
+
+// Chessboard Arrows Library
+var boardArrows = null;
+
+// Initialize Stockfish
+function initStockfish() {
+    if (typeof STOCKFISH === 'function') {
+        stockfish = STOCKFISH();
+
+        stockfish.onmessage = function(event) {
+            var line = event.data || event;
+
+            // Stockfish está pronto
+            if (line === 'uciok') {
+                stockfishReady = true;
+                $('#stockfish-status').text('✓ Engine pronto').css('color', '#00ff00');
+            }
+
+            // Resposta de análise
+            if (line.startsWith('info') && line.includes('score')) {
+                parseStockfishInfo(line);
+            }
+
+            // Melhor jogada encontrada
+            if (line.startsWith('bestmove')) {
+                var bestMove = line.split(' ')[1];
+                displayBestMove(bestMove);
+            }
+        };
+
+        // Inicializar UCI
+        stockfish.postMessage('uci');
+        stockfish.postMessage('setoption name Skill Level value 20');
+        stockfish.postMessage('ucinewgame');
+    } else {
+        $('#stockfish-status').text('⚠ Engine não disponível').css('color', '#ff9800');
+    }
+}
+
+// Parse informações do Stockfish e atualiza a barra de avaliação
+function parseStockfishInfo(line) {
+    var match;
+    var evaluationValue = null; // Variável para guardar a pontuação numérica
+
+    // Extrair avaliação (centipawns ou mate)
+    if (line.includes('score cp')) {
+        match = line.match(/score cp (-?\d+)/);
+        if (match) {
+            var cp = parseInt(match[1]);
+            var evaluation = (cp / 100).toFixed(2);
+            currentEvaluation = evaluation;
+            evaluationValue = parseFloat(evaluation); // Guarda o valor numérico
+            $('#stockfish-eval').text(`Avaliação: ${evaluation > 0 ? '+' : ''}${evaluation}`);
+        }
+    } else if (line.includes('score mate')) {
+        match = line.match(/score mate (-?\d+)/);
+        if (match) {
+            var mateIn = parseInt(match[1]);
+            currentEvaluation = `Mate em ${Math.abs(mateIn)}`;
+            // Se for mate, damos 100% de vantagem para o lado que aplica o mate
+            evaluationValue = mateIn > 0 ? 10.0 : -10.0;
+            $('#stockfish-eval').text(`${mateIn > 0 ? 'Brancas' : 'Pretas'} fazem mate em ${Math.abs(mateIn)}`);
+        }
+    }
+
+    // Se tivermos um valor de avaliação, atualizamos a barra
+    if (evaluationValue !== null) {
+        updateEvaluationBar(evaluationValue);
+    }
+
+    // Extrair profundidade
+    if (line.includes('depth')) {
+        match = line.match(/depth (\d+)/);
+        if (match) {
+            $('#stockfish-depth').text(`Profundidade: ${match[1]}`);
+        }
+    }
+}
+
+// Exibir melhor jogada com uma seta
+function displayBestMove(move) {
+    if (move && move !== '(none)') {
+        var from = move.substring(0, 2);
+        var to = move.substring(2, 4);
+        $('#stockfish-bestmove').text(`Melhor jogada: ${from} → ${to}`);
+
+        // Limpa setas e destaques antigos
+        if (boardArrows) {
+            boardArrows.clear();
+        }
+        $('.chess-square').removeClass('highlight-from highlight-to');
+
+        // Desenha a nova seta!
+        if (boardArrows) {
+            boardArrows.addArrow(from, to);
+        }
+
+        // Destaque das casas (opcional)
+        $(`#${from}`).addClass('highlight-from');
+        $(`#${to}`).addClass('highlight-to');
+    }
+    isAnalyzing = false;
+    $('#btn-analyze').text('Analisar Posição').prop('disabled', false);
+}
+
+
+// Analisar posição atual
+function analyzePosition() {
+    if (!stockfishReady) {
+        $('#stockfish-eval').text('Engine não está pronto');
+        return;
+    }
+
+    if (isAnalyzing) {
+        stopAnalysis();
+        return;
+    }
+
+    isAnalyzing = true;
+    $('#btn-analyze').text('Parar Análise...').prop('disabled', false);
+    $('#stockfish-eval').text('Analisando...');
+    $('#stockfish-bestmove').text('Calculando...');
+    // Reseta a barra ao iniciar uma nova análise
+    updateEvaluationBar(0);
+
+    var fen = loadedPgnGame.fen();
+
+    stockfish.postMessage('stop');
+    stockfish.postMessage('position fen ' + fen);
+    stockfish.postMessage('go depth 18');
+}
+
+// Parar análise
+function stopAnalysis() {
+    if (stockfish && isAnalyzing) {
+        stockfish.postMessage('stop');
+        isAnalyzing = false;
+        $('#btn-analyze').text('Analisar Posição').prop('disabled', false);
+    }
+}
+
+// Função para atualizar a barra de avaliação
+function updateEvaluationBar(evaluation) {
+    // Limita a avaliação para a barra não ficar extrema (ex: de -10 a +10 peões)
+    const maxEval = 10.0;
+    let clampedEval = Math.max(-maxEval, Math.min(maxEval, evaluation));
+
+    // Converte a avaliação para uma porcentagem (de 0 a 1)
+    // 0 = Vantagem total das pretas, 0.5 = Igualdade, 1 = Vantagem total das brancas
+    let whiteAdvantagePercentage = 0.5 + (clampedEval / (maxEval * 2));
+
+    // Garante que a porcentagem fique entre 0 e 1
+    whiteAdvantagePercentage = Math.max(0, Math.min(1, whiteAdvantagePercentage));
+
+    let whiteHeight = whiteAdvantagePercentage * 100;
+    let blackHeight = 100 - whiteHeight;
+
+    $('#white-advantage').css('height', `${whiteHeight}%`);
+    $('#black-advantage').css('height', `${blackHeight}%`);
+}
+
+
+// Botão de análise
+$('#btn-analyze').click(function() {
+    analyzePosition();
+});
 
 
 // ===============
@@ -68,7 +239,6 @@ $(".chess-square").click(function() {
 
 // Set Timer:
 $("#btn-timer").click(function () {
-    //var time = prompt("Set the time limit (in seconds):", "30");
     var time = prompt(language.prompttimer, "30");
   if (isInt(time)) {
     timeLimit = parseInt(time);
@@ -103,7 +273,7 @@ $("#btn-pieces").click(function() {
     } else {
         pieces = true;
         $(this).text(function (i, text) {
-            $(".chess-square").css('background-size', 'contain');
+            updateBoardDisplay();
             return language.btnpieceson;
         })
     }
@@ -142,6 +312,166 @@ $("#btn-reverse").click(function() {
         })
     }
 });
+
+
+// ===============
+// PGN Functions
+// ===============
+
+$('#btn-load-pgn').click(function() {
+    var pgnText = $('#pgn-input').val().trim();
+
+    if (!pgnText) {
+        $('#pgn-status').text('Por favor, cole um PGN válido.');
+        return;
+    }
+
+    try {
+        loadedPgnGame = new Chess();
+        if (loadedPgnGame.load_pgn(pgnText)) {
+            // Guardar histórico de movimentos
+            moveHistory = loadedPgnGame.history();
+
+            // Resetar para posição inicial
+            loadedPgnGame.reset();
+            currentMoveIndex = -1;
+
+            // Exibir informações do jogo
+            var white = loadedPgnGame.header()['White'] || 'Brancas';
+            var black = loadedPgnGame.header()['Black'] || 'Pretas';
+            $('#pgn-status').html(`<strong>Partida carregada:</strong><br>${white} vs ${black}<br>Total de lances: ${moveHistory.length}`);
+
+            // Atualizar tabuleiro
+            updateBoardDisplay();
+
+            // Mostrar controles de navegação
+            $('.pgn-navigation').show();
+            updateMoveInfo();
+            if (boardArrows) boardArrows.clear(); // Limpa setas ao carregar novo pgn
+
+            playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/game-start.mp3");
+        } else {
+            $('#pgn-status').text('Erro: PGN inválido. Verifique o formato.');
+        }
+    } catch (e) {
+        $('#pgn-status').text('Erro ao processar PGN: ' + e.message);
+    }
+});
+
+$('#btn-pgn-start').click(function() {
+    loadedPgnGame.reset();
+    currentMoveIndex = -1;
+    updateBoardDisplay();
+    updateMoveInfo();
+    if (boardArrows) boardArrows.clear();
+    playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
+});
+
+$('#btn-pgn-prev').click(function() {
+    if (currentMoveIndex >= 0) {
+        loadedPgnGame.undo();
+        currentMoveIndex--;
+        updateBoardDisplay();
+        updateMoveInfo();
+        if (boardArrows) boardArrows.clear();
+        playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
+    }
+});
+
+$('#btn-pgn-next').click(function() {
+    if (currentMoveIndex < moveHistory.length - 1) {
+        currentMoveIndex++;
+        loadedPgnGame.move(moveHistory[currentMoveIndex]);
+        updateBoardDisplay();
+        updateMoveInfo();
+        if (boardArrows) boardArrows.clear();
+        playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
+    }
+});
+
+$('#btn-pgn-end').click(function() {
+    while (currentMoveIndex < moveHistory.length - 1) {
+        currentMoveIndex++;
+        loadedPgnGame.move(moveHistory[currentMoveIndex]);
+    }
+    updateBoardDisplay();
+    updateMoveInfo();
+    if (boardArrows) boardArrows.clear();
+    playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
+});
+
+function updateMoveInfo() {
+    if (moveHistory.length === 0) {
+        $('#current-move').text('Posição inicial');
+        return;
+    }
+
+    var moveNum = Math.floor(currentMoveIndex / 2) + 1;
+    var isWhite = currentMoveIndex % 2 === 0;
+    var currentMove = currentMoveIndex >= 0 ? moveHistory[currentMoveIndex] : 'Início';
+
+    $('#current-move').text(`Lance ${currentMoveIndex + 1}/${moveHistory.length}: ${currentMove}`);
+}
+
+function updateBoardDisplay() {
+    // Limpar todas as peças do tabuleiro
+    $('.chess-square').css('background-image', 'none');
+
+    if (!pieces) {
+        $('.chess-square').css('background-size', '0,0');
+        return;
+    }
+
+    // Obter FEN da posição atual e parsear
+    var fen = loadedPgnGame.fen();
+    var fenParts = fen.split(' ');
+    var position = fenParts[0]; // Primeira parte do FEN contém as peças
+
+    // Mapeamento de peças para URLs de imagem
+    var pieceImages = {
+        'p': 'https://images.chesscomfiles.com/chess-themes/pieces/classic/150/bp.png',
+        'n': 'https://images.chesscomfiles.com/chess-themes/pieces/classic/150/bn.png',
+        'b': 'https://images.chesscomfiles.com/chess-themes/pieces/classic/150/bb.png',
+        'r': 'https://images.chesscomfiles.com/chess-themes/pieces/classic/150/br.png',
+        'q': 'https://images.chesscomfiles.com/chess-themes/pieces/classic/150/bq.png',
+        'k': 'https://images.chesscomfiles.com/chess-themes/pieces/classic/150/bk.png',
+        'P': 'https://images.chesscomfiles.com/chess-themes/pieces/classic/150/wp.png',
+        'N': 'https://images.chesscomfiles.com/chess-themes/pieces/classic/150/wn.png',
+        'B': 'https://images.chesscomfiles.com/chess-themes/pieces/classic/150/wb.png',
+        'R': 'https://images.chesscomfiles.com/chess-themes/pieces/classic/150/wr.png',
+        'Q': 'https://images.chesscomfiles.com/chess-themes/pieces/classic/150/wq.png',
+        'K': 'https://images.chesscomfiles.com/chess-themes/pieces/classic/150/wk.png'
+    };
+
+    // Dividir por ranks (linhas do tabuleiro)
+    var ranks = position.split('/');
+
+    // Iterar sobre cada rank (de 8 a 1)
+    for (var i = 0; i < 8; i++) {
+        var rank = 8 - i; // rank 8, 7, 6... 1
+        var file = 0; // coluna a=0, b=1, ... h=7
+
+        for (var j = 0; j < ranks[i].length; j++) {
+            var char = ranks[i][j];
+
+            // Se for um número, pular casas vazias
+            if (!isNaN(char)) {
+                file += parseInt(char);
+            } else {
+                // É uma peça
+                var squareName = String.fromCharCode(97 + file) + rank;
+                var imageUrl = pieceImages[char];
+
+                $('#' + squareName).css({
+                    'background-image': 'url("' + imageUrl + '")',
+                    'background-size': 'contain'
+                });
+
+                file++;
+            }
+        }
+    }
+}
 
 
 // ===============
@@ -292,7 +622,6 @@ function resetTimer(timeReset) {
   $("#square-random").text("-");
   clearInterval(timerInterval);
   timePassed = 0;
-  // timeLimit = timeReset;
   timeLeft = timeReset - timePassed;
   $("#base-timer-label").html(formatTime(timeLeft));
   setCircleDasharray();
@@ -323,7 +652,7 @@ var pt = {
     "btnpiecesoff": "Mostrar peças",
     "prompttimer": "Alterar limite de tempo (em segundos):",
     "footer1": "Espero que curta! Compartilhe com seus parceiros.",
-    "footer2": "Criado por <a href=\"https://github.com/JoseRFJuniorLLMs/Rashid-Nezhmetdinov-Mikhail-Tal-GUI\" target=\"blank\">Jose R F Junior</a> ♔, 2030."
+    "footer2": "Criado por <a href=\"https://github.com/JoseRFJuniorLLMs/SuperNez/\" target=\"blank\">Jose R F Junior</a> ♔, 2021."
 };
 var en = {
     "title": "Chess Notation Training",
@@ -347,7 +676,7 @@ var en = {
     "btnpiecesoff": "Show pieces",
     "prompttimer": "Set the time limit (in seconds):",
     "footer1": "Hope you enjoy! Share with your fellows.",
-    "footer2": "Created by <a href=\"https://reisarthur.github.io/cv/\" target=\"blank\">reisarthur</a> ♔, 2021."
+    "footer2": "Created by <a href=\"https://github.com/JoseRFJuniorLLMs/SuperNez\" target=\"blank\">Jose R F Junior</a> ♔, 2021."
 }
 var language = pt;
 
@@ -385,33 +714,23 @@ function setLanguage(lang) {
     });
 }
 
-setLanguage('pt');
-
-// =======================================================
-// CÓDIGO ADICIONADO PARA CARREGAR PGN                     
-// =======================================================
-
-// Variável para armazenar a partida carregada
-var loadedPgnGame = new Chess(); // Usa chess.js para gerir a lógica da partida
-
-$('#btn-load-pgn').click(function() {
-    var pgnText = $('#pgn-input').val();
-    
-    try {
-        if (loadedPgnGame.load_pgn(pgnText)) {
-            // Se o PGN for carregado com sucesso
-            $('#pgn-status').text('PGN carregado com sucesso! ' + loadedPgnGame.header().White + ' vs ' + loadedPgnGame.header().Black);
-            // Agora loadedPgnGame contém a partida. Você pode acessar FENs, etc.
-            // Por exemplo, para obter o FEN da posição final:
-            // console.log("FEN final da partida carregada:", loadedPgnGame.fen());
-        } else {
-            $('#pgn-status').text('Erro: PGN inválido. Verifique o formato.');
-        }
-    } catch (e) {
-        $('#pgn-status').text('Erro ao processar PGN: ' + e.message);
+// ===================================
+// INITIALIZE THE APPLICATION
+// ===================================
+$(document).ready(function() {
+    // Pega o elemento container do tabuleiro para a biblioteca de setas
+    const boardContainer = document.getElementById('board-container');
+    if (boardContainer) {
+        // Inicializa as setas
+        boardArrows = new ChessboardArrows(boardContainer);
     }
+    
+    // Inicia a engine do Stockfish
+    initStockfish();
+    
+    // Define o idioma inicial
+    setLanguage('pt');
+    
+    // Garante que a barra de avaliação comece em 50/50
+    updateEvaluationBar(0);
 });
-
-// =======================================================
-// FIM DO CÓDIGO ADICIONADO                              
-// =======================================================

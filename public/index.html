@@ -379,6 +379,18 @@ Exemplo:
                 <a href="#" class="myButton" id="btn-load-pgn">Carregar PGN</a>
                 <p id="pgn-status">Nenhum PGN carregado.</p>
                 
+                <div class="stockfish-panel">
+                    <h4>🤖 Análise Stockfish</h4>
+                    <div id="stockfish-status">⏳ Inicializando engine...</div>
+                    <div style="font-size: 0.75em; color: #888; margin: 5px 0;">
+                        <strong>Nota:</strong> Requer servidor local (http://)
+                    </div>
+                    <div id="stockfish-eval">Avaliação: -</div>
+                    <div id="stockfish-bestmove">Melhor jogada: -</div>
+                    <div id="stockfish-depth">Profundidade: -</div>
+                    <button id="btn-analyze" disabled>Analisar Posição</button>
+                </div>
+                
                 <div class="pgn-navigation">
                     <p id="current-move">Posição inicial</p>
                     <div class="pgn-nav-buttons">
@@ -387,15 +399,6 @@ Exemplo:
                         <button class="pgn-nav-btn" id="btn-pgn-next">Próximo ▶</button>
                         <button class="pgn-nav-btn" id="btn-pgn-end">Fim ⏭</button>
                     </div>
-                </div>
-
-                <div class="stockfish-panel">
-                    <h4>🤖 Análise Stockfish</h4>
-                    <div id="stockfish-status">Inicializando engine...</div>
-                    <div id="stockfish-eval">Avaliação: -</div>
-                    <div id="stockfish-bestmove">Melhor jogada: -</div>
-                    <div id="stockfish-depth">Profundidade: -</div>
-                    <button id="btn-analyze">Analisar Posição</button>
                 </div>
             </div>
         </div>
@@ -518,7 +521,7 @@ Exemplo:
     </div>
 
     <footer>
-        <div id="footer1">2025</div>
+
         <div id="footer2">Criado por Jose R F Junior ♔, 2025</div>
     </footer>
 
@@ -526,5 +529,8 @@ Exemplo:
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stockfish.js@10.0.2/stockfish.js"></script>
     <script src="game.js"></script>
+    <script type="module"> 
+     import stockfish from 'https://cdn.jsdelivr.net/npm/stockfish@17.1.0/+esm' 
+    </script>
 </body>
 </html>
