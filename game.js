@@ -151,93 +151,211 @@ function tryAlternativeStockfish() {
 }
 
 function parseStockfishInfo(line) {
-    var match;
+    if (!line.includes('multipv')) return;
 
-    // Avaliação em centipawns
-    if (line.includes('score cp')) {
-        match = line.match(/score cp (-?\d+)/);
-        if (match) {
-            var cp = parseInt(match[1]);
-            var evaluation = (cp / 100).toFixed(2);
-            currentEvaluation = evaluation;
-            $('#stockfish-eval').html(`<strong>Avaliação:</strong> ${evaluation > 0 ? '+' : ''}${evaluation}`);
-        }
-    }
-    // Avaliação de mate
-    else if (line.includes('score mate')) {
-        match = line.match(/score mate (-?\d+)/);
-        if (match) {
-            var mateIn = parseInt(match[1]);
-            currentEvaluation = `Mate em ${Math.abs(mateIn)}`;
-            $('#stockfish-eval').html(`<strong>${mateIn > 0 ? '⚪ Brancas' : '⚫ Pretas'}</strong> fazem mate em ${Math.abs(mateIn)}`);
-        }
+    const multipv = line.match(/multipv (\d+)/)?.[1];
+    const depth = line.match(/depth (\d+)/)?.[1];
+    const scoreCp = line.match(/score cp (-?\d+)/)?.[1];
+    const scoreMate = line.match(/score mate (-?\d+)/)?.[1];
+    const pvMoves = line.match(/pv (([a-h][1-8][a-h][1-8][qnrb]? ?)+)/)?.[1];
+    if (!multipv || !pvMoves) return;
+
+    const pvIndex = parseInt(multipv) - 1;
+    const firstMove = pvMoves.split(' ')[0].toUpperCase();
+
+    let score = '';
+    if (scoreCp) {
+        const cp = parseInt(scoreCp) / 100;
+        score = (cp >= 0 ? '+' : '') + cp.toFixed(2);
+    } else if (scoreMate) {
+        const mate = parseInt(scoreMate);
+        score = mate > 0 ? `M${mate}` : `M${-mate}`;
     }
 
-    // Profundidade da análise
-    if (line.includes('depth')) {
-        match = line.match(/depth (\d+)/);
-        if (match) {
-            $('#stockfish-depth').html(`<strong>Profundidade:</strong> ${match[1]}`);
-        }
-    }
+    // Armazena no array
+    pvData[pvIndex] = {
+        move: firstMove,
+        score: score,
+        depth: parseInt(depth) || 0
+    };
+
+    updateMultiPVDisplay();
 }
 
-function displayBestMove(move) {
-    if (move && move !== '(none)') {
-        var from = move.substring(0, 2);
-        var to = move.substring(2, 4);
-        $('#stockfish-bestmove').html(`<strong>Melhor jogada:</strong> ${from.toUpperCase()} → ${to.toUpperCase()}`);
+function updateMultiPVDisplay() {
+    const $list = $('#multi-pv-list');
+    $list.empty();
 
-        // Limpa destaques anteriores
-        $('.chess-square').removeClass('highlight-from highlight-to');
-
-        // Destaca as casas
-        $(`#${from}`).addClass('highlight-from');
-        $(`#${to}`).addClass('highlight-to');
-
-        // Desenha seta
-        drawArrow(from, to);
+    // Clear the analysis tree layer
+    const svg = document.getElementById('analysis-tree-layer');
+    if (svg) {
+        svg.innerHTML = '';
+        svg.style.display = 'none';
     }
 
+    if (pvData.length === 0) return;
+
+    const maxDepth = Math.max(...pvData.map(pv => pv?.depth || 0));
+    if (maxDepth === 0) return;
+
+    // Show the SVG layer for arrows
+    if (svg) {
+        svg.style.display = 'block';
+    }
+
+    // Colors for each PV line (like Nibbler)
+    const colors = [
+        '#4CAF50',  // Green - Best move
+        '#2196F3',  // Blue - 2nd best
+        '#FFC107',  // Amber - 3rd best
+        '#FF5722',  // Orange - 4th best
+        '#9C27B0'   // Purple - 5th best
+    ];
+
+    pvData.forEach((pv, i) => {
+        if (!pv || pv.depth < maxDepth) return;
+
+        const moveStr = pv.move.toLowerCase();
+        const from = moveStr.substring(0, 2);
+        const to = moveStr.substring(2, 4);
+        const promo = moveStr[4] ? `=${moveStr[4].toUpperCase()}` : '';
+
+        const color = colors[i] || '#666666';
+
+        // Draw arrow for this PV
+        drawMultiPVArrow(from, to, color, i);
+
+        // Show in list
+        $list.append(`
+            <div style="margin:4px 0; padding:6px; background:#2a2926; 
+                        border-left:4px solid ${color}; border-radius:4px; font-size:0.9em;">
+                <strong>${i + 1}.</strong> 
+                ${from.toUpperCase()}→${to.toUpperCase()}${promo}
+                <span style="float:right; color:#B58863;">${pv.score}</span>
+            </div>
+        `);
+    });
+}
+
+function drawMultiPVArrow(fromSquareId, toSquareId, color, index) {
+    const svg = document.getElementById('analysis-tree-layer');
+    if (!svg) return;
+
+    const fromEl = document.getElementById(fromSquareId);
+    const toEl = document.getElementById(toSquareId);
+
+    if (!fromEl || !toEl) return;
+
+    const fromRect = fromEl.getBoundingClientRect();
+    const toRect = toEl.getBoundingClientRect();
+    const boardRect = document.querySelector('.chess-board').getBoundingClientRect();
+
+    // Calculate positions with offset for multiple arrows
+    const offset = (index - 1) * 8; // Offset arrows slightly so they don't overlap
+
+    const x1 = fromRect.left + fromRect.width / 2 - boardRect.left + offset;
+    const y1 = fromRect.top + fromRect.height / 2 - boardRect.top + offset;
+    const x2 = toRect.left + toRect.width / 2 - boardRect.left + offset;
+    const y2 = toRect.top + toRect.height / 2 - boardRect.top + offset;
+
+    // Arrow line
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', x1);
+    line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2);
+    line.setAttribute('y2', y2);
+    line.setAttribute('stroke', color);
+    line.setAttribute('stroke-width', index === 0 ? '8' : '6'); // Best move is thicker
+    line.setAttribute('stroke-linecap', 'round');
+    line.setAttribute('opacity', index === 0 ? '0.9' : '0.7');
+    svg.appendChild(line);
+
+    // Arrow head
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    const size = index === 0 ? 22 : 18;
+    const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+    const points = [
+        [x2, y2],
+        [x2 - size * Math.cos(angle - Math.PI / 6), y2 - size * Math.sin(angle - Math.PI / 6)],
+        [x2 - size * Math.cos(angle + Math.PI / 6), y2 - size * Math.sin(angle + Math.PI / 6)]
+    ];
+    arrow.setAttribute('points', points.map(p => p.join(',')).join(' '));
+    arrow.setAttribute('fill', color);
+    arrow.setAttribute('opacity', index === 0 ? '0.9' : '0.7');
+    svg.appendChild(arrow);
+}
+
+
+
+function displayBestMove(move) {
+    if (!move || move === '(none)') return;
+
+    const from = move.substring(0, 2);
+    const to = move.substring(2, 4);
+
+    $('.chess-square').removeClass('highlight-from highlight-to');
+    $(`#${from}`).addClass('highlight-from');
+    $(`#${to}`).addClass('highlight-to');
+
+    drawArrow(from, to);
+
+    $('#stockfish-bestmove').html(`<strong>Melhor:</strong> ${from.toUpperCase()} → ${to.toUpperCase()}`);
     isAnalyzing = false;
-    $('#btn-analyze').text('🔍 Analisar Posição').prop('disabled', false);
+    $('#btn-analyze').text('Analisar Posição');
 }
 
 function analyzePosition() {
-    if (!stockfishReady) {
-        $('#stockfish-eval').html('⚠️ <strong>Engine não está pronto</strong>');
-        return;
-    }
-
-    if (isAnalyzing) {
-        stopAnalysis();
-        return;
-    }
+    if (!stockfishReady || isAnalyzing) return;
 
     isAnalyzing = true;
-    $('#btn-analyze').html('⏸️ Parar').prop('disabled', false);
-    $('#stockfish-eval').html('🔄 <strong>Analisando...</strong>');
-    $('#stockfish-bestmove').html('⏳ <strong>Calculando...</strong>');
+    pvData = [];
+    $('#multi-pv-list').empty();
+    
+    // Clear analysis arrows
+    const svg = document.getElementById('analysis-tree-layer');
+    if (svg) {
+        svg.innerHTML = '';
+        svg.style.display = 'none';
+    }
 
-    var fen = loadedPgnGame.fen();
-    console.log('📊 Analisando FEN:', fen);
+    $('#stockfish-eval').html('Analisando...');
+    $('#stockfish-bestmove').html('');
 
+    const fen = loadedPgnGame.fen();
     stockfish.postMessage('stop');
+    stockfish.postMessage('setoption name MultiPV value 5'); // 5 lines
     stockfish.postMessage('position fen ' + fen);
-    stockfish.postMessage('go depth 15');
+    stockfish.postMessage('go depth 18');
+    
+    $('#btn-analyze').text('⏸️ Analisando...').prop('disabled', true);
 }
 
+// Clear arrows when stopping analysis
 function stopAnalysis() {
     if (stockfish && isAnalyzing) {
         stockfish.postMessage('stop');
         isAnalyzing = false;
         $('#btn-analyze').html('🔍 Analisar Posição').prop('disabled', false);
+        
+        // Clear analysis arrows
+        const svg = document.getElementById('analysis-tree-layer');
+        if (svg) {
+            svg.innerHTML = '';
+            svg.style.display = 'none';
+        }
     }
 }
 
-$('#btn-analyze').click(function () {
-    analyzePosition();
+// Also clear arrows when navigating moves
+$('#btn-pgn-prev, #btn-pgn-next, #btn-pgn-start, #btn-pgn-end').click(function() {
+    const svg = document.getElementById('analysis-tree-layer');
+    if (svg) {
+        svg.innerHTML = '';
+        svg.style.display = 'none';
+    }
+    pvData = [];
 });
+
 
 // ===============
 // Game Buttons:
@@ -1336,43 +1454,24 @@ $('#btn-load-pgn').on('click', function() {
 // ================================================
 
 function initStockfish() {
-    console.log('🚀 Iniciando Stockfish (sem CORS)...');
+    console.log('Iniciando Stockfish...');
 
     try {
-        // SOLUÇÃO: Carrega Stockfish via importScripts dentro do Worker
-        const stockfishCode = `
-            // Carrega Stockfish.js via importScripts (funciona sem CORS)
-            self.importScripts('https://cdnjs.cloudflare.com/ajax/libs/stockfish.js/10.0.2/stockfish.js');
-            
-            self.onmessage = function(e) {
-                self.postMessage(e.data);
-            };
-        `;
-
-        const blob = new Blob([stockfishCode], { type: 'application/javascript' });
-        const workerUrl = URL.createObjectURL(blob);
-        
-        stockfish = new Worker(workerUrl);
-
-        let initTimeout = setTimeout(() => {
-            console.warn('⚠️ Timeout - Tentando Stockfish local...');
-            tryLocalStockfish();
-        }, 8000);
+        // Carrega Stockfish local (same-origin → sem CORS)
+        stockfish = new Worker('stockfish.js'); // ← ARQUIVO NA MESMA PASTA
 
         stockfish.onmessage = function (event) {
             const line = event.data;
-            
-            // Log apenas de comandos importantes
-            if (line === 'uciok' || line.startsWith('bestmove') || line.includes('multipv')) {
-                console.log('📥 Stockfish:', line);
-            }
+            console.log('Stockfish:', line);
 
             if (line === 'uciok') {
-                clearTimeout(initTimeout);
                 stockfishReady = true;
-                $('#stockfish-status').html('✅ <strong>Engine pronto!</strong>').css('color', '#00ff00');
+                $('#stockfish-status').html('Engine pronto!').css('color', '#00ff00');
                 $('#btn-analyze').prop('disabled', false);
-                console.log('✅ Stockfish inicializado com sucesso!');
+                $('#btn-visual-analysis').prop('disabled', false);
+
+                // ATIVA 3 LINHAS DE MULTIPV POR PADRÃO
+                stockfish.postMessage('setoption name MultiPV value 3');
             }
 
             if (line.startsWith('info') && line.includes('score')) {
@@ -1380,32 +1479,47 @@ function initStockfish() {
             }
 
             if (line.startsWith('bestmove')) {
-                const bestMove = line.split(' ')[1];
-                displayBestMove(bestMove);
+                displayBestMove(line.split(' ')[1]);
             }
         };
 
         stockfish.onerror = function (error) {
-            clearTimeout(initTimeout);
-            console.error('❌ Erro ao carregar Stockfish:', error);
-            tryLocalStockfish();
+            console.error('Erro no Worker:', error);
+            showStockfishError();
         };
 
-        console.log('📤 Enviando comandos UCI...');
-        setTimeout(() => {
-            stockfish.postMessage('uci');
-            stockfish.postMessage('setoption name Hash value 128');
-            stockfish.postMessage('setoption name Threads value 2');
-            stockfish.postMessage('ucinewgame');
-        }, 1000);
+        // Inicializa UCI
+        stockfish.postMessage('uci');
+        stockfish.postMessage('setoption name Hash value 128');
+        stockfish.postMessage('setoption name Threads value 2');
+        stockfish.postMessage('ucinewgame');
 
-        $('#stockfish-status').html('⏳ Carregando engine... <small>(pode levar 5-10s)</small>').css('color', '#ffaa00');
+        $('#stockfish-status').html('Carregando engine...').css('color', '#ffaa00');
 
     } catch (e) {
-        console.error('❌ Erro ao criar Worker:', e);
-        tryLocalStockfish();
+        console.error('Falha ao criar Worker:', e);
+        showStockfishError();
     }
 }
+
+$('#btn-visual-analysis').click(function () {
+    if (!stockfishReady) return;
+
+    const isActive = $(this).text().includes('Desativar');
+
+    if (isActive) {
+        $(this).text('Ativar Análise Visual (Multi-PV)');
+        stockfish.postMessage('setoption name MultiPV value 1');
+        pvData = [];
+        $('#multi-pv-list').empty();
+    } else {
+        $(this).text('Desativar Análise Visual');
+        stockfish.postMessage('setoption name MultiPV value 5');
+    }
+
+    analyzePosition(); // Reanalisa com novo MultiPV
+});
+
 
 // ================================================
 // MÉTODO ALTERNATIVO: STOCKFISH LOCAL
@@ -1527,26 +1641,10 @@ function tryLichessStockfish() {
 // MOSTRAR ERRO FINAL
 // ================================================
 function showStockfishError() {
-    const errorHtml = `
-        ❌ <strong>Engine não disponível</strong><br>
-        <small style="color:#ffaa00;">
-        <strong>Solução:</strong><br>
-        1. Baixe <a href="https://github.com/nmrugg/stockfish.js/raw/master/stockfish.js" 
-           target="_blank" style="color:#4CAF50;">stockfish.js aqui</a><br>
-        2. Coloque na mesma pasta do index.html<br>
-        3. Recarregue a página
-        </small>
-    `;
-    
-    $('#stockfish-status').html(errorHtml).css('color', '#ff0000');
-    $('#btn-analyze').prop('disabled', true).text('Engine Indisponível');
-    $('#btn-visual-analysis').prop('disabled', true);
-    
-    console.log('');
-    console.log('📥 SOLUÇÃO ALTERNATIVA:');
-    console.log('1. Baixe: https://github.com/nmrugg/stockfish.js/raw/master/stockfish.js');
-    console.log('2. Coloque o arquivo stockfish.js na mesma pasta do index.html');
-    console.log('3. Recarregue a página');
-    console.log('');
+    $('#stockfish-status').html(`
+        <strong>Engine falhou</strong><br>
+        <small>Coloque <code>stockfish.js</code> na pasta do projeto</small>
+    `).css('color', '#ff0000');
+    $('#btn-analyze, #btn-visual-analysis').prop('disabled', true);
 }
 

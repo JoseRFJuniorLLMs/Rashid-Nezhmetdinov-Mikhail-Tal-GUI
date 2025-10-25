@@ -1331,134 +1331,191 @@ $('#btn-load-pgn').on('click', function() {
 });
 
 // ================================================
-// STOCKFISH REAL - SUBSTITUA A FUNÇÃO initStockfish()
-// NO SEU game.js PELA VERSÃO ABAIXO
+// STOCKFISH SEM CORS - FUNCIONA NO FIREBASE
+// SUBSTITUA initStockfish() e tryAlternativeStockfish()
 // ================================================
 
 function initStockfish() {
-    console.log('🚀 Iniciando Stockfish REAL (não alternativo)...');
+    console.log('🚀 Iniciando Stockfish (sem CORS)...');
 
     try {
-        // Método 1: Tenta Stockfish via CDN (Stockfish 16)
-        stockfish = new Worker('https://cdnjs.cloudflare.com/ajax/libs/stockfish.js/10.0.2/stockfish.js');
+        // SOLUÇÃO: Carrega Stockfish via importScripts dentro do Worker
+        const stockfishCode = `
+            // Carrega Stockfish.js via importScripts (funciona sem CORS)
+            self.importScripts('https://cdnjs.cloudflare.com/ajax/libs/stockfish.js/10.0.2/stockfish.js');
+            
+            self.onmessage = function(e) {
+                self.postMessage(e.data);
+            };
+        `;
+
+        const blob = new Blob([stockfishCode], { type: 'application/javascript' });
+        const workerUrl = URL.createObjectURL(blob);
         
-        var initTimeout = setTimeout(function() {
-            console.warn('⚠️ Timeout - Tentando método alternativo...');
-            tryStockfishWASM();
-        }, 5000);
+        stockfish = new Worker(workerUrl);
+
+        let initTimeout = setTimeout(() => {
+            console.warn('⚠️ Timeout - Tentando Stockfish local...');
+            tryLocalStockfish();
+        }, 8000);
 
         stockfish.onmessage = function (event) {
-            var line = event.data;
-            console.log('📥 Stockfish:', line);
+            const line = event.data;
+            
+            // Log apenas de comandos importantes
+            if (line === 'uciok' || line.startsWith('bestmove') || line.includes('multipv')) {
+                console.log('📥 Stockfish:', line);
+            }
 
-            // Engine está pronto
             if (line === 'uciok') {
                 clearTimeout(initTimeout);
                 stockfishReady = true;
                 $('#stockfish-status').html('✅ <strong>Engine pronto!</strong>').css('color', '#00ff00');
                 $('#btn-analyze').prop('disabled', false);
-                console.log('✅ Stockfish REAL inicializado com sucesso!');
+                console.log('✅ Stockfish inicializado com sucesso!');
             }
 
-            // Informações de análise
             if (line.startsWith('info') && line.includes('score')) {
                 parseStockfishInfo(line);
             }
 
-            // Melhor jogada encontrada
             if (line.startsWith('bestmove')) {
-                var bestMove = line.split(' ')[1];
+                const bestMove = line.split(' ')[1];
                 displayBestMove(bestMove);
             }
         };
 
         stockfish.onerror = function (error) {
             clearTimeout(initTimeout);
-            console.error('❌ Erro no Stockfish CDN:', error);
-            tryStockfishWASM();
+            console.error('❌ Erro ao carregar Stockfish:', error);
+            tryLocalStockfish();
         };
 
-        // Inicializar protocolo UCI
         console.log('📤 Enviando comandos UCI...');
         setTimeout(() => {
             stockfish.postMessage('uci');
             stockfish.postMessage('setoption name Hash value 128');
             stockfish.postMessage('setoption name Threads value 2');
             stockfish.postMessage('ucinewgame');
-        }, 500);
+        }, 1000);
 
-        $('#stockfish-status').html('⏳ Inicializando Stockfish... <small>(aguarde)</small>').css('color', '#ffaa00');
+        $('#stockfish-status').html('⏳ Carregando engine... <small>(pode levar 5-10s)</small>').css('color', '#ffaa00');
 
     } catch (e) {
-        console.error('❌ Erro ao criar Web Worker:', e);
-        tryStockfishWASM();
+        console.error('❌ Erro ao criar Worker:', e);
+        tryLocalStockfish();
     }
 }
 
 // ================================================
-// MÉTODO ALTERNATIVO: STOCKFISH WASM
+// MÉTODO ALTERNATIVO: STOCKFISH LOCAL
 // ================================================
-function tryStockfishWASM() {
-    console.log('🔄 Tentando Stockfish WASM...');
+function tryLocalStockfish() {
+    console.log('🔄 Tentando carregar Stockfish.js local...');
+    
+    // Verifica se o arquivo stockfish.js está na mesma pasta
+    fetch('stockfish.js')
+        .then(response => {
+            if (response.ok) {
+                console.log('✅ Encontrado stockfish.js local!');
+                loadLocalStockfish();
+            } else {
+                console.warn('⚠️ stockfish.js não encontrado localmente');
+                tryLichessStockfish();
+            }
+        })
+        .catch(() => {
+            console.warn('⚠️ Erro ao verificar stockfish.js local');
+            tryLichessStockfish();
+        });
+}
 
+function loadLocalStockfish() {
     try {
-        // Usa versão WASM do Stockfish (mais moderna)
-        var wasmSupported = typeof WebAssembly === 'object';
+        stockfish = new Worker('stockfish.js');
         
-        if (wasmSupported) {
-            console.log('✅ WebAssembly suportado, carregando Stockfish WASM...');
+        stockfish.onmessage = function(event) {
+            const line = event.data;
             
-            // Cria worker inline com Stockfish
-            var workerCode = `
-                importScripts('https://unpkg.com/stockfish.wasm@0.11.0/stockfish.js');
-                
-                var stockfish = null;
-                
-                Stockfish().then(function(sf) {
-                    stockfish = sf;
-                    self.postMessage('uciok');
-                });
-                
-                self.onmessage = function(e) {
-                    if (stockfish) {
-                        if (e.data === 'uci') {
-                            self.postMessage('uciok');
-                        } else {
-                            stockfish.postMessage(e.data);
-                        }
-                    }
-                };
-            `;
+            if (line === 'uciok' || line.startsWith('bestmove') || line.includes('multipv')) {
+                console.log('📥 Stockfish Local:', line);
+            }
             
-            var blob = new Blob([workerCode], { type: 'application/javascript' });
-            stockfish = new Worker(URL.createObjectURL(blob));
+            if (line === 'uciok') {
+                stockfishReady = true;
+                $('#stockfish-status').html('✅ <strong>Engine local pronto!</strong>').css('color', '#00ff00');
+                $('#btn-analyze').prop('disabled', false);
+            }
             
-            stockfish.onmessage = function(event) {
-                var line = event.data;
-                console.log('📥 Stockfish WASM:', line);
-                
-                if (line === 'uciok') {
-                    stockfishReady = true;
-                    $('#stockfish-status').html('✅ <strong>Engine pronto (WASM)</strong>').css('color', '#00ff00');
-                    $('#btn-analyze').prop('disabled', false);
-                }
-                
-                if (line.startsWith('info') && line.includes('score')) {
-                    parseStockfishInfo(line);
-                }
-                
-                if (line.startsWith('bestmove')) {
-                    var bestMove = line.split(' ')[1];
-                    displayBestMove(bestMove);
-                }
+            if (line.startsWith('info') && line.includes('score')) {
+                parseStockfishInfo(line);
+            }
+            
+            if (line.startsWith('bestmove')) {
+                displayBestMove(line.split(' ')[1]);
+            }
+        };
+        
+        stockfish.postMessage('uci');
+        
+    } catch (e) {
+        console.error('❌ Erro ao carregar local:', e);
+        tryLichessStockfish();
+    }
+}
+
+// ================================================
+// ÚLTIMO RECURSO: LICHESS API
+// ================================================
+function tryLichessStockfish() {
+    console.log('🔄 Tentando API Lichess Stockfish...');
+    
+    try {
+        const lichessCode = `
+            const STOCKFISH_URL = 'https://lichess.org/assets/stockfish/stockfish.js';
+            
+            self.importScripts(STOCKFISH_URL);
+            
+            self.onmessage = function(e) {
+                self.postMessage(e.data);
             };
-            
-            stockfish.postMessage('uci');
-            
-        } else {
-            console.error('❌ WebAssembly não suportado');
+        `;
+        
+        const blob = new Blob([lichessCode], { type: 'application/javascript' });
+        stockfish = new Worker(URL.createObjectURL(blob));
+        
+        let timeout = setTimeout(() => {
+            console.error('❌ Timeout Lichess');
             showStockfishError();
-        }
+        }, 10000);
+        
+        stockfish.onmessage = function(event) {
+            const line = event.data;
+            
+            if (line === 'uciok') {
+                clearTimeout(timeout);
+                stockfishReady = true;
+                $('#stockfish-status').html('✅ <strong>Engine pronto (Lichess)!</strong>').css('color', '#00ff00');
+                $('#btn-analyze').prop('disabled', false);
+                console.log('✅ Lichess Stockfish OK!');
+            }
+            
+            if (line.startsWith('info') && line.includes('score')) {
+                parseStockfishInfo(line);
+            }
+            
+            if (line.startsWith('bestmove')) {
+                displayBestMove(line.split(' ')[1]);
+            }
+        };
+        
+        stockfish.onerror = function(error) {
+            clearTimeout(timeout);
+            console.error('❌ Erro Lichess:', error);
+            showStockfishError();
+        };
+        
+        setTimeout(() => stockfish.postMessage('uci'), 1000);
         
     } catch (e) {
         console.error('❌ Todos os métodos falharam:', e);
@@ -1467,17 +1524,29 @@ function tryStockfishWASM() {
 }
 
 // ================================================
-// MOSTRAR ERRO
+// MOSTRAR ERRO FINAL
 // ================================================
 function showStockfishError() {
-    $('#stockfish-status').html('❌ <strong>Engine não disponível</strong><br><small>Tente usar Chrome ou Firefox atualizado</small>').css('color', '#ff0000');
+    const errorHtml = `
+        ❌ <strong>Engine não disponível</strong><br>
+        <small style="color:#ffaa00;">
+        <strong>Solução:</strong><br>
+        1. Baixe <a href="https://github.com/nmrugg/stockfish.js/raw/master/stockfish.js" 
+           target="_blank" style="color:#4CAF50;">stockfish.js aqui</a><br>
+        2. Coloque na mesma pasta do index.html<br>
+        3. Recarregue a página
+        </small>
+    `;
+    
+    $('#stockfish-status').html(errorHtml).css('color', '#ff0000');
     $('#btn-analyze').prop('disabled', true).text('Engine Indisponível');
     $('#btn-visual-analysis').prop('disabled', true);
     
-    alert('⚠️ Não foi possível carregar o Stockfish.\n\nPor favor:\n1. Use Chrome ou Firefox atualizado\n2. Verifique sua conexão com internet\n3. Desabilite bloqueadores de script');
+    console.log('');
+    console.log('📥 SOLUÇÃO ALTERNATIVA:');
+    console.log('1. Baixe: https://github.com/nmrugg/stockfish.js/raw/master/stockfish.js');
+    console.log('2. Coloque o arquivo stockfish.js na mesma pasta do index.html');
+    console.log('3. Recarregue a página');
+    console.log('');
 }
 
-// ================================================
-// NÃO USAR tryAlternativeStockfish() ANTIGO!
-// Apague ou comente a função tryAlternativeStockfish
-// ================================================
