@@ -849,12 +849,6 @@ function setLanguage(lang) {
     }
 }
 
-
-
-// ===============
-// Initialize
-// ===============
-
 // ===============
 // Initialize
 // ===============
@@ -865,91 +859,7 @@ $(document).ready(function() {
     
     setLanguage('pt');
     
-    // --- INÍCIO DO CÓDIGO NOVO ---
-
-    /**
-     * Função para buscar um arquivo PGN, processá-lo e popular um dropdown.
-     * @param {string} filePath - O caminho para o arquivo PGN (ex: 'nez.pgn')
-     * @param {string} selectId - O ID do <select> (ex: '#select-nez-game')
-     */
-    function fetchAndPopulatePgn(filePath, selectId) {
-        const $select = $(selectId);
-        if (!$select.length) return; // Sai se o select não existir
-
-        // Busca o arquivo no servidor
-        fetch(filePath)
-            .then(response => {
-                if (!response.ok) {
-                    // Se der erro (ex: 404 - Arquivo não encontrado), avisa no console
-                    throw new Error(`Erro ao buscar ${filePath}: ${response.statusText}`);
-                }
-                return response.text(); // Pega o conteúdo do arquivo como texto
-            })
-            .then(pgnText => {
-                $select.empty(); // Limpa o "Carregando..."
-                $select.append($('<option>', { value: "", text: "Selecione uma partida..." }));
-
-                // Tenta separar o arquivo em múltiplos PGNs.
-                // Isso assume que cada PGN começa com [Event "..."
-                const games = pgnText.split(/(\[Event "[^"]*"][\s\S]*?(?=\n\n\[Event|$))/g);
-                
-                for (let i = 0; i < games.length; i++) {
-                    let pgnData = games[i].trim();
-                    
-                    // Ignora entradas vazias ou que não sejam PGNs
-                    if (!pgnData || !pgnData.startsWith("[Event")) continue; 
-                    
-                    // Tenta extrair um nome para a partida
-                    let gameName = `Partida ${i + 1}`; // Nome padrão
-                    const whiteMatch = pgnData.match(/\[White "([^"]+)"\]/);
-                    const blackMatch = pgnData.match(/\[Black "([^"]+)"\]/);
-                    const dateMatch = pgnData.match(/\[Date "([^"]+)"\]/);
-                    
-                    if (whiteMatch && blackMatch) {
-                        gameName = `${whiteMatch[1]} vs ${blackMatch[1]}`;
-                        if(dateMatch) {
-                             // Extrai apenas o ano para ficar mais limpo
-                             gameName += ` (${dateMatch[1].substring(0, 4)})`;
-                        }
-                    }
-
-                    // Adiciona a opção ao select
-                    $select.append($('<option>', {
-                        value: pgnData,  // O valor é o PGN completo
-                        text: gameName    // O texto é o nome que extraímos
-                    }));
-                }
-            })
-            .catch(error => {
-                // Se der erro, exibe no menu
-                console.error(error);
-                $select.empty();
-                $select.append($('<option>', { value: "", text: "Erro ao carregar PGNs" }));
-            });
-    }
-
-    // Carrega os PGNs
-    // *** ATENÇÃO: Se o seu arquivo for 'nez.pg', mude aqui ***
-    fetchAndPopulatePgn('nez.pgn', '#select-nez-game'); 
-    fetchAndPopulatePgn('thal.pgn', '#select-thal-game');
-
-    // Adiciona o "listener" para carregar o PGN quando o usuário selecionar
-    $('.pgn-preloaded-select').change(function() {
-        const selectedPgn = $(this).val(); // Pega o PGN da opção selecionada
-        
-        if (selectedPgn) {
-            $('#pgn-input').val(selectedPgn); // Coloca o PGN no textarea
-            $('#btn-load-pgn').click(); // Simula o clique no botão "Carregar PGN"
-            
-            // Reseta o outro select para não ficar confuso
-            $('.pgn-preloaded-select').not(this).val('');
-        }
-    });
-
-    // --- FIM DO CÓDIGO NOVO ---
-    
     // Inicializar Stockfish após um pequeno delay para garantir que jQuery carregou
-    // (Esta parte já existia no seu código)
     setTimeout(function() {
         console.log('🚀 Iniciando carregamento do Stockfish...');
         initStockfish();
