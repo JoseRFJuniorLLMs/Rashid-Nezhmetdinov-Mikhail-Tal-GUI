@@ -1,166 +1,122 @@
-// Variables:
+// ===================================
+// VARIÁVEIS GLOBAIS
+// ===================================
+
+// Game state
 var hits = 0;
 var soundsOn = true;
 var squarenames = true;
 var pieces = true;
 var reverse = true;
 
+// Timer
 var timeLimit = 30;
 var timePassed = 0;
 var timeLeft = timeLimit;
 var timerInterval = null;
 
-// PGN Variables
+// PGN
 var loadedPgnGame = new Chess();
 var currentMoveIndex = -1;
 var moveHistory = [];
 var OPENING_BOOK = null;
-var currentOpeningName = "";
 
-// Stockfish Variables
+// Stockfish
 var stockfish = null;
 var stockfishReady = false;
 var isAnalyzing = false;
-var currentEvaluation = null;
-var pvData = []; // Array para armazenar dados de cada PV: {move: 'e2e4', score: '+0.32' ou 'M5'}
-var currentDepth = 0;
+var pvData = [];
+var selectedSquare = null;
+var previousEvaluations = {}; // ARMAZENA AVALIAÇÕES
 
-// Initialize Stockfish - Versão Melhorada
+// Move quality definitions
+const MOVE_QUALITY = {
+    BRILLIANT: { threshold: 300, icon: '!!', color: '#1BADA6', label: 'brilliant' },
+    GREAT: { threshold: 100, icon: '!', color: '#5C9ECC', label: 'greatmove' },
+    BEST: { threshold: 50, icon: '✓', color: '#9BC93E', label: 'bestmove' },
+    EXCELLENT: { threshold: 20, icon: '⚡', color: '#96BC4B', label: 'excellent' },
+    GOOD: { threshold: -10, icon: '▽', color: '#96AF8B', label: 'good' },
+    INACCURACY: { threshold: -50, icon: '?!', color: '#F0C15C', label: 'inaccuracy' },
+    MISTAKE: { threshold: -100, icon: '?', color: '#E58F2A', label: 'mistake' },
+    BLUNDER: { threshold: -Infinity, icon: '??', color: '#CA3431', label: 'blunder' }
+};
+
+// ===================================
+// STOCKFISH INITIALIZATION
+// ===================================
+
 function initStockfish() {
-    console.log('🚀 Iniciando Stockfish...');
+    console.log('Iniciando Stockfish...');
 
     try {
-        // Tenta carregar Stockfish via URL inline (funciona local e Firebase)
-        const stockfishCode = `
-            importScripts('https://cdn.jsdelivr.net/npm/stockfish@16.0.0/src/stockfish.js');
-        `;
-
-        const blob = new Blob([stockfishCode], { type: 'application/javascript' });
-        const workerUrl = URL.createObjectURL(blob);
-
-        stockfish = new Worker(workerUrl);
+        stockfish = new Worker('stockfish.js');
 
         stockfish.onmessage = function (event) {
-            var line = event.data;
-            console.log('📥 Stockfish:', line);
+            const line = event.data;
 
-            // Engine está pronto
+            if (line === 'uciok' || line.startsWith('bestmove') || line.includes('multipv')) {
+                console.log('Stockfish:', line);
+            }
+
             if (line === 'uciok') {
                 stockfishReady = true;
                 $('#stockfish-status').html('✅ <strong>Engine pronto!</strong>').css('color', '#00ff00');
                 $('#btn-analyze').prop('disabled', false);
-                console.log('✅ Stockfish inicializado com sucesso!');
+                $('#btn-visual-analysis').prop('disabled', false);
+
+                stockfish.postMessage('setoption name Hash value 256');
+                stockfish.postMessage('setoption name Threads value 2');
+                stockfish.postMessage('setoption name MultiPV value 5');
+                stockfish.postMessage('ucinewgame');
             }
 
-            // Informações de análise
             if (line.startsWith('info') && line.includes('score')) {
                 parseStockfishInfo(line);
             }
 
-            // Melhor jogada encontrada
             if (line.startsWith('bestmove')) {
-                var bestMove = line.split(' ')[1];
-                displayBestMove(bestMove);
+                displayBestMove(line.split(' ')[1]);
+                isAnalyzing = false;
+                $('#btn-analyze').text('🔍 Analisar Posição').prop('disabled', false);
             }
         };
 
         stockfish.onerror = function (error) {
-            console.error('❌ Erro no Stockfish:', error);
-
-            // Tenta método alternativo: WASM via jsdelivr
-            tryAlternativeStockfish();
-        };
-
-        // Inicializar protocolo UCI
-        console.log('📤 Enviando comandos UCI...');
-        setTimeout(() => {
-            stockfish.postMessage('uci');
-            stockfish.postMessage('setoption name Skill Level value 20');
-            stockfish.postMessage('ucinewgame');
-        }, 500);
-
-        $('#stockfish-status').html('⏳ Inicializando... <small>(aguarde 2-3s)</small>').css('color', '#ffaa00');
-
-        // Timeout de segurança
-        setTimeout(() => {
-            if (!stockfishReady) {
-                console.warn('⚠️ Stockfish demorou muito, tentando método alternativo...');
-                tryAlternativeStockfish();
-            }
-        }, 5000);
-
-    } catch (e) {
-        console.error('❌ Erro ao criar Web Worker:', e);
-        tryAlternativeStockfish();
-    }
-}
-
-// Método alternativo: Stockfish.js básico
-function tryAlternativeStockfish() {
-    console.log('🔄 Tentando método alternativo...');
-
-    try {
-        // Usa o Stockfish via unpkg (mais compatível)
-        const workerCode = `
-            self.onmessage = function(e) {
-                // Simula UCI básico para testes
-                if (e.data === 'uci') {
-                    self.postMessage('uciok');
-                } else if (e.data.startsWith('position')) {
-                    // Armazena posição
-                } else if (e.data.startsWith('go')) {
-                    // Simula análise rápida
-                    setTimeout(() => {
-                        self.postMessage('info depth 10 score cp 25');
-                        self.postMessage('bestmove e2e4');
-                    }, 1000);
-                }
-            };
-        `;
-
-        const blob = new Blob([workerCode], { type: 'application/javascript' });
-        stockfish = new Worker(URL.createObjectURL(blob));
-
-        stockfish.onmessage = function (event) {
-            var line = event.data;
-            console.log('📥 Stockfish (alternativo):', line);
-
-            if (line === 'uciok') {
-                stockfishReady = true;
-                $('#stockfish-status').html('✅ <strong>Engine pronto</strong> <small>(modo básico)</small>').css('color', '#00ff00');
-                $('#btn-analyze').prop('disabled', false);
-            }
-
-            if (line.startsWith('info') && line.includes('score')) {
-                parseStockfishInfo(line);
-            }
-
-            if (line.startsWith('bestmove')) {
-                var bestMove = line.split(' ')[1];
-                displayBestMove(bestMove);
-            }
+            console.error('Erro no Worker:', error);
+            showStockfishError();
         };
 
         stockfish.postMessage('uci');
+        $('#stockfish-status').html('⏳ Inicializando...').css('color', '#ffaa00');
 
     } catch (e) {
-        console.error('❌ Todos os métodos falharam:', e);
-        $('#stockfish-status').html('❌ <strong>Engine não disponível</strong><br><small>Verifique o console (F12)</small>').css('color', '#ff0000');
-        $('#btn-analyze').prop('disabled', true).text('Engine Indisponível');
+        console.error('Falha ao criar Worker:', e);
+        showStockfishError();
     }
 }
 
-function parseStockfishInfo(line) {
-    if (!line.includes('multipv')) return;
+function showStockfishError() {
+    $('#stockfish-status').html(`
+        <strong>❌ Engine falhou</strong><br>
+        <small>Verifique se stockfish.js está na pasta</small>
+    `).css('color', '#ff0000');
+    $('#btn-analyze, #btn-visual-analysis').prop('disabled', true);
+}
 
+// ===================================
+// STOCKFISH ANALYSIS
+// ===================================
+
+function parseStockfishInfo(line) {
     const multipv = line.match(/multipv (\d+)/)?.[1];
     const depth = line.match(/depth (\d+)/)?.[1];
     const scoreCp = line.match(/score cp (-?\d+)/)?.[1];
     const scoreMate = line.match(/score mate (-?\d+)/)?.[1];
     const pvMoves = line.match(/pv (([a-h][1-8][a-h][1-8][qnrb]? ?)+)/)?.[1];
-    if (!multipv || !pvMoves) return;
 
-    const pvIndex = parseInt(multipv) - 1;
+    if (!pvMoves) return;
+
+    const pvIndex = multipv ? parseInt(multipv) - 1 : 0;
     const firstMove = pvMoves.split(' ')[0].toUpperCase();
 
     let score = '';
@@ -172,120 +128,61 @@ function parseStockfishInfo(line) {
         score = mate > 0 ? `M${mate}` : `M${-mate}`;
     }
 
-    // Armazena no array
     pvData[pvIndex] = {
         move: firstMove,
         score: score,
         depth: parseInt(depth) || 0
     };
 
-    updateMultiPVDisplay();
+    if (parseInt(depth) >= 10) {
+        updateMultiPVDisplay();
+    }
 }
 
-function updateMultiPVDisplay() {
-    const $list = $('#multi-pv-list');
-    $list.empty();
+function analyzePosition() {
+    if (!stockfishReady) {
+        alert('Engine ainda não está pronto. Aguarde.');
+        return;
+    }
 
-    // Clear the analysis tree layer
+    if (isAnalyzing) {
+        console.log('Análise já em andamento...');
+        return;
+    }
+
+    isAnalyzing = true;
+    pvData = [];
+    $('#multi-pv-list').empty();
+
     const svg = document.getElementById('analysis-tree-layer');
     if (svg) {
         svg.innerHTML = '';
         svg.style.display = 'none';
     }
 
-    if (pvData.length === 0) return;
+    const fen = loadedPgnGame.fen();
 
-    const maxDepth = Math.max(...pvData.map(pv => pv?.depth || 0));
-    if (maxDepth === 0) return;
+    stockfish.postMessage('stop');
+    stockfish.postMessage('setoption name MultiPV value 5');
+    stockfish.postMessage('position fen ' + fen);
+    stockfish.postMessage('go depth 20');
 
-    // Show the SVG layer for arrows
-    if (svg) {
-        svg.style.display = 'block';
+    $('#btn-analyze').text('⏸️ Analisando...').prop('disabled', true);
+}
+
+function stopAnalysis() {
+    if (stockfish && isAnalyzing) {
+        stockfish.postMessage('stop');
+        isAnalyzing = false;
+        $('#btn-analyze').text('🔍 Analisar Posição').prop('disabled', false);
+
+        const svg = document.getElementById('analysis-tree-layer');
+        if (svg) {
+            svg.innerHTML = '';
+            svg.style.display = 'none';
+        }
     }
-
-    // Colors for each PV line (like Nibbler)
-    const colors = [
-        '#4CAF50',  // Green - Best move
-        '#2196F3',  // Blue - 2nd best
-        '#FFC107',  // Amber - 3rd best
-        '#FF5722',  // Orange - 4th best
-        '#9C27B0'   // Purple - 5th best
-    ];
-
-    pvData.forEach((pv, i) => {
-        if (!pv || pv.depth < maxDepth) return;
-
-        const moveStr = pv.move.toLowerCase();
-        const from = moveStr.substring(0, 2);
-        const to = moveStr.substring(2, 4);
-        const promo = moveStr[4] ? `=${moveStr[4].toUpperCase()}` : '';
-
-        const color = colors[i] || '#666666';
-
-        // Draw arrow for this PV
-        drawMultiPVArrow(from, to, color, i);
-
-        // Show in list
-        $list.append(`
-            <div style="margin:4px 0; padding:6px; background:#2a2926; 
-                        border-left:4px solid ${color}; border-radius:4px; font-size:0.9em;">
-                <strong>${i + 1}.</strong> 
-                ${from.toUpperCase()}→${to.toUpperCase()}${promo}
-                <span style="float:right; color:#B58863;">${pv.score}</span>
-            </div>
-        `);
-    });
 }
-
-function drawMultiPVArrow(fromSquareId, toSquareId, color, index) {
-    const svg = document.getElementById('analysis-tree-layer');
-    if (!svg) return;
-
-    const fromEl = document.getElementById(fromSquareId);
-    const toEl = document.getElementById(toSquareId);
-
-    if (!fromEl || !toEl) return;
-
-    const fromRect = fromEl.getBoundingClientRect();
-    const toRect = toEl.getBoundingClientRect();
-    const boardRect = document.querySelector('.chess-board').getBoundingClientRect();
-
-    // Calculate positions with offset for multiple arrows
-    const offset = (index - 1) * 8; // Offset arrows slightly so they don't overlap
-
-    const x1 = fromRect.left + fromRect.width / 2 - boardRect.left + offset;
-    const y1 = fromRect.top + fromRect.height / 2 - boardRect.top + offset;
-    const x2 = toRect.left + toRect.width / 2 - boardRect.left + offset;
-    const y2 = toRect.top + toRect.height / 2 - boardRect.top + offset;
-
-    // Arrow line
-    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    line.setAttribute('x1', x1);
-    line.setAttribute('y1', y1);
-    line.setAttribute('x2', x2);
-    line.setAttribute('y2', y2);
-    line.setAttribute('stroke', color);
-    line.setAttribute('stroke-width', index === 0 ? '8' : '6'); // Best move is thicker
-    line.setAttribute('stroke-linecap', 'round');
-    line.setAttribute('opacity', index === 0 ? '0.9' : '0.7');
-    svg.appendChild(line);
-
-    // Arrow head
-    const angle = Math.atan2(y2 - y1, x2 - x1);
-    const size = index === 0 ? 22 : 18;
-    const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-    const points = [
-        [x2, y2],
-        [x2 - size * Math.cos(angle - Math.PI / 6), y2 - size * Math.sin(angle - Math.PI / 6)],
-        [x2 - size * Math.cos(angle + Math.PI / 6), y2 - size * Math.sin(angle + Math.PI / 6)]
-    ];
-    arrow.setAttribute('points', points.map(p => p.join(',')).join(' '));
-    arrow.setAttribute('fill', color);
-    arrow.setAttribute('opacity', index === 0 ? '0.9' : '0.7');
-    svg.appendChild(arrow);
-}
-
-
 
 function displayBestMove(move) {
     if (!move || move === '(none)') return;
@@ -298,174 +195,190 @@ function displayBestMove(move) {
     $(`#${to}`).addClass('highlight-to');
 
     drawArrow(from, to);
-
-    $('#stockfish-bestmove').html(`<strong>Melhor:</strong> ${from.toUpperCase()} → ${to.toUpperCase()}`);
-    isAnalyzing = false;
-    $('#btn-analyze').text('Analisar Posição');
 }
 
-function analyzePosition() {
-    if (!stockfishReady || isAnalyzing) return;
+function saveCurrentEvaluation() {
+    if (pvData.length > 0 && pvData[0] && pvData[0].score) {
+        let evalScore = pvData[0].score;
 
-    isAnalyzing = true;
-    pvData = [];
-    $('#multi-pv-list').empty();
-    
-    // Clear analysis arrows
-    const svg = document.getElementById('analysis-tree-layer');
-    if (svg) {
-        svg.innerHTML = '';
-        svg.style.display = 'none';
-    }
-
-    $('#stockfish-eval').html('Analisando...');
-    $('#stockfish-bestmove').html('');
-
-    const fen = loadedPgnGame.fen();
-    stockfish.postMessage('stop');
-    stockfish.postMessage('setoption name MultiPV value 5'); // 5 lines
-    stockfish.postMessage('position fen ' + fen);
-    stockfish.postMessage('go depth 18');
-    
-    $('#btn-analyze').text('⏸️ Analisando...').prop('disabled', true);
-}
-
-// Clear arrows when stopping analysis
-function stopAnalysis() {
-    if (stockfish && isAnalyzing) {
-        stockfish.postMessage('stop');
-        isAnalyzing = false;
-        $('#btn-analyze').html('🔍 Analisar Posição').prop('disabled', false);
-        
-        // Clear analysis arrows
-        const svg = document.getElementById('analysis-tree-layer');
-        if (svg) {
-            svg.innerHTML = '';
-            svg.style.display = 'none';
-        }
-    }
-}
-
-// Also clear arrows when navigating moves
-$('#btn-pgn-prev, #btn-pgn-next, #btn-pgn-start, #btn-pgn-end').click(function() {
-    const svg = document.getElementById('analysis-tree-layer');
-    if (svg) {
-        svg.innerHTML = '';
-        svg.style.display = 'none';
-    }
-    pvData = [];
-});
-
-
-// ===============
-// Game Buttons:
-// ===============
-
-$(".btn-play-pause").click(function () {
-    if ($(this).hasClass("paused")) {
-        resetTimer(timeLimit);
-        playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/game-end.mp3");
-    } else {
-        startTimer();
-        playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/game-start.mp3");
-        $("#square-random").text(randomSquare());
-    }
-    $(this).toggleClass("paused");
-});
-
-$(".chess-square").click(function () {
-    var rndm = $("#square-random").text();
-    var click = $(this).attr('id');
-    $("#square-clicked").text(click);
-    if (soundsOn) {
-        if (rndm === "-") {
-            $("#img-answer-right").addClass("hidden");
-            $("#img-answer-wrong").addClass("hidden");
-        } else if (click === rndm) {
-            hits++;
-            $("#square-score").text(hits);
-            playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
-            $("#square-random").text(randomSquare());
-            $("#img-answer-right").removeClass("hidden");
-            $("#img-answer-wrong").addClass("hidden");
+        if (evalScore.startsWith('M') || evalScore.startsWith('-M')) {
+            evalScore = evalScore.includes('-') ? -900 : 900;
         } else {
-            resetTimer(0);
-            playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/illegal.mp3");
-            $("#img-answer-right").addClass("hidden");
-            $("#img-answer-wrong").removeClass("hidden");
+            evalScore = parseFloat(evalScore) * 100;
+        }
+
+        if (!isNaN(evalScore)) {
+            previousEvaluations[currentMoveIndex] = evalScore;
         }
     }
-});
+}
 
-// ===============
-// Setting Buttons:
-// ===============
+// ===================================
+// MULTI-PV DISPLAY
+// ===================================
 
-$("#btn-timer").click(function () {
-    var time = prompt(language.prompttimer, "30");
-    if (isInt(time)) {
-        timeLimit = parseInt(time);
-        resetTimer(timeLimit);
+function updateMultiPVDisplay() {
+    const $list = $('#multi-pv-list');
+    $list.empty();
+
+    const svg = document.getElementById('analysis-tree-layer');
+    if (svg) {
+        svg.innerHTML = '';
+        svg.style.display = 'none';
     }
-});
 
-$("#btn-squarenames").click(function () {
-    $(".notation").toggleClass('hidden');
-    if (squarenames) {
-        squarenames = false;
-        $(this).text(function (i, text) {
-            return language.btnsquarenamesoff;
-        })
+    if (pvData.length === 0) return;
+
+    const maxDepth = Math.max(...pvData.map(pv => pv?.depth || 0));
+    if (maxDepth === 0) return;
+
+    if (svg) {
+        svg.style.display = 'block';
+    }
+
+    const colors = ['#4CAF50', '#2196F3', '#FFC107', '#FF5722', '#9C27B0'];
+
+    pvData.forEach((pv, i) => {
+        if (!pv || pv.depth < maxDepth) return;
+
+        const moveStr = pv.move.toLowerCase();
+        const from = moveStr.substring(0, 2);
+        const to = moveStr.substring(2, 4);
+        const promo = moveStr[4] ? `=${moveStr[4].toUpperCase()}` : '';
+        const color = colors[i] || '#666666';
+
+        drawMultiPVArrow(from, to, color, i);
+
+        $list.append(`
+            <div style="margin:4px 0; padding:6px; background:#2a2926; 
+                        border-left:4px solid ${color}; border-radius:4px; font-size:0.9em;">
+                <strong>${i + 1}.</strong> 
+                ${from.toUpperCase()}→${to.toUpperCase()}${promo}
+                <span style="float:right; color:#B58863;">${pv.score}</span>
+            </div>
+        `);
+    });
+
+    saveCurrentEvaluation();
+}
+
+function drawMultiPVArrow(fromSquareId, toSquareId, color, index) {
+    const svg = document.getElementById('analysis-tree-layer');
+    if (!svg) return;
+
+    const fromEl = document.getElementById(fromSquareId);
+    const toEl = document.getElementById(toSquareId);
+    if (!fromEl || !toEl) return;
+
+    const fromRect = fromEl.getBoundingClientRect();
+    const toRect = toEl.getBoundingClientRect();
+    const boardRect = document.querySelector('.chess-board').getBoundingClientRect();
+
+    const offset = (index - 1) * 6;
+    const x1 = fromRect.left + fromRect.width / 2 - boardRect.left + offset;
+    const y1 = fromRect.top + fromRect.height / 2 - boardRect.top + offset;
+    const x2 = toRect.left + toRect.width / 2 - boardRect.left + offset;
+    const y2 = toRect.top + toRect.height / 2 - boardRect.top + offset;
+
+    // Linha mais fina
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', x1);
+    line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2);
+    line.setAttribute('y2', y2);
+    line.setAttribute('stroke', color);
+    line.setAttribute('stroke-width', index === 0 ? '5' : '4');
+    line.setAttribute('stroke-linecap', 'round');
+    line.setAttribute('opacity', index === 0 ? '0.85' : '0.65');
+    svg.appendChild(line);
+
+    // Seta menor
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    const size = index === 0 ? 16 : 14;
+    const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+    const points = [
+        [x2, y2],
+        [x2 - size * Math.cos(angle - Math.PI / 6), y2 - size * Math.sin(angle - Math.PI / 6)],
+        [x2 - size * Math.cos(angle + Math.PI / 6), y2 - size * Math.sin(angle + Math.PI / 6)]
+    ];
+    arrow.setAttribute('points', points.map(p => p.join(',')).join(' '));
+    arrow.setAttribute('fill', color);
+    arrow.setAttribute('opacity', index === 0 ? '0.85' : '0.65');
+    svg.appendChild(arrow);
+
+    // Badge retangular pequeno
+    const pv = pvData[index];
+    if (pv && pv.score) {
+        const badgeDistance = 25;
+        const badgeX = x2 - badgeDistance * Math.cos(angle);
+        const badgeY = y2 - badgeDistance * Math.sin(angle);
+
+        const badge = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+
+        // Retângulo pequeno
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        const scoreText = pv.score.replace('+', '').replace('-', ''); // Remove sinais
+        const textWidth = scoreText.length * 7 + 6;
+        
+        rect.setAttribute('x', badgeX - textWidth / 2);
+        rect.setAttribute('y', badgeY - 9);
+        rect.setAttribute('width', textWidth);
+        rect.setAttribute('height', '18');
+        rect.setAttribute('rx', '3');
+        rect.setAttribute('fill', 'rgba(42, 41, 38, 0.92)');
+        rect.setAttribute('stroke', color);
+        rect.setAttribute('stroke-width', '1.5');
+        badge.appendChild(rect);
+
+        // Texto sem sinal
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', badgeX);
+        text.setAttribute('y', badgeY + 4);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('font-size', '11');
+        text.setAttribute('font-weight', 'bold');
+        text.setAttribute('fill', '#F0D9B5');
+        text.textContent = scoreText;
+        badge.appendChild(text);
+
+        svg.appendChild(badge);
+    }
+}
+
+// ===================================
+// MOVE QUALITY EVALUATION
+// ===================================
+
+function evaluateMoveQuality(prevEval, currEval, color) {
+    if (prevEval === null || currEval === null || prevEval === undefined || currEval === undefined) {
+        return null;
+    }
+
+    const perspective = color === 'b' ? -1 : 1;
+    const evalChange = (currEval - prevEval) * perspective;
+
+    if (evalChange >= MOVE_QUALITY.BRILLIANT.threshold) {
+        return { ...MOVE_QUALITY.BRILLIANT, change: evalChange };
+    } else if (evalChange >= MOVE_QUALITY.GREAT.threshold) {
+        return { ...MOVE_QUALITY.GREAT, change: evalChange };
+    } else if (evalChange >= MOVE_QUALITY.BEST.threshold) {
+        return { ...MOVE_QUALITY.BEST, change: evalChange };
+    } else if (evalChange >= MOVE_QUALITY.EXCELLENT.threshold) {
+        return { ...MOVE_QUALITY.EXCELLENT, change: evalChange };
+    } else if (evalChange >= MOVE_QUALITY.GOOD.threshold) {
+        return { ...MOVE_QUALITY.GOOD, change: evalChange };
+    } else if (evalChange >= MOVE_QUALITY.INACCURACY.threshold) {
+        return { ...MOVE_QUALITY.INACCURACY, change: evalChange };
+    } else if (evalChange >= MOVE_QUALITY.MISTAKE.threshold) {
+        return { ...MOVE_QUALITY.MISTAKE, change: evalChange };
     } else {
-        squarenames = true;
-        $(this).text(function (i, text) {
-            return language.btnsquarenameson;
-        })
+        return { ...MOVE_QUALITY.BLUNDER, change: evalChange };
     }
-});
+}
 
-$("#btn-pieces").click(function () {
-    if (pieces) {
-        pieces = false;
-        $(this).text(function (i, text) {
-            $(".chess-square").css('background-size', '0,0');
-            return language.btnpiecesoff;
-        })
-    } else {
-        pieces = true;
-        $(this).text(function (i, text) {
-            updateBoardDisplay();
-            return language.btnpieceson;
-        })
-    }
-});
-
-$("#btn-reverse").click(function () {
-    if (reverse) {
-        reverse = false;
-        $(".chess-board").css('flex-direction', 'column-reverse');
-        $(".chess-row").css('flex-direction', 'row-reverse');
-        $(this).text(function (i, text) {
-            return language.btnreverseoff;
-        })
-    } else {
-        reverse = true;
-        $(".chess-board").css('flex-direction', 'column');
-        $(".chess-row").css('flex-direction', 'row');
-        $(this).text(function (i, text) {
-            return language.btnreverseon;
-        })
-    }
-});
-
-// ===============
-// PGN Functions
-// ===============
-// ===============
-// PGN Functions
-// ===============
-
-// FUNÇÃO DE CARREGAMENTO ANTIGA REMOVIDA DAQUI (estava causando o conflito)
+// ===================================
+// PGN NAVIGATION
+// ===================================
 
 $('#btn-pgn-start').click(function () {
     loadedPgnGame.reset();
@@ -473,13 +386,7 @@ $('#btn-pgn-start').click(function () {
     updateBoardDisplay();
     updateMoveInfo();
     updateMoveListHighlight(currentMoveIndex);
-    $("#square-clicked").text("-");
     clearArrow();
-
-    if (stockfishReady) {
-        setTimeout(analyzePosition, 300);
-    }
-
     playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
 });
 
@@ -491,45 +398,26 @@ $('#btn-pgn-prev').click(function () {
         updateMoveInfo();
         updateMoveListHighlight(currentMoveIndex);
 
-        if (undoneMove) {
-            $("#square-clicked").text(undoneMove.san);
-
-            if (soundsOn) {
-                playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
-            }
+        if (undoneMove && soundsOn) {
+            playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
         }
 
         clearArrow();
-
-        if (stockfishReady) {
-            setTimeout(analyzePosition, 300);
-        }
     }
 });
 
 $('#btn-pgn-next').click(function () {
-    // Só avança se ainda houver jogadas no histórico
     if (currentMoveIndex < moveHistory.length - 1) {
-
-        // Avança o índice e realiza o próximo lance
         currentMoveIndex++;
         var moveObj = loadedPgnGame.move(moveHistory[currentMoveIndex]);
         updateBoardDisplay();
         updateMoveInfo();
         updateMoveListHighlight(currentMoveIndex);
 
-        // Se o movimento for válido
         if (moveObj) {
-            // Mostra a notação do lance (ex: e4, Nf3)
-            $("#square-clicked").text(moveObj.san);
-
-            // 🔊 Fala o nome do lance (ex: “E quatro”)
             speakSquare(moveObj.san);
-
-            // Desenha uma seta visual entre as casas
             drawArrow(moveObj.from, moveObj.to);
 
-            // Efeitos sonoros normais
             if (soundsOn) {
                 if (moveObj.captured) {
                     playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/capture.mp3");
@@ -538,20 +426,14 @@ $('#btn-pgn-next').click(function () {
                 }
             }
         }
-
-        // Reanalisa posição com Stockfish (se estiver ativo)
-        if (stockfishReady) {
-            setTimeout(analyzePosition, 300);
-        }
     }
 });
 
 $('#btn-pgn-end').click(function () {
-    var lastMoveObj = null;
-
     loadedPgnGame.load_pgn($('#pgn-input').val().trim());
     currentMoveIndex = moveHistory.length - 1;
 
+    var lastMoveObj = null;
     if (moveHistory.length > 0) {
         var tempGame = new Chess();
         tempGame.load_pgn($('#pgn-input').val().trim());
@@ -563,7 +445,6 @@ $('#btn-pgn-end').click(function () {
     updateMoveListHighlight(currentMoveIndex);
 
     if (lastMoveObj) {
-        $("#square-clicked").text(lastMoveObj.san);
         drawArrow(lastMoveObj.from, lastMoveObj.to);
 
         if (soundsOn) {
@@ -574,23 +455,181 @@ $('#btn-pgn-end').click(function () {
             }
         }
     }
+});
 
-    if (stockfishReady) {
-        setTimeout(analyzePosition, 300);
+function goToMove(index) {
+    if (index < -1 || index >= moveHistory.length) return;
+
+    loadedPgnGame.reset();
+
+    for (let i = 0; i <= index; i++) {
+        loadedPgnGame.move(moveHistory[i]);
+    }
+
+    currentMoveIndex = index;
+
+    updateBoardDisplay();
+    updateMoveInfo();
+    updateMoveListHighlight(currentMoveIndex);
+    clearArrow();
+}
+
+// ===================================
+// PGN LOADING
+// ===================================
+
+$('#btn-load-pgn').on('click', function() {
+    const pgnText = $('#pgn-input').val().trim();
+
+    if (!pgnText) return;
+
+    try {
+        loadedPgnGame = new Chess();
+        if (loadedPgnGame.load_pgn(pgnText, { sloppy: true })) {
+            moveHistory = loadedPgnGame.history();
+            const header = loadedPgnGame.header();
+
+            previousEvaluations = {};
+
+            populateMoveList(loadedPgnGame.history({ verbose: true }));
+            $('#pgn-score-sheet').show();
+            $('#pgn-move-list').scrollTop(0);
+
+            loadedPgnGame.reset();
+            currentMoveIndex = -1;
+            updateBoardDisplay();
+            updateOpeningName();
+            updateMoveListHighlight(-1);
+            $('.pgn-navigation').show();
+            $('#player-white-name').text(`⚪ ${header['White'] || 'Jogador (Brancas)'}`).show();
+            $('#player-black-name').text(`⚫ ${header['Black'] || 'Jogador (Pretas)'}`).show();
+
+            const statusHtml = `
+                <strong>${header['Event'] || 'Partida Casual'}</strong><br>
+                <small>${(header['Site'] || 'Local Desconhecido').split(',')[0]}, ${(header['Date'] || 'Ano Desconhecido').split('.')[0]}</small>
+                <hr style="border-color:#4a4946; border-top:0; margin: 8px 0;">
+                ⚪ <strong>${header['White'] || 'Jogador (Brancas)'}</strong><br>
+                ⚫ <strong>${header['Black'] || 'Jogador (Pretas)'}</strong><br>
+                Resultado: <strong>${header['Result'] || '*'}</strong>
+                <br>Total de Lances: <strong>${moveHistory.length}</strong>
+            `;
+            $('#pgn-status').html(statusHtml);
+
+            $('#btn-paste-pgn').text('✏️ Editar PGN').off('click').on('click', function(e) {
+                e.preventDefault();
+                const novo = prompt("Edite o PGN:", pgnText);
+                if (novo && novo !== pgnText) {
+                    $('#pgn-input').val(novo);
+                    $('#btn-load-pgn').click();
+                }
+            });
+
+        } else {
+            alert("PGN inválido. Verifique o formato.");
+        }
+    } catch (e) {
+        alert("Erro ao processar PGN: " + e.message);
     }
 });
 
-function updateMoveInfo() {
-    if (moveHistory.length === 0) {
-        $('#current-move').text('📍 Posição inicial');
-        updateOpeningName();
-        return;
-    }
+$('#btn-paste-pgn').on('click', function(e) {
+    e.preventDefault();
 
-    var currentMove = currentMoveIndex >= 0 ? moveHistory[currentMoveIndex] : 'Início';
-    $('#current-move').html(`<strong>Lance ${currentMoveIndex + 1}/${moveHistory.length}:</strong> ${currentMove}`);
-    updateOpeningName();
+    const pgn = prompt("Cole o PGN completo da partida aqui:", "");
+
+    if (pgn && pgn.trim().length > 10) {
+        $('#pgn-input').val(pgn.trim());
+        $('#btn-load-pgn').click();
+    } else if (pgn) {
+        alert("PGN muito curto ou inválido. Tente novamente.");
+    }
+});
+
+// ===================================
+// SCORE SHEET
+// ===================================
+
+function populateMoveList(history) {
+    const $moveList = $('#pgn-move-list').empty().show();
+    let $currentRow = null;
+
+    history.forEach((move, index) => {
+        const san = move.san;
+        const calculatedMoveNumber = Math.floor(index / 2) + 1;
+
+        let qualityAttr = '';
+        let iconAttr = '';
+
+        if (previousEvaluations[index] !== undefined && previousEvaluations[index - 1] !== undefined) {
+            const quality = evaluateMoveQuality(
+                previousEvaluations[index - 1],
+                previousEvaluations[index],
+                move.color
+            );
+
+            if (quality) {
+                qualityAttr = `data-quality="${quality.label}"`;
+                iconAttr = `data-quality-icon="${quality.icon}"`;
+            }
+        }
+
+        if (move.color === 'w') {
+            if ($currentRow) $moveList.append($currentRow);
+            $currentRow = $('<div class="move-row" style="display:grid; grid-template-columns: 1fr 1fr;"></div>');
+            $currentRow.append(`<span class="move-san" data-move-index="${index}" ${qualityAttr} ${iconAttr} style="text-align:left; padding-left:5px;">${calculatedMoveNumber}. ${san}</span>`);
+        } else {
+            if (!$currentRow) {
+                $currentRow = $('<div class="move-row" style="display:grid; grid-template-columns: 1fr 1fr;"></div>');
+                $currentRow.append(`<span class="move-san" data-move-index="-1" style="text-align:left; padding-left:5px;">${calculatedMoveNumber}. ...</span>`);
+            }
+            $currentRow.append(`<span class="move-san" data-move-index="${index}" ${qualityAttr} ${iconAttr} style="text-align:left;">${san}</span>`);
+            $moveList.append($currentRow);
+            $currentRow = null;
+        }
+    });
+
+    if ($currentRow) $moveList.append($currentRow);
 }
+
+function updateMoveListHighlight(index) {
+    $('.move-san').removeClass('active-move');
+
+    const $activeMove = $(`.move-san[data-move-index="${index}"]`);
+    if ($activeMove.length > 0) {
+        $activeMove.addClass('active-move');
+
+        const $container = $('#pgn-move-list');
+        const containerTop = $container.scrollTop();
+        const containerBottom = containerTop + $container.height();
+        const moveTop = $activeMove.position().top + containerTop;
+        const moveBottom = moveTop + $activeMove.outerHeight();
+
+        if (moveTop < containerTop) {
+            $container.scrollTop(moveTop);
+        } else if (moveBottom > containerBottom) {
+            $container.scrollTop(moveBottom - $container.height() + $activeMove.outerHeight());
+        }
+    }
+}
+
+$('#pgn-move-list').on('click', '.move-san', function() {
+    const moveIndex = $(this).data('move-index');
+
+    if (moveIndex !== undefined && moveIndex !== -1) {
+        goToMove(parseInt(moveIndex, 10));
+
+        try {
+            const moveObj = loadedPgnGame.history({ verbose: true })[moveIndex];
+            if (moveObj) {
+                $("#square-clicked").text(moveObj.san);
+            }
+        } catch (e) {}
+    }
+});
+
+// ===================================
+// BOARD DISPLAY
+// ===================================
 
 function updateBoardDisplay() {
     $('.chess-square').css('background-image', 'none');
@@ -645,9 +684,21 @@ function updateBoardDisplay() {
     }
 }
 
-// ===============
-// Arrow Functions
-// ===============
+function updateMoveInfo() {
+    if (moveHistory.length === 0) {
+        $('#current-move').text('📍 Posição inicial');
+        updateOpeningName();
+        return;
+    }
+
+    var currentMove = currentMoveIndex >= 0 ? moveHistory[currentMoveIndex] : 'Início';
+    $('#current-move').html(`<strong>Lance ${currentMoveIndex + 1}/${moveHistory.length}:</strong> ${currentMove}`);
+    updateOpeningName();
+}
+
+// ===================================
+// ARROWS
+// ===================================
 
 function drawArrow(fromSquareId, toSquareId) {
     const svg = document.getElementById('move-arrow-layer');
@@ -705,9 +756,371 @@ function clearArrow() {
     $('.chess-square').removeClass('highlight-from highlight-to');
 }
 
-// ===============
-// Aux Functions
-// ===============
+// ===================================
+// OPENING BOOK
+// ===================================
+
+function updateOpeningName() {
+    const $openingNameEl = $('#opening-name');
+    const $historyBoxEl = $('#opening-history-box');
+    const $historyTextEl = $('#opening-history-text');
+
+    if (!OPENING_BOOK) {
+        $openingNameEl.text("");
+        $historyBoxEl.hide();
+        return;
+    }
+
+    var historySlice = moveHistory.slice(0, currentMoveIndex + 1);
+    var openingMatch = null;
+
+    for (var i = historySlice.length; i > 0; i--) {
+        var moveKey = historySlice.slice(0, i).join(' ');
+        if (OPENING_BOOK[moveKey]) {
+            openingMatch = OPENING_BOOK[moveKey];
+            break;
+        }
+    }
+
+    if (openingMatch && openingMatch.name) {
+        const englishName = openingMatch.name;
+        const eco = openingMatch.eco;
+        let infoIcon = "";
+        let historia = "";
+        let nomePt = "";
+
+        if (typeof OPENING_DETAILS_PT !== 'undefined' && OPENING_DETAILS_PT[englishName]) {
+            const details = OPENING_DETAILS_PT[englishName];
+            nomePt = details.nome;
+            historia = details.historia;
+
+            infoIcon = ' <span id="opening-info-icon" title="Clique para saber mais">ℹ</span>';
+            $historyTextEl.text(historia);
+            $historyBoxEl.find('h5').text("Sobre: " + nomePt);
+        } else {
+            nomePt = englishName;
+            $historyBoxEl.hide();
+        }
+
+        $openingNameEl.html(`${nomePt} <span class="eco-code">(${eco})</span>${infoIcon}`);
+    } else {
+        $openingNameEl.text("");
+        $historyBoxEl.hide();
+    }
+}
+
+function loadOpeningBook() {
+    $.getJSON("openings.json")
+        .done(function(data) {
+            OPENING_BOOK = data;
+            console.log("✅ Livro de aberturas carregado!");
+            updateOpeningName();
+        })
+        .fail(function(jqxhr, textStatus, error) {
+            console.error("❌ Erro ao carregar openings.json: " + textStatus + ", " + error);
+        });
+}
+
+// ===================================
+// PRELOADED GAMES
+// ===================================
+
+$('#btn-load-preloaded').on('click', function () {
+    const $btn = $(this);
+    const $status = $('#preloaded-status');
+    const $selectsContainer = $('#preloaded-selects');
+    const $nezSelect = $('#select-nez-game');
+    const $thalSelect = $('#select-thal-game');
+
+    if ($btn.prop('disabled')) return;
+
+    $btn.prop('disabled', true).text('Carregando...');
+    $status.html('Carregando nez.pgn e thal.pgn...').css('color', '#ffaa00');
+    $selectsContainer.hide();
+
+    $nezSelect.empty().append('<option value="">Carregando Nezhmetdinov...</option>');
+    $thalSelect.empty().append('<option value="">Carregando Tal...</option>');
+
+    let loaded = 0;
+    const total = 2;
+
+    function checkDone() {
+        loaded++;
+        if (loaded === total) {
+            $btn.prop('disabled', false).text('Recarregar Partidas');
+            $selectsContainer.show();
+            $status.html('Partidas carregadas com sucesso!').css('color', '#00ff00');
+        }
+    }
+
+    fetch('nez.pgn')
+        .then(r => {
+            if (!r.ok) throw new Error(`nez.pgn não encontrado (404)`);
+            return r.text();
+        })
+        .then(text => {
+            populateSelect(text, $nezSelect, 'Nezhmetdinov');
+            checkDone();
+        })
+        .catch(err => {
+            $nezSelect.empty().append('<option value="">Erro: ' + err.message + '</option>');
+            $status.html('Erro ao carregar nez.pgn').css('color', '#ff0000');
+            checkDone();
+        });
+
+    fetch('thal.pgn')
+        .then(r => {
+            if (!r.ok) throw new Error(`thal.pgn não encontrado (404)`);
+            return r.text();
+        })
+        .then(text => {
+            populateSelect(text, $thalSelect, 'Tal');
+            checkDone();
+        })
+        .catch(err => {
+            $thalSelect.empty().append('<option value="">Erro: ' + err.message + '</option>');
+            $status.html('Erro ao carregar thal.pgn').css('color', '#ff0000');
+            checkDone();
+        });
+});
+
+function populateSelect(pgnText, $select, playerName) {
+    $select.empty().append('<option value="">Selecione uma partida de ' + playerName + '...</option>');
+
+    const games = pgnText.split(/\n\s*\n(?=\[Event)/).filter(g => g.trim().startsWith('[Event'));
+
+    if (games.length === 0) {
+        $select.append('<option value="">Nenhuma partida encontrada</option>');
+        return;
+    }
+
+    games.forEach((pgn, i) => {
+        const white = pgn.match(/\[White "([^"]+)"\]/)?.[1] || 'Brancas';
+        const black = pgn.match(/\[Black "([^"]+)"\]/)?.[1] || 'Pretas';
+        const date = pgn.match(/\[Date "([^"]+)"\]/)?.[1]?.split('.')[0] || '';
+        const name = `${white} vs ${black}${date ? ' (' + date + ')' : ''}`;
+
+        $select.append(`<option value="${pgn.replace(/"/g, '&quot;')}">${name}</option>`);
+    });
+}
+
+$('#select-nez-game, #select-thal-game').on('change', function () {
+    const pgn = $(this).val();
+    if (pgn) {
+        $('#pgn-input').val(pgn);
+        $('#btn-load-pgn').click();
+    }
+});
+
+// ===================================
+// VOICE SYNTHESIS
+// ===================================
+
+let availableVoices = [];
+let selectedVoiceIndex = null;
+
+function populateVoiceList() {
+    if (!('speechSynthesis' in window)) {
+        $('#voice-select').html('<option value="">Speech não suportado</option>');
+        return;
+    }
+
+    const synth = window.speechSynthesis;
+    availableVoices = synth.getVoices().filter(v => v.lang.includes('pt') || v.lang.includes('en'));
+
+    const $select = $('#voice-select');
+    $select.empty();
+
+    if (availableVoices.length === 0) {
+        $select.append('<option value="">Nenhuma voz encontrada</option>');
+        return;
+    }
+
+    $select.append('<option value="">Voz padrão do navegador</option>');
+
+    availableVoices.forEach((voice, index) => {
+        const isDefault = voice.default ? ' (Padrão)' : '';
+        $select.append(`<option value="${index}">${voice.name} (${voice.lang})${isDefault}</option>`);
+    });
+
+    const preferredIndex = availableVoices.findIndex(v => v.lang === 'pt-BR' && (v.name.includes('Luciana') || v.name.includes('Google')));
+    if (preferredIndex !== -1) {
+        $select.val(preferredIndex);
+        selectedVoiceIndex = preferredIndex;
+    }
+}
+
+$('#voice-select').on('change', function () {
+    selectedVoiceIndex = $(this).val() === "" ? null : parseInt($(this).val());
+});
+
+function speakSquare(squareText) {
+    try {
+        if (!soundsOn) return;
+
+        if ('speechSynthesis' in window) {
+            const synth = window.speechSynthesis;
+            const utterance = new SpeechSynthesisUtterance(squareText);
+            utterance.lang = 'pt-BR';
+            utterance.rate = 1.0;
+            utterance.pitch = 1.0;
+
+            if (selectedVoiceIndex !== null && availableVoices[selectedVoiceIndex]) {
+                utterance.voice = availableVoices[selectedVoiceIndex];
+            }
+
+            speechSynthesis.speak(utterance);
+        }
+    } catch (e) {
+        console.error('Erro ao falar casa:', e);
+    }
+}
+
+if ('speechSynthesis' in window) {
+    const synth = window.speechSynthesis;
+    if (synth.getVoices().length > 0) {
+        populateVoiceList();
+    } else {
+        synth.onvoiceschanged = populateVoiceList;
+    }
+}
+
+// ===================================
+// GAME BUTTONS
+// ===================================
+
+$(".btn-play-pause").click(function () {
+    if ($(this).hasClass("paused")) {
+        resetTimer(timeLimit);
+        playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/game-end.mp3");
+    } else {
+        startTimer();
+        playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/game-start.mp3");
+        $("#square-random").text(randomSquare());
+    }
+    $(this).toggleClass("paused");
+});
+
+$(".chess-square").click(function () {
+    var rndm = $("#square-random").text();
+    var click = $(this).attr('id');
+    $("#square-clicked").text(click);
+    if (soundsOn) {
+        if (rndm === "-") {
+            $("#img-answer-right").addClass("hidden");
+            $("#img-answer-wrong").addClass("hidden");
+        } else if (click === rndm) {
+            hits++;
+            $("#square-score").text(hits);
+            playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
+            $("#square-random").text(randomSquare());
+            $("#img-answer-right").removeClass("hidden");
+            $("#img-answer-wrong").addClass("hidden");
+        } else {
+            resetTimer(0);
+            playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/illegal.mp3");
+            $("#img-answer-right").addClass("hidden");
+            $("#img-answer-wrong").removeClass("hidden");
+        }
+    }
+});
+
+// ===================================
+// SETTINGS BUTTONS
+// ===================================
+
+$("#btn-timer").click(function () {
+    var time = prompt("Alterar limite de tempo (em segundos):", "30");
+    if (isInt(time)) {
+        timeLimit = parseInt(time);
+        resetTimer(timeLimit);
+    }
+});
+
+$("#btn-squarenames").click(function () {
+    $(".notation").toggleClass('hidden');
+    squarenames = !squarenames;
+    $(this).text(squarenames ? "Esconder nome das casas" : "Mostrar nome das casas");
+});
+
+$("#btn-pieces").click(function () {
+    pieces = !pieces;
+    if (pieces) {
+        updateBoardDisplay();
+        $(this).text("Esconder peças");
+    } else {
+        $(".chess-square").css('background-size', '0,0');
+        $(this).text("Mostrar peças");
+    }
+});
+
+$("#btn-reverse").click(function () {
+    reverse = !reverse;
+    if (reverse) {
+        $(".chess-board").css('flex-direction', 'column');
+        $(".chess-row").css('flex-direction', 'row');
+        $(this).text("Pretas embaixo");
+    } else {
+        $(".chess-board").css('flex-direction', 'column-reverse');
+        $(".chess-row").css('flex-direction', 'row-reverse');
+        $(this).text("Brancas embaixo");
+    }
+});
+
+// ===================================
+// ANALYSIS BUTTONS
+// ===================================
+
+$('#btn-analyze').off('click').on('click', function() {
+    if (!stockfishReady) {
+        alert('Engine ainda não está pronto. Aguarde.');
+        return;
+    }
+
+    if (isAnalyzing) {
+        stopAnalysis();
+    } else {
+        analyzePosition();
+    }
+});
+
+$('#btn-visual-analysis').off('click').on('click', function () {
+    if (!stockfishReady) {
+        alert('Engine ainda não está pronto. Aguarde.');
+        return;
+    }
+
+    const isActive = $(this).text().includes('Desativar');
+
+    if (isActive) {
+        $(this).text('🌳 Análise Visual (Multi-PV)');
+        stopAnalysis();
+
+        const svg = document.getElementById('analysis-tree-layer');
+        if (svg) {
+            svg.innerHTML = '';
+            svg.style.display = 'none';
+        }
+        pvData = [];
+        $('#multi-pv-list').empty();
+    } else {
+        $(this).text('Desativar Análise Visual');
+        analyzePosition();
+    }
+});
+
+$('#btn-pgn-prev, #btn-pgn-next, #btn-pgn-start, #btn-pgn-end').click(function() {
+    const svg = document.getElementById('analysis-tree-layer');
+    if (svg) {
+        svg.innerHTML = '';
+        svg.style.display = 'none';
+    }
+    pvData = [];
+});
+
+// ===================================
+// UTILITY FUNCTIONS
+// ===================================
 
 function randomSquare() {
     var randomNumber = Math.floor(Math.random() * 64);
@@ -720,9 +1133,9 @@ function randomSquare() {
 function playSound(name) {
     try {
         var audio = new Audio(name);
-        audio.play().catch(e => console.log('🔇 Som desabilitado:', e));
+        audio.play().catch(e => console.log('Som desabilitado:', e));
     } catch (e) {
-        console.log('🔇 Erro ao tocar som');
+        console.log('Erro ao tocar som');
     }
 }
 
@@ -732,27 +1145,20 @@ function isInt(value) {
         !isNaN(parseInt(value, 10));
 }
 
-// ===============
-// Timer Functions:
-// ===============
+// ===================================
+// TIMER FUNCTIONS
+// ===================================
 
 const FULL_DASH_ARRAY = 283;
 const WARNING_THRESHOLD = 10;
 const ALERT_THRESHOLD = 5;
 
 const COLOR_CODES = {
-    info: {
-        color: "green"
-    },
-    warning: {
-        color: "orange",
-        threshold: WARNING_THRESHOLD
-    },
-    alert: {
-        color: "red",
-        threshold: ALERT_THRESHOLD
-    }
+    info: { color: "green" },
+    warning: { color: "orange", threshold: WARNING_THRESHOLD },
+    alert: { color: "red", threshold: ALERT_THRESHOLD }
 };
+
 var remainingPathColor = COLOR_CODES.info.color;
 
 $("#timer").html(`
@@ -773,9 +1179,7 @@ $("#timer").html(`
       ></path>
     </g>
   </svg>
-  <span id="base-timer-label" class="base-timer__label">${formatTime(
-    timeLeft
-)}</span>
+  <span id="base-timer-label" class="base-timer__label">${formatTime(timeLeft)}</span>
 </div>
 `);
 
@@ -812,11 +1216,7 @@ function formatTime(time) {
 }
 
 function setRemainingPathColor(timeLeft) {
-    const {
-        alert,
-        warning,
-        info
-    } = COLOR_CODES;
+    const { alert, warning, info } = COLOR_CODES;
     if (timeLeft <= alert.threshold) {
         $("#base-timer-path-remaining").removeClass(COLOR_CODES.info.color);
         $("#base-timer-path-remaining").removeClass(COLOR_CODES.warning.color);
@@ -858,396 +1258,20 @@ function resetTimer(timeReset) {
     setRemainingPathColor(timeLeft);
 }
 
-function speakSquare(squareText) {
-    try {
-        if (!soundsOn) return;
+// ===================================
+// INITIALIZATION
+// ===================================
 
-        if ('speechSynthesis' in window) {
-            const synth = window.speechSynthesis;
-            const utterance = new SpeechSynthesisUtterance(squareText);
-            utterance.lang = (language === pt) ? 'pt-BR' : 'en-US';
-            utterance.rate = 1.0;
-            utterance.pitch = 1.0;
-
-            // === AQUI: ESCOLHA SUA VOZ FAVORITA ===
-            // Substitua 'pt-BR' pela lang da voz que você quer (ex: 'pt-BR')
-            const preferredVoice = synth.getVoices().find(voice =>
-                voice.lang === 'pt-BR' && voice.name.includes('Luciana')  // Ou 'Google', 'Francisca', etc.
-            );
-            if (preferredVoice) {
-                utterance.voice = preferredVoice;
-                console.log('🗣️ Usando voz:', preferredVoice.name);
-            }
-
-            speechSynthesis.speak(utterance);
-        } else {
-            console.warn('🔇 speechSynthesis não suportado neste navegador.');
-        }
-    } catch (e) {
-        console.error('Erro ao falar casa:', e);
-    }
-}
-
-
-// Language Selection:
-var pt = {
-    "title": "Treino de Notações de Xadrez",
-    "description1": "A Notação Algébrica é o método padrão de registrar e descrever os movimentos de um jogo de xadrez.",
-    "btnwiki": "Artigo na Wikipedia",
-    "wikilink": "https://pt.wikipedia.org/wiki/Nota%C3%A7%C3%A3o_alg%C3%A9brica_de_xadrez",
-    "subtitle": "Nomeando as Casas",
-    "description2": "<p>Cada casa do tabuleiro de xadrez é identificada por um par de coordenadas único. Pelo ponto de vista das peças brancas:</p><ul><li>Linhas são nomeadas <em>1</em> até <em>8</em> de baixo para cima.</li><li>Colunas são nomeadas <em>a</em> até <em>h</em> da esquerda para a direita.</li></ul><p>Encontre corretamente o máximo número de casas antes que o tempo acabe e <b>se torne um jogador profissional de xadrez</b>.</p>",
-    "next": "Próximo:",
-    "clicked": "Clicado:",
-    "score": "Pontuação:",
-    "settings": "Configurações:",
-    "btnsquarenameson": "Esconder nome das casas",
-    "btnsquarenamesoff": "Mostrar nome das casas",
-    "btnreverseon": "Pretas embaixo",
-    "btnreverseoff": "Brancas embaixo",
-    "btnsoundson": "Desligar sons",
-    "btnsoundsoff": "Ligar sons",
-    "btntimer": "Alterar tempo",
-    "btnpieceson": "Esconder peças",
-    "btnpiecesoff": "Mostrar peças",
-    "prompttimer": "Alterar limite de tempo (em segundos):",
-    "footer1": "Espero que curta! Compartilhe com seus parceiros.",
-    "footer2": "Criado por <a href=\"https://github.com/JoseRFJuniorLLMs/SuperNez/\" target=\"blank\">Jose R F Junior</a> ♟, 2025."
-};
-
-var en = {
-    "title": "Chess Notation Training",
-    "description1": "The Algebraic Notation is the standard method for recording and describing moves in a game of chess.",
-    "btnwiki": "Wikipedia Article",
-    "wikilink": "https://en.wikipedia.org/wiki/Algebraic_notation_(chess)",
-    "subtitle": "Naming the Squares",
-    "description2": "<p>Each chessboard square is identified by a unique coordinate pair, from the White's point of view:</p><ul><li> Rows are named <em>1</em> to <em>8</em> from bottom to top.</li><li>Columns are named <em>a</em> to <em>h</em> from left to right.</li></ul><p>Find correctly the max number of squares before the time runs out and <b>become a pro</b> chess player.</p>",
-    "next": "Next:",
-    "clicked": "Clicked:",
-    "score": "Score:",
-    "settings": "Settings:",
-    "btnsquarenameson": "Hide square names",
-    "btnsquarenamesoff": "Show square names",
-    "btnreverseon": "Black on bottom",
-    "btnreverseoff": "White on bottom",
-    "btnsoundson": "Disable sounds",
-    "btnsoundsoff": "Enable sounds",
-    "btntimer": "Set time limit",
-    "btnpieceson": "Hide pieces",
-    "btnpiecesoff": "Show pieces",
-    "prompttimer": "Set the time limit (in seconds):",
-    "footer1": "Hope you enjoy! Share with your fellows.",
-    "footer2": "Created by <a href=\"https://github.com/JoseRFJuniorLLMs/SuperNez\" target=\"blank\">Jose R F Junior</a> ♟, 2025."
-}
-
-var language = pt;
-
-function setLanguage(lang) {
-    switch (lang) {
-        case 'en':
-            language = en;
-            break;
-        case 'pt':
-            language = pt;
-            break;
-    }
-}
-
-
-
-// ================================================
-// SUBSTITUA A FUNÇÃO ANTIGA PELA FUNÇÃO ABAIXO
-// ================================================
-
-// === BOTÃO PARA CARREGAR PARTIDAS PRÉ-CARREGADAS ===
-$('#btn-load-preloaded').on('click', function () {
-    const $btn = $(this);
-    const $status = $('#preloaded-status');
-    const $selectsContainer = $('#preloaded-selects');
-    const $nezSelect = $('#select-nez-game');
-    const $thalSelect = $('#select-thal-game');
-
-    // Evita clique duplo
-    if ($btn.prop('disabled')) return;
-
-    // Estado inicial
-    $btn.prop('disabled', true).text('Carregando...');
-    $status.html('Carregando nez.pgn e thal.pgn...').css('color', '#ffaa00');
-    $selectsContainer.hide();
-
-    // Limpa selects
-    $nezSelect.empty().append('<option value="">Carregando Nezhmetdinov...</option>');
-    $thalSelect.empty().append('<option value="">Carregando Tal...</option>');
-
-    let loaded = 0;
-    const total = 2;
-
-    function checkDone() {
-        loaded++;
-        if (loaded === total) {
-            $btn.prop('disabled', false).text('Recarregar Partidas');
-            $selectsContainer.show();
-            $status.html('Partidas carregadas com sucesso!').css('color', '#00ff00');
-        }
-    }
-
-    // === CARREGA NEZHMETDINOV ===
-    fetch('nez.pgn')
-        .then(r => {
-            if (!r.ok) throw new Error(`nez.pgn não encontrado (404)`);
-            return r.text();
-        })
-        .then(text => {
-            populateSelect(text, $nezSelect, 'Nezhmetdinov');
-            checkDone();
-        })
-        .catch(err => {
-            $nezSelect.empty().append('<option value="">Erro: ' + err.message + '</option>');
-            $status.html('Erro ao carregar nez.pgn').css('color', '#ff0000');
-            checkDone();
-        });
-
-    // === CARREGA TAL ===
-    fetch('thal.pgn')
-        .then(r => {
-            if (!r.ok) throw new Error(`thal.pgn não encontrado (404)`);
-            return r.text();
-        })
-        .then(text => {
-            populateSelect(text, $thalSelect, 'Tal');
-            checkDone();
-        })
-        .catch(err => {
-            $thalSelect.empty().append('<option value="">Erro: ' + err.message + '</option>');
-            $status.html('Erro ao carregar thal.pgn').css('color', '#ff0000');
-            checkDone();
-        });
-});
-
-// === FUNÇÃO PARA POPULAR UM SELECT COM PGNs ===
-function populateSelect(pgnText, $select, playerName) {
-    $select.empty().append('<option value="">Selecione uma partida de ' + playerName + '...</option>');
-
-    const games = pgnText.split(/\n\s*\n(?=\[Event)/).filter(g => g.trim().startsWith('[Event'));
-
-    if (games.length === 0) {
-        $select.append('<option value="">Nenhuma partida encontrada</option>');
-        return;
-    }
-
-    games.forEach((pgn, i) => {
-        const white = pgn.match(/\[White "([^"]+)"\]/)?.[1] || 'Brancas';
-        const black = pgn.match(/\[Black "([^"]+)"\]/)?.[1] || 'Pretas';
-        const date = pgn.match(/\[Date "([^"]+)"\]/)?.[1]?.split('.')[0] || '';
-        const name = `${white} vs ${black}${date ? ' (' + date + ')' : ''}`;
-
-        $select.append(`<option value="${pgn.replace(/"/g, '&quot;')}">${name}</option>`);
-    });
-}
-
-// === LISTAR E ESCOLHER VOZES PARA SPEECH SYNTHESIS ===
-function listVoices() {
-    if ('speechSynthesis' in window) {
-        const synth = window.speechSynthesis;
-
-        // Evento pra quando as vozes carregarem (é assíncrono)
-        synth.onvoiceschanged = function () {
-            const voices = synth.getVoices();
-            console.log('🎤 VOZES DISPONÍVEIS NO SEU BROWSER:');
-            console.log('=====================================');
-
-            voices.forEach((voice, index) => {
-                const isDefault = voice.default ? ' (PADRÃO)' : '';
-                const isLocal = voice.localService ? ' (INSTALADA LOCAL)' : ' (REMOTA)';
-                console.log(`${index}: ${voice.name} (${voice.lang}) ${isDefault} ${isLocal}`);
-            });
-            console.log('=====================================');
-
-            // Dica: Escolha uma voz PT-BR mais natural
-            const ptVoices = voices.filter(v => v.lang.startsWith('pt')).map(v => v.name);
-            console.log('🔥 VOZES EM PORTUGUÊS:', ptVoices.join(', '));
-        };
-
-        // Carrega as vozes na hora
-        synth.getVoices();
-    } else {
-        console.log('❌ Seu browser não suporta speechSynthesis (use Chrome/Firefox)');
-    }
-}
-
-// Chama a função quando a página carregar
-listVoices();
-
-// === EVENTO: QUANDO ESCOLHE UMA PARTIDA ===
-$('#select-nez-game, #select-thal-game').on('change', function () {
-    const pgn = $(this).val();
-    if (pgn) {
-        $('#pgn-input').val(pgn);
-        $('#btn-load-pgn').click();
-    }
-});
-
-// === COMBO DE VOZES ===
-let availableVoices = [];
-let selectedVoiceIndex = null;
-
-function populateVoiceList() {
-    if (!('speechSynthesis' in window)) {
-        $('#voice-select').html('<option value="">Speech não suportado</option>');
-        return;
-    }
-
-    const synth = window.speechSynthesis;
-    availableVoices = synth.getVoices().filter(v => v.lang.includes('pt') || v.lang.includes('en')); // Só PT/EN pra simplificar
-
-    const $select = $('#voice-select');
-    $select.empty();
-
-    if (availableVoices.length === 0) {
-        $select.append('<option value="">Nenhuma voz encontrada</option>');
-        return;
-    }
-
-    // Opção padrão
-    $select.append('<option value="">Voz padrão do navegador</option>');
-
-    // Adiciona vozes
-    availableVoices.forEach((voice, index) => {
-        const isDefault = voice.default ? ' (Padrão)' : '';
-        $select.append(`<option value="${index}">${voice.name} (${voice.lang})${isDefault}</option>`);
-    });
-
-    // Seleciona uma PT-BR boa automaticamente
-    const preferredIndex = availableVoices.findIndex(v => v.lang === 'pt-BR' && (v.name.includes('Luciana') || v.name.includes('Google')));
-    if (preferredIndex !== -1) {
-        $select.val(preferredIndex);
-        selectedVoiceIndex = preferredIndex;
-    }
-}
-
-// Carrega vozes quando prontas (pode demorar 1-2s no Chrome)
-if ('speechSynthesis' in window) {
-    const synth = window.speechSynthesis;
-    if (synth.getVoices().length > 0) {
-        populateVoiceList();
-    } else {
-        synth.onvoiceschanged = populateVoiceList;
-    }
-}
-
-// Evento: Muda a voz escolhida
-$('#voice-select').on('change', function () {
-    selectedVoiceIndex = $(this).val() === "" ? null : parseInt($(this).val());
-    console.log('🗣️ Voz selecionada:', selectedVoiceIndex !== null ? availableVoices[selectedVoiceIndex].name : 'Padrão');
-});
-
-// ================================================
-// NÃO MEXA NAS LINHAS ABAIXO
-// ================================================
-
-function updateOpeningName() {
-    // Seleciona os elementos HTML
-    const $openingNameEl = $('#opening-name');
-    const $historyBoxEl = $('#opening-history-box');
-    const $historyTextEl = $('#opening-history-text');
-
-    // 1. GARANTE QUE O LIVRO PRINCIPAL FOI CARREGADO
-    if (!OPENING_BOOK) {
-        $openingNameEl.text("");
-        $historyBoxEl.hide(); 
-        return;
-    }
-
-    var historySlice = moveHistory.slice(0, currentMoveIndex + 1);
-    var openingMatch = null; 
-
-    // 2. PROCURA NO LIVRO PRINCIPAL (JSON)
-    for (var i = historySlice.length; i > 0; i--) {
-        var moveKey = historySlice.slice(0, i).join(' ');
-        if (OPENING_BOOK[moveKey]) {
-            openingMatch = OPENING_BOOK[moveKey];
-            break;
-        }
-    }
-
-    // 3. SE ENCONTROU UMA ABERTURA...
-    if (openingMatch && openingMatch.name) {
-        const englishName = openingMatch.name;
-        const eco = openingMatch.eco; // <-- Pega o ECO aqui
-        let infoIcon = ""; 
-        let historia = ""; 
-        let nomePt = ""; 
-
-        // 4. VERIFICA SE TEMOS TRADUÇÃO/HISTÓRIA (no openings_pt.js)
-        if (typeof OPENING_DETAILS_PT !== 'undefined' && OPENING_DETAILS_PT[englishName]) {
-            
-            const details = OPENING_DETAILS_PT[englishName];
-            nomePt = details.nome; // <-- Pega o nome em Português
-            historia = details.historia;
-
-            // Adiciona o ícone de info e atualiza o texto da caixa
-            infoIcon = ' <span id="opening-info-icon" title="Clique para saber mais">i</span>';
-            $historyTextEl.text(historia); 
-            $historyBoxEl.find('h5').text("Sobre: " + nomePt); 
-        
-        } else {
-            // Se não temos tradução, usa o nome em inglês mesmo
-            nomePt = englishName;
-            $historyBoxEl.hide();
-        }
-
-        // 5. EXIBE O NOME (PT ou EN) + ECO + ÍCONE (se houver)
-        // Esta é a linha que mostra TUDO junto
-        $openingNameEl.html(`${nomePt} <span class="eco-code">(${eco})</span>${infoIcon}`);
-
-    } else {
-        // Se não encontrou nenhuma abertura
-        currentOpeningName = "";
-        $openingNameEl.text(""); 
-        $historyBoxEl.hide(); 
-    }
-}
-
-// ================================================
-// RODA QUANDO A PÁGINA ESTÁ PRONTA
-// ================================================
-
-// === CARREGA O LIVRO DE ABERTURAS JSON ===
-function loadOpeningBook() {
-    // Usa a função getJSON do jQuery para carregar o arquivo
-    $.getJSON("openings.json")
-        .done(function(data) {
-            // Se der certo, armazena os dados na variável global
-            OPENING_BOOK = data; 
-            console.log("✅ Livro de aberturas (openings.json) carregado com sucesso!");
-            // Checa a abertura da posição inicial (agora que o livro carregou)
-            updateOpeningName(); 
-        })
-        .fail(function(jqxhr, textStatus, error) {
-            // Se der erro
-            console.error("❌ Erro ao carregar openings.json: " + textStatus + ", " + error);
-            console.log("Verifique se o arquivo openings.json está na mesma pasta do index.html.");
-        });
-}
-
-// Quando o documento (página) estiver pronto...
 $(document).ready(function() {
-
-    // 1. Carrega o livro de aberturas
     loadOpeningBook();
-
-    // 2. Inicializa o Stockfish
-    // (Não precisamos mais do delay de 1000ms, o document.ready já cuida disso)
-    console.log('🚀 Iniciando carregamento do Stockfish...');
     initStockfish();
-    // LISTENER PARA CLIQUE NO SCORE SHEET
+
     $('#pgn-move-list').on('click', '.move-san', function() {
-        const moveIndex = $(this).data('move-index'); // Pega o índice (ex: 5)
-        
+        const moveIndex = $(this).data('move-index');
+
         if (moveIndex !== undefined && moveIndex !== -1) {
-            goToMove(parseInt(moveIndex, 10)); // Pula para o lance
-            
-            // Tenta atualizar o display de lance clicado
+            goToMove(parseInt(moveIndex, 10));
+
             try {
                 const moveObj = loadedPgnGame.history({ verbose: true })[moveIndex];
                 if (moveObj) {
@@ -1257,394 +1281,10 @@ $(document).ready(function() {
         }
     });
 
-    // Listener para a caixa de história (se você tiver)
     $('#opening-name').on('click', '#opening-info-icon', function(e) {
-            e.stopPropagation(); 
-            $('#opening-history-box').slideToggle(200); 
+        e.stopPropagation();
+        $('#opening-history-box').slideToggle(200);
     });
 });
 
-/**
- * Preenche o Score Sheet (#pgn-move-list) com os lances formatados.
- * VERSÃO FINAL E CORRETA: Usa o índice do array para calcular o número do lance.
- * @param {Array} history - O histórico verbose do chess.js
- */
-function populateMoveList(history) {
-    // 1. Limpa e exibe o container principal da folha de anotações
-    const $moveList = $('#pgn-move-list').empty().show(); 
-    let $currentRow = null;
-
-    history.forEach((move, index) => {
-        const san = move.san; 
-        
-        // CORREÇÃO FINAL: Calcula o número do lance (1, 2, 3...) com base no índice.
-        // O número completo do lance é o Math.floor(index / 2) + 1.
-        const calculatedMoveNumber = Math.floor(index / 2) + 1;
-
-        // Se for lance das Brancas ('w'), cria uma nova linha
-        if (move.color === 'w') {
-            if ($currentRow) $moveList.append($currentRow); 
-            
-            // Cria a nova linha (div)
-            $currentRow = $('<div class="move-row" style="display:grid; grid-template-columns: 1fr 1fr;"></div>');
-            
-            // Coluna Brancas: Contém o número do lance e a notação (ex: "1. d4")
-            $currentRow.append(`<span class="move-san" data-move-index="${index}" style="text-align:left; padding-left:5px;">${calculatedMoveNumber}. ${san}</span>`);
-        
-        } else { // Se for lance das Pretas ('b')
-            // Caso raro onde o PGN começa com lances das Pretas
-            if (!$currentRow) {
-                 $currentRow = $('<div class="move-row" style="display:grid; grid-template-columns: 1fr 1fr;"></div>');
-                 // Insere o número do lance e um placeholder "..."
-                 $currentRow.append(`<span class="move-san" data-move-index="-1" style="text-align:left; padding-left:5px;">${calculatedMoveNumber}. ...</span>`);
-            }
-            
-            // Coluna Pretas: Insere a notação do lance.
-            $currentRow.append(`<span class="move-san" data-move-index="${index}" style="text-align:left;">${san}</span>`);
-            
-            // A linha está completa (Brancas + Pretas), anexa ao placar e reseta $currentRow
-            $moveList.append($currentRow);
-            $currentRow = null;
-        }
-    });
-
-    // Se a última jogada foi das Brancas, a linha ainda está aberta. Anexa ela.
-    if ($currentRow) {
-        $moveList.append($currentRow);
-    }
-}
-
-
-/**
- * Destaca o lance atual no Score Sheet
- * @param {number} index - O índice do lance (currentMoveIndex)
- */
-function updateMoveListHighlight(index) {
-    // 1. Remove o destaque de todos os lances
-    $('.move-san').removeClass('active-move');
-    
-    // 2. Adiciona o destaque no lance atual
-    const $activeMove = $(`.move-san[data-move-index="${index}"]`);
-    if ($activeMove.length > 0) {
-        $activeMove.addClass('active-move');
-
-        // 3. Auto-scroll para manter o lance visível
-        const $container = $('#pgn-move-list');
-        const $move = $activeMove;
-        
-        const containerTop = $container.scrollTop();
-        const containerBottom = containerTop + $container.height();
-        const moveTop = $move.position().top + containerTop;
-        const moveBottom = moveTop + $move.outerHeight();
-
-        if (moveTop < containerTop) { // Se o lance está acima da área visível
-            $container.scrollTop(moveTop);
-        } else if (moveBottom > containerBottom) { // Se o lance está abaixo
-            $container.scrollTop(moveBottom - $container.height() + $move.outerHeight());
-        }
-    }
-}
-
-/**
- * Pula o tabuleiro para um lance específico (clicado no Score Sheet)
- * @param {number} index - O índice do lance (currentMoveIndex)
- */
-function goToMove(index) {
-    if (index < -1 || index >= moveHistory.length) return; // Índice inválido
-    
-    // Reseta o jogo
-    loadedPgnGame.reset();
-    
-    // Avança lance por lance até o índice desejado
-    for (let i = 0; i <= index; i++) {
-        loadedPgnGame.move(moveHistory[i]);
-    }
-    
-    // Atualiza o estado global
-    currentMoveIndex = index;
-    
-    // Atualiza a UI
-    updateBoardDisplay();
-    updateMoveInfo(); // Isso já chama updateOpeningName()
-    updateMoveListHighlight(currentMoveIndex);
-    
-    // Limpa setas e analisa
-    clearArrow();
-    if (stockfishReady) {
-        setTimeout(analyzePosition, 300);
-    }
-}
-
-// === BOTÃO: Colar PGN → Prompt → Carregar automático ===
-$('#btn-paste-pgn').on('click', function(e) {
-    e.preventDefault();
-    
-    const pgn = prompt("Cole o PGN completo da partida aqui:", "");
-    
-    if (pgn && pgn.trim().length > 10) { // Validação mínima
-        $('#pgn-input').val(pgn.trim());
-        $('#btn-load-pgn').click(); // Dispara o carregamento
-    } else if (pgn) {
-        alert("PGN muito curto ou inválido. Tente novamente.");
-    }
-});
-
-// === QUANDO CARREGAR O PGN → MOSTRAR A FOLHA DE PAPEL (Versão Correta) ===
-$('#btn-load-pgn').on('click', function() {
-    const pgnText = $('#pgn-input').val().trim();
-    
-    if (!pgnText) return;
-
-    try {
-        loadedPgnGame = new Chess();
-        if (loadedPgnGame.load_pgn(pgnText, { sloppy: true })) {
-            moveHistory = loadedPgnGame.history();
-            const header = loadedPgnGame.header();
-
-            // === PREENCHE A FOLHA DE PAPEL ===
-            populateMoveList(loadedPgnGame.history({ verbose: true }));
-            $('#pgn-score-sheet').show(); // <--- ISTO AQUI MOSTRA A FOLHA!
-            $('#pgn-move-list').scrollTop(0);
-
-            // === Atualiza tudo ===
-            loadedPgnGame.reset();
-            currentMoveIndex = -1;
-            updateBoardDisplay();
-            updateOpeningName();
-            updateMoveListHighlight(-1);
-            $('.pgn-navigation').show();
-            $('#player-white-name').text(`⚪ ${header['White'] || 'Jogador (Brancas)'}`).show();
-            $('#player-black-name').text(`⚫ ${header['Black'] || 'Jogador (Pretas)'}`).show();
-            
-            // Atualiza status (copiado da função antiga)
-            const statusHtml = `
-                <strong>${header['Event'] || 'Partida Casual'}</strong><br>
-                <small>${(header['Site'] || 'Local Desconhecido').split(',')[0]}, ${(header['Date'] || 'Ano Desconhecido').split('.')[0]}</small>
-                <hr style="border-color:#4a4946; border-top:0; margin: 8px 0;">
-                ⚪ <strong>${header['White'] || 'Jogador (Brancas)'}</strong><br>
-                ⚫ <strong>${header['Black'] || 'Jogador (Pretas)'}</strong><br>
-                Resultado: <strong>${header['Result'] || '*'}</strong>
-                <br>Total de Lances: <strong>${moveHistory.length}</strong>
-            `;
-            $('#pgn-status').html(statusHtml);
-
-            // === Mostra botão de edição ===
-            $('#btn-paste-pgn').text('✏️ Editar PGN').off('click').on('click', function(e) {
-                e.preventDefault();
-                const novo = prompt("Edite o PGN:", pgnText);
-                if (novo && novo !== pgnText) {
-                    $('#pgn-input').val(novo);
-                    $('#btn-load-pgn').click();
-                }
-            });
-
-            if (stockfishReady) setTimeout(analyzePosition, 500);
-
-        } else {
-            alert("PGN inválido. Verifique o formato.");
-        }
-    } catch (e) {
-        alert("Erro ao processar PGN: " + e.message);
-    }
-});
-
-// ================================================
-// STOCKFISH SEM CORS - FUNCIONA NO FIREBASE
-// SUBSTITUA initStockfish() e tryAlternativeStockfish()
-// ================================================
-
-function initStockfish() {
-    console.log('Iniciando Stockfish...');
-
-    try {
-        // Carrega Stockfish local (same-origin → sem CORS)
-        stockfish = new Worker('stockfish.js'); // ← ARQUIVO NA MESMA PASTA
-
-        stockfish.onmessage = function (event) {
-            const line = event.data;
-            console.log('Stockfish:', line);
-
-            if (line === 'uciok') {
-                stockfishReady = true;
-                $('#stockfish-status').html('Engine pronto!').css('color', '#00ff00');
-                $('#btn-analyze').prop('disabled', false);
-                $('#btn-visual-analysis').prop('disabled', false);
-
-                // ATIVA 3 LINHAS DE MULTIPV POR PADRÃO
-                stockfish.postMessage('setoption name MultiPV value 3');
-            }
-
-            if (line.startsWith('info') && line.includes('score')) {
-                parseStockfishInfo(line);
-            }
-
-            if (line.startsWith('bestmove')) {
-                displayBestMove(line.split(' ')[1]);
-            }
-        };
-
-        stockfish.onerror = function (error) {
-            console.error('Erro no Worker:', error);
-            showStockfishError();
-        };
-
-        // Inicializa UCI
-        stockfish.postMessage('uci');
-        stockfish.postMessage('setoption name Hash value 128');
-        stockfish.postMessage('setoption name Threads value 2');
-        stockfish.postMessage('ucinewgame');
-
-        $('#stockfish-status').html('Carregando engine...').css('color', '#ffaa00');
-
-    } catch (e) {
-        console.error('Falha ao criar Worker:', e);
-        showStockfishError();
-    }
-}
-
-$('#btn-visual-analysis').click(function () {
-    if (!stockfishReady) return;
-
-    const isActive = $(this).text().includes('Desativar');
-
-    if (isActive) {
-        $(this).text('Ativar Análise Visual (Multi-PV)');
-        stockfish.postMessage('setoption name MultiPV value 1');
-        pvData = [];
-        $('#multi-pv-list').empty();
-    } else {
-        $(this).text('Desativar Análise Visual');
-        stockfish.postMessage('setoption name MultiPV value 5');
-    }
-
-    analyzePosition(); // Reanalisa com novo MultiPV
-});
-
-
-// ================================================
-// MÉTODO ALTERNATIVO: STOCKFISH LOCAL
-// ================================================
-function tryLocalStockfish() {
-    console.log('🔄 Tentando carregar Stockfish.js local...');
-    
-    // Verifica se o arquivo stockfish.js está na mesma pasta
-    fetch('stockfish.js')
-        .then(response => {
-            if (response.ok) {
-                console.log('✅ Encontrado stockfish.js local!');
-                loadLocalStockfish();
-            } else {
-                console.warn('⚠️ stockfish.js não encontrado localmente');
-                tryLichessStockfish();
-            }
-        })
-        .catch(() => {
-            console.warn('⚠️ Erro ao verificar stockfish.js local');
-            tryLichessStockfish();
-        });
-}
-
-function loadLocalStockfish() {
-    try {
-        stockfish = new Worker('stockfish.js');
-        
-        stockfish.onmessage = function(event) {
-            const line = event.data;
-            
-            if (line === 'uciok' || line.startsWith('bestmove') || line.includes('multipv')) {
-                console.log('📥 Stockfish Local:', line);
-            }
-            
-            if (line === 'uciok') {
-                stockfishReady = true;
-                $('#stockfish-status').html('✅ <strong>Engine local pronto!</strong>').css('color', '#00ff00');
-                $('#btn-analyze').prop('disabled', false);
-            }
-            
-            if (line.startsWith('info') && line.includes('score')) {
-                parseStockfishInfo(line);
-            }
-            
-            if (line.startsWith('bestmove')) {
-                displayBestMove(line.split(' ')[1]);
-            }
-        };
-        
-        stockfish.postMessage('uci');
-        
-    } catch (e) {
-        console.error('❌ Erro ao carregar local:', e);
-        tryLichessStockfish();
-    }
-}
-
-// ================================================
-// ÚLTIMO RECURSO: LICHESS API
-// ================================================
-function tryLichessStockfish() {
-    console.log('🔄 Tentando API Lichess Stockfish...');
-    
-    try {
-        const lichessCode = `
-            const STOCKFISH_URL = 'https://lichess.org/assets/stockfish/stockfish.js';
-            
-            self.importScripts(STOCKFISH_URL);
-            
-            self.onmessage = function(e) {
-                self.postMessage(e.data);
-            };
-        `;
-        
-        const blob = new Blob([lichessCode], { type: 'application/javascript' });
-        stockfish = new Worker(URL.createObjectURL(blob));
-        
-        let timeout = setTimeout(() => {
-            console.error('❌ Timeout Lichess');
-            showStockfishError();
-        }, 10000);
-        
-        stockfish.onmessage = function(event) {
-            const line = event.data;
-            
-            if (line === 'uciok') {
-                clearTimeout(timeout);
-                stockfishReady = true;
-                $('#stockfish-status').html('✅ <strong>Engine pronto (Lichess)!</strong>').css('color', '#00ff00');
-                $('#btn-analyze').prop('disabled', false);
-                console.log('✅ Lichess Stockfish OK!');
-            }
-            
-            if (line.startsWith('info') && line.includes('score')) {
-                parseStockfishInfo(line);
-            }
-            
-            if (line.startsWith('bestmove')) {
-                displayBestMove(line.split(' ')[1]);
-            }
-        };
-        
-        stockfish.onerror = function(error) {
-            clearTimeout(timeout);
-            console.error('❌ Erro Lichess:', error);
-            showStockfishError();
-        };
-        
-        setTimeout(() => stockfish.postMessage('uci'), 1000);
-        
-    } catch (e) {
-        console.error('❌ Todos os métodos falharam:', e);
-        showStockfishError();
-    }
-}
-
-// ================================================
-// MOSTRAR ERRO FINAL
-// ================================================
-function showStockfishError() {
-    $('#stockfish-status').html(`
-        <strong>Engine falhou</strong><br>
-        <small>Coloque <code>stockfish.js</code> na pasta do projeto</small>
-    `).css('color', '#ff0000');
-    $('#btn-analyze, #btn-visual-analysis').prop('disabled', true);
-}
-
+console.log('✅ game.js carregado - VERSÃO ESTÁVEL!');
