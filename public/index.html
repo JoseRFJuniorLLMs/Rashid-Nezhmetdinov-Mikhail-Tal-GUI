@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="Treine xadrez e navegue por partidas PGN">
+    <meta name="keywords" content="chess, chessboard, pgn, notation">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Notation Training</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;500;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Scroll Bar */
+        html {
+            overflow-y: scroll;
+        }
+
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Main Styles */
+        body {
+            background-color: #3F3E3A;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main {
+            display: grid;
+            justify-items: center;
+            align-items: stretch;
+            grid-template-columns: 25% 50% 25%;
+            grid-template-rows: 50% 50%;
+            margin: 1% 0;
+        }
+
+        .sidebar-left {
+            grid-column: 1 / 2;
+            grid-row: 1 / 3;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            margin: 0 2% 2% 4%;
+        }
+
+        .chess-board {
+            grid-column: 2 / 3;
+            grid-row: 1 / 3;
+            margin: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .sidebar-right {
+            grid-column: 3 / 4;
+            grid-row: 1 / 2;
+            font-style: italic;
+            margin: 2%;
+        }
+
+        .setting-buttons {
+            grid-column: 3 / 4;
+            grid-row: 2 / 3;
+            align-self: end;
+            margin: 2% 10%;
+        }
+
+        /* PGN Loader Section */
+        .pgn-loader-section {
+            margin-top: 25px;
+            border-top: 2px dotted #B58863;
+            padding-top: 15px;
+        }
+
+        /* NOVO: Estilos para os combos de seleção de PGN */
+        .pgn-preloaded-section {
+            margin-bottom: 15px;
+        }
+
+        .pgn-preloaded-section label {
+            display: block;
+            margin: 10px 0 5px;
+            font-size: 0.9em;
+            color: #F0D9B5;
+        }
+
+        .pgn-preloaded-select {
+            width: 95%;
+            padding: 8px;
+            background-color: #2a2926;
+            color: white;
+            border: 1px solid #B58863;
+            border-radius: 5px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* FIM DOS NOVOS ESTILOS */
+
+        #pgn-input {
+            width: 90%;
+            background-color: #2a2926;
+            color: white;
+            border: 1px solid #B58863;
+            border-radius: 5px;
+            padding: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            resize: vertical;
+            min-height: 100px;
+            margin-bottom: 10px;
+        }
+
+        /* * ===============================================
+         * *** INÍCIO DA CORREÇÃO CSS ***
+         * ===============================================
+         */
+
+        /* Estilos para os Nomes dos Jogadores no Tabuleiro */
+        .player-name-display {
+            width: 100%;
+            padding: 8px 0;
+            font-size: 1.1em;
+            font-weight: 500;
+            color: #F0D9B5;
+            background-color: #2a2926;
+            /* Fundo escuro para emoldurar */
+            border: 1px solid #B58863;
+            border-radius: 4px;
+            box-sizing: border-box;
+            /* Importante para o padding */
+            margin: 5px 0;
+            min-height: 1.5em;
+            /* Garante altura mesmo vazio */
+            display: none;
+            /* Começa escondido */
+            text-align: center;
+        }
+
+        /* Estilos para o painel de status do PGN (melhorado) */
+        #pgn-status {
+            text-align: left;
+            font-size: 0.9em;
+            color: #ccc;
+            /* Cor mais suave */
+            line-height: 1.6;
+            background-color: #2a2926;
+            border: 1px solid #B58863;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        #pgn-status strong {
+            color: #F0D9B5;
+        }
+
+        /* * ===============================================
+         * *** FIM DA CORREÇÃO CSS ***
+         * ===============================================
+         */
+
+        .pgn-navigation {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #B58863;
+        }
+
+        #current-move {
+            margin: 10px 0;
+            font-size: 0.9em;
+            color: #F0D9B5;
+        }
+
+        .pgn-nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .pgn-nav-btn {
+            flex: 1;
+            padding: 8px 4px;
+            font-size: 11px;
+            background: linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
+            border: 1px solid #dcdcdc;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #777777;
+            font-weight: bold;
+        }
+
+        .pgn-nav-btn:hover {
+            background: linear-gradient(to bottom, #dfdfdf 5%, #ededed 100%);
+        }
+
+        /* Stockfish Panel */
+        .stockfish-panel {
+            display: block;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #2a2926;
+            border: 1px solid #B58863;
+            border-radius: 5px;
+        }
+
+        .stockfish-panel h4 {
+            margin: 0 0 10px 0;
+            color: #F0D9B5;
+            font-size: 1em;
+        }
+
+        #stockfish-status {
+            font-size: 0.85em;
+            color: #ff9800;
+            margin-bottom: 8px;
+        }
+
+        #stockfish-eval,
+        #stockfish-bestmove,
+        #stockfish-depth {
+            font-size: 0.9em;
+            color: #B58863;
+            margin: 5px 0;
+        }
+
+        #btn-analyze {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+            background: linear-gradient(to bottom, #4CAF50 5%, #45a049 100%);
+            color: white;
+            border: 1px solid #4CAF50;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #btn-analyze:hover {
+            background: linear-gradient(to bottom, #45a049 5%, #4CAF50 100%);
+        }
+
+        #btn-analyze:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Highlight squares for best move */
+        .highlight-from {
+            box-shadow: inset 0 0 0 3px #4CAF50 !important;
+        }
+
+        .highlight-to {
+            box-shadow: inset 0 0 0 3px #2196F3 !important;
+        }
+
+        /* Chessboard */
+        .chess-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: row;
+        }
+
+        .chess-square {
+            width: 5.5vw;
+            min-width: 50px;
+            height: 5.5vw;
+            min-height: 50px;
+            text-align: left;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notation {
+            color: #3F3E3A;
+            font-size: 10px;
+            margin: 3px;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+        }
+
+        .dark {
+            background-color: #B58863;
+        }
+
+        .light {
+            background-color: #F0D9B5;
+        }
+
+        .hidden {
+            visibility: hidden;
+        }
+
+        /* Arrow SVG Layer */
+        #move-arrow-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            display: none;
+        }
+
+        /* Timer */
+        .sidebar-timer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .base-timer {
+            display: inline-block;
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+        }
+
+        .base-timer__svg {
+            transform: scaleX(-1);
+        }
+
+        .base-timer__circle {
+            fill: none;
+            stroke: none;
+        }
+
+        .base-timer__path-elapsed {
+            stroke-width: 7px;
+            stroke: grey;
+        }
+
+        .base-timer__path-remaining {
+            stroke-width: 7px;
+            stroke-linecap: round;
+            transform: rotate(90deg);
+            transform-origin: center;
+            transition: 1s linear all;
+            fill-rule: nonzero;
+            stroke: currentColor;
+        }
+
+        .base-timer__path-remaining.green {
+            color: rgb(65, 184, 131);
+        }
+
+        .base-timer__path-remaining.orange {
+            color: orange;
+        }
+
+        .base-timer__path-remaining.red {
+            color: red;
+        }
+
+        .base-timer__label {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+        }
+
+        #square-clicked {
+            font-style: normal;
+            font-size: 8rem;
+            font-weight: bold;
+            color: #974122;
+        }
+
+        /* Play/Pause Button */
+        .btn-play-pause {
+            border: 0;
+            background: transparent;
+            box-sizing: border-box;
+            width: 0;
+            height: 45px;
+            margin: 10px;
+            border-color: transparent transparent transparent #F0D9B5;
+            transition: 100ms all ease;
+            cursor: pointer;
+            border-style: solid;
+            border-width: 27px 0 27px 45px;
+        }
+
+        .btn-play-pause.paused {
+            border-style: double;
+            border-width: 0px 0 0px 45px;
+        }
+
+        .btn-play-pause:hover {
+            border-color: transparent transparent transparent #B58863;
+        }
+
+        /* Game Info */
+        .sidebar-game h3 {
+            margin: 1em 0 0.1em;
+        }
+
+        .sidebar-game span {
+            justify-content: center;
+            margin: 0;
+        }
+
+        .img-answer {
+            width: 1em;
+        }
+
+        /* Buttons */
+        .myButton {
+            box-shadow: inset 0 1px 0 0 #ffffff;
+            background: linear-gradient(to bottom, #ededed 5%, #dfdfdf 100%);
+            background-color: #ededed;
+            border-radius: 6px;
+            border: 1px solid #dcdcdc;
+            display: inline-block;
+            cursor: pointer;
+            color: #777777;
+            font-family: Arial;
+            font-size: 15px;
+            font-weight: bold;
+            padding: 6px 24px;
+            text-decoration: none;
+            text-shadow: 0 1px 0 #ffffff;
+            margin: 2%;
+        }
+
+        .myButton:hover {
+            background: linear-gradient(to bottom, #dfdfdf 5%, #ededed 100%);
+            background-color: #dfdfdf;
+        }
+
+        .myButton:active {
+            position: relative;
+            top: 1px;
+        }
+
+        a {
+            color: white;
+        }
+
+        footer {
+            margin: 3px;
+        }
+
+        @media (max-width: 1200px) {
+            .main {
+                grid-template-columns: auto auto;
+                grid-template-rows: auto auto auto;
+            }
+
+            .sidebar-left {
+                grid-column: 1 / 3;
+                grid-row: 1 / 2;
+            }
+
+            .chess-board {
+                grid-column: 1 / 2;
+                grid-row: 2 / 3;
+            }
+
+            .sidebar-right {
+                grid-column: 2 / 3;
+                grid-row: 2 / 3;
+            }
+
+            .setting-buttons {
+                grid-column: 1 / 3;
+                grid-row: 3 / 4;
+            }
+        }
+
+        .eval-label {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #000;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 1px 3px;
+            border-radius: 3px;
+            z-index: 5;
+        }
+
+        /* =================================================
+         INÍCIO DO NOVO CSS (FOLHA DE PAPEL)
+        =================================================
+        */
+        .score-sheet {
+            display: none;
+            /* Começa escondido, aparece após carregar PGN */
+            background-color: #f7f7f7;
+            /* Fundo de "papel" */
+            color: #333;
+            /* Texto escuro */
+            font-family: 'Courier New', Courier, monospace;
+            /* Fonte monoespaçada */
+            font-size: 0.9em;
+            max-height: 250px;
+            /* Altura máxima com scroll */
+            overflow-y: auto;
+            /* Adiciona scroll se a lista for longa */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        .move-row {
+            display: flex;
+            flex-wrap: nowrap;
+            padding: 2px 4px;
+            border-bottom: 1px solid #eee;
+            /* Linha fina entre os lances */
+        }
+
+        .move-row:last-child {
+            border-bottom: none;
+        }
+
+        .move-number {
+            width: 30px;
+            /* Espaço para o número (ex: "10.") */
+            color: #777;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .move-san {
+            flex-basis: 70px;
+            /* Largura para o lance (ex: "Nf3") */
+            font-weight: bold;
+            color: #111;
+            padding: 1px 4px;
+            border-radius: 3px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .move-san:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Destaque para o lance ativo */
+        .move-san.active-move {
+            background-color: #007bff;
+            /* Azul (como na foto) */
+            color: #ffffff;
+        }
+
+        /* FIM DO NOVO CSS */
+    </style>
+
+</head>
+
+<body>
+    <div class="main">
+        <div class="sidebar-left">
+            <div class="pgn-loader-section">
+                <div id="pgn-input-area">
+
+
+                    <div style="margin-bottom:15px;">
+                        <a href="#" class="myButton" id="btn-paste-pgn">📋 Colar PGN da Partida</a>
+                    </div>
+
+                    <textarea id="pgn-input" style="display:none;"></textarea>
+
+
+                    <a href="#" id="btn-load-pgn" style="display:none;">Carregar PGN</a>
+
+                </div>
+
+                <p id="pgn-status">Nenhum PGN carregado.</p>
+
+                <div class="pgn-navigation">
+                    <p id="current-move">Folha de PGN</p>
+                </div>
+                
+                <div id="pgn-score-sheet" class="score-sheet" style="display:none; margin:15px 0;">
+                    <div
+                        style="padding:8px; background:#eee; border-bottom:1px solid #ccc; font-weight:bold; color:#333; display:flex;">
+                        <span style="flex:1; text-align:left; padding-left: 30px;">Brancas</span>
+                        <span style="flex:1; text-align:left;">Pretas</span>
+                    </div>
+                    <div id="pgn-move-list"></div>
+                </div>
+
+                <div class="stockfish-panel">
+                    <h4>🤖 Análise Stockfish</h4>
+                    <div id="stockfish-status">⏳ Inicializando engine...</div>
+                    <button id="btn-analyze" disabled>Analisar Posição</button>
+                </div>
+
+                <div id="multi-pv-list" style="margin-top:8px; font-size:0.9em; max-height:200px; overflow-y:auto;">
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="chess-board">
+
+            <div id="player-black-name" class="player-name-display"></div>
+
+            <svg id="move-arrow-layer" xmlns="http://www.w3.org/2000/svg"></svg>
+
+            <div class="chess-row" id="r8">
+                <div class="chess-square light" id="a8"><span class="notation">a8</span></div>
+                <div class="chess-square dark" id="b8"><span class="notation">b8</span></div>
+                <div class="chess-square light" id="c8"><span class="notation">c8</span></div>
+                <div class="chess-square dark" id="d8"><span class="notation">d8</span></div>
+                <div class="chess-square light" id="e8"><span class="notation">e8</span></div>
+                <div class="chess-square dark" id="f8"><span class="notation">f8</span></div>
+                <div class="chess-square light" id="g8"><span class="notation">g8</span></div>
+                <div class="chess-square dark" id="h8"><span class="notation">h8</span></div>
+            </div>
+            <div class="chess-row" id="r7">
+                <div class="chess-square dark" id="a7"><span class="notation">a7</span></div>
+                <div class="chess-square light" id="b7"><span class="notation">b7</span></div>
+                <div class="chess-square dark" id="c7"><span class="notation">c7</span></div>
+                <div class="chess-square light" id="d7"><span class="notation">d7</span></div>
+                <div class="chess-square dark" id="e7"><span class="notation">e7</span></div>
+                <div class="chess-square light" id="f7"><span class="notation">f7</span></div>
+                <div class="chess-square dark" id="g7"><span class="notation">g7</span></div>
+                <div class="chess-square light" id="h7"><span class="notation">h7</span></div>
+            </div>
+            <div class="chess-row" id="r6">
+                <div class="chess-square light" id="a6"><span class="notation">a6</span></div>
+                <div class="chess-square dark" id="b6"><span class="notation">b6</span></div>
+                <div class="chess-square light" id="c6"><span class="notation">c6</span></div>
+                <div class="chess-square dark" id="d6"><span class="notation">d6</span></div>
+                <div class="chess-square light" id="e6"><span class="notation">e6</span></div>
+                <div class="chess-square dark" id="f6"><span class="notation">f6</span></div>
+                <div class="chess-square light" id="g6"><span class="notation">g6</span></div>
+                <div class="chess-square dark" id="h6"><span class="notation">h6</span></div>
+            </div>
+            <div class="chess-row" id="r5">
+                <div class="chess-square dark" id="a5"><span class="notation">a5</span></div>
+                <div class="chess-square light" id="b5"><span class="notation">b5</span></div>
+                <div class="chess-square dark" id="c5"><span class="notation">c5</span></div>
+                <div class="chess-square light" id="d5"><span class="notation">d5</span></div>
+                <div class="chess-square dark" id="e5"><span class="notation">e5</span></div>
+                <div class="chess-square light" id="f5"><span class="notation">f5</span></div>
+                <div class="chess-square dark" id="g5"><span class="notation">g5</span></div>
+                <div class="chess-square light" id="h5"><span class="notation">h5</span></div>
+            </div>
+            <div class="chess-row" id="r4">
+                <div class="chess-square light" id="a4"><span class="notation">a4</span></div>
+                <div class="chess-square dark" id="b4"><span class="notation">b4</span></div>
+                <div class="chess-square light" id="c4"><span class="notation">c4</span></div>
+                <div class="chess-square dark" id="d4"><span class="notation">d4</span></div>
+                <div class="chess-square light" id="e4"><span class="notation">e4</span></div>
+                <div class="chess-square dark" id="f4"><span class="notation">f4</span></div>
+                <div class="chess-square light" id="g4"><span class="notation">g4</span></div>
+                <div class="chess-square dark" id="h4"><span class="notation">h4</span></div>
+            </div>
+            <div class="chess-row" id="r3">
+                <div class="chess-square dark" id="a3"><span class="notation">a3</span></div>
+                <div class="chess-square light" id="b3"><span class="notation">b3</span></div>
+                <div class="chess-square dark" id="c3"><span class="notation">c3</span></div>
+                <div class="chess-square light" id="d3"><span class="notation">d3</span></div>
+                <div class="chess-square dark" id="e3"><span class="notation">e3</span></div>
+                <div class="chess-square light" id="f3"><span class="notation">f3</span></div>
+                <div class="chess-square dark" id="g3"><span class="notation">g3</span></div>
+                <div class="chess-square light" id="h3"><span class="notation">h3</span></div>
+            </div>
+            <div class="chess-row" id="r2">
+                <div class="chess-square light" id="a2"><span class="notation">a2</span></div>
+                <div class="chess-square dark" id="b2"><span class="notation">b2</span></div>
+                <div class="chess-square light" id="c2"><span class="notation">c2</span></div>
+                <div class="chess-square dark" id="d2"><span class="notation">d2</span></div>
+                <div class="chess-square light" id="e2"><span class="notation">e2</span></div>
+                <div class="chess-square dark" id="f2"><span class="notation">f2</span></div>
+                <div class="chess-square light" id="g2"><span class="notation">g2</span></div>
+                <div class="chess-square dark" id="h2"><span class="notation">h2</span></div>
+            </div>
+            <div class="chess-row" id="r1">
+                <div class="chess-square dark" id="a1"><span class="notation">a1</span></div>
+                <div class="chess-square light" id="b1"><span class="notation">b1</span></div>
+                <div class="chess-square dark" id="c1"><span class="notation">c1</span></div>
+                <div class="chess-square light" id="d1"><span class="notation">d1</span></div>
+                <div class="chess-square dark" id="e1"><span class="notation">e1</span></div>
+                <div class="chess-square light" id="f1"><span class="notation">f1</span></div>
+                <div class="chess-square dark" id="g1"><span class="notation">g1</span></div>
+                <div class="chess-square light" id="h1"><span class="notation">h1</span></div>
+            </div>
+
+            <div id="player-white-name" class="player-name-display"></div>
+
+        </div>
+        <div class="sidebar-right">
+            <div class="pgn-preloaded-section">
+                <h4 style="margin: 0 0 10px; color: #F0D9B5; font-size: 1em;">📂 Partidas Pré-carregadas</h4>
+
+                <button id="btn-load-preloaded" class="myButton" style="width: 100%; margin: 8px 0; padding: 10px;">
+                    Carregar (Nezhmetdinov & Tal)
+                </button>
+
+                <div id="preloaded-status" style="margin: 8px 0; font-size: 0.85em; color: #ffaa00; min-height: 1.2em;">
+                </div>
+
+                <div id="preloaded-selects" style="display: none;">
+                    <label for="select-nez-game" class="config-label">Nezhmetdinov:</label>
+                    <select id="select-nez-game" class="config-select">
+                        <option value="">Selecione uma partida...</option>
+                    </select>
+
+                    <label for="select-thal-game" class="config-label">Tal:</label>
+                    <select id="select-thal-game" class="config-select">
+                        <option value="">Selecione uma partida...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="config-panel" style="margin-top: 20px; padding-top: 15px; border-top: 1px dotted #B58863;">
+                <div class="pgn-nav-buttons">
+                    <button class="pgn-nav-btn" id="btn-pgn-start" title="Início">⏮</button>
+                    <button class="pgn-nav-btn" id="btn-pgn-prev" title="Anterior">◀</button>
+                    <button class="pgn-nav-btn" id="btn-pgn-next" title="Próximo">▶</button>
+                    <button class="pgn-nav-btn" id="btn-pgn-end" title="Fim">⏭</button>
+                </div>
+
+                <button id="btn-reverse" class="myButton config-btn" title="Inverter orientação do tabuleiro">
+                    🔄 Inverter Tabuleiro
+                </button>
+
+                <div style="margin: 10px 0;">
+                    <label for="voice-select" class="config-label">🎤 Voz do lance:</label>
+                    <select id="voice-select" class="config-select">
+                        <option value="">Carregando vozes...</option>
+                    </select>
+                </div>
+
+                <h4 id="opening-name"
+                    style="color: #F0D9B5; margin: 5px 0 10px; min-height: 1.2em; font-style: italic; font-weight: 500;">
+                </h4>
+            </div>
+
+            <div id="opening-history-box"
+                style="display: none; margin-top: 15px; padding: 12px; background-color: #2a2926; border: 1px solid #B58863; border-radius: 5px; text-align: left; font-style: normal; font-size: 0.9em;">
+                <h5>Sobre a Abertura</h5>
+                <p id="opening-history-text"></p>
+            </div>
+
+            <div class="sidebar-game">
+                <div id="square-random"></div>
+                <div id="square-clicked"></div>
+                <div id="square-score"></div>
+            </div>
+        </div>
+
+
+
+        <div class="setting-buttons">
+        </div>
+    </div>
+
+    <footer>
+        <div id="footer2">Criado por Jose R F Junior , web2ajax@gmail.com ♟, 2025</div>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.min.js"></script>
+    <script src="game.js"></script>
+</body>
+
+</html>

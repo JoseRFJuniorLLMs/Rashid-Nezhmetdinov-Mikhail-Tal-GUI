@@ -1146,43 +1146,45 @@ $(document).ready(function() {
     });
 });
 
-// ... (depois da sua função updateOpeningName) ...
-
 /**
  * Preenche o Score Sheet (#pgn-move-list) com os lances formatados.
+ * VERSÃO FINAL E CORRETA: Usa o índice do array para calcular o número do lance.
  * @param {Array} history - O histórico verbose do chess.js
  */
 function populateMoveList(history) {
-    const $moveList = $('#pgn-move-list').empty().show(); // Limpa e exibe o div
+    // 1. Limpa e exibe o container principal da folha de anotações
+    const $moveList = $('#pgn-move-list').empty().show(); 
     let $currentRow = null;
 
     history.forEach((move, index) => {
-        const moveNumber = move.turn; // Pega o número do lance (ex: 1, 2, 3...)
-        const san = move.san; // Pega a notação (ex: "Nf3")
+        const san = move.san; 
+        
+        // CORREÇÃO FINAL: Calcula o número do lance (1, 2, 3...) com base no índice.
+        // O número completo do lance é o Math.floor(index / 2) + 1.
+        const calculatedMoveNumber = Math.floor(index / 2) + 1;
 
-        // Se for lance das Brancas, cria uma nova linha
+        // Se for lance das Brancas ('w'), cria uma nova linha
         if (move.color === 'w') {
-            // Se uma linha anterior (só com pretas) ficou aberta, fecha
             if ($currentRow) $moveList.append($currentRow); 
             
-            // Cria a nova linha
-            $currentRow = $('<div class="move-row"></div>');
-            $currentRow.append(`<span class="move-number">${moveNumber}.</span>`);
-            $currentRow.append(`<span class="move-san" data-move-index="${index}">${san}</span>`);
+            // Cria a nova linha (div)
+            $currentRow = $('<div class="move-row" style="display:grid; grid-template-columns: 1fr 1fr;"></div>');
+            
+            // Coluna Brancas: Contém o número do lance e a notação (ex: "1. d4")
+            $currentRow.append(`<span class="move-san" data-move-index="${index}" style="text-align:left; padding-left:5px;">${calculatedMoveNumber}. ${san}</span>`);
         
-        } else { // Se for lance das Pretas
-            // Se não tem linha (ex: PGN começa do lance das pretas)
+        } else { // Se for lance das Pretas ('b')
+            // Caso raro onde o PGN começa com lances das Pretas
             if (!$currentRow) {
-                 $currentRow = $('<div class="move-row"></div>');
-                 $currentRow.append(`<span class="move-number">${moveNumber}.</span>`);
-                 // Adiciona um placeholder "..." para o lance branco
-                 $currentRow.append(`<span class="move-san" data-move-index="-1">...</span>`);
+                 $currentRow = $('<div class="move-row" style="display:grid; grid-template-columns: 1fr 1fr;"></div>');
+                 // Insere o número do lance e um placeholder "..."
+                 $currentRow.append(`<span class="move-san" data-move-index="-1" style="text-align:left; padding-left:5px;">${calculatedMoveNumber}. ...</span>`);
             }
             
-            // Adiciona o lance das pretas na linha atual
-            $currentRow.append(`<span class="move-san" data-move-index="${index}">${san}</span>`);
+            // Coluna Pretas: Insere a notação do lance.
+            $currentRow.append(`<span class="move-san" data-move-index="${index}" style="text-align:left;">${san}</span>`);
             
-            // Anexa a linha completa no placar e reseta
+            // A linha está completa (Brancas + Pretas), anexa ao placar e reseta $currentRow
             $moveList.append($currentRow);
             $currentRow = null;
         }
@@ -1193,6 +1195,7 @@ function populateMoveList(history) {
         $moveList.append($currentRow);
     }
 }
+
 
 /**
  * Destaca o lance atual no Score Sheet
@@ -1276,7 +1279,7 @@ $('#btn-load-pgn').on('click', function() {
 
     try {
         loadedPgnGame = new Chess();
-        if (loadedPgnGame.load_pgn(pgnText)) {
+        if (loadedPgnGame.load_pgn(pgnText, { sloppy: true })) {
             moveHistory = loadedPgnGame.history();
             const header = loadedPgnGame.header();
 

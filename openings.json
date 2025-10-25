@@ -275,7 +275,7 @@
         "pgn": "g3 e5. cavalo f3 e4. cavalo h4"
     },
     "g3 c5": {
-        "name": "hungarian Abertura sicilian convite",
+        "name": "hungarian Abertura Siciliana convite",
         "eco": "a00",
         "pgn": "g3 c5"
     },
@@ -665,7 +665,7 @@
         "pgn": "cavalo c3 e5. d4 e takes d4. Rainha takes d4 cavalo c6. Rainha a4"
     },
     "cavalo c3 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4": {
-        "name": "van geet Abertura sicilian two cavalos",
+        "name": "van geet Abertura Siciliana two cavalos",
         "eco": "a00",
         "pgn": "cavalo c3 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4"
     },
@@ -1005,7 +1005,7 @@
         "pgn": "d4 g6. cavalo f3 cavalo h6"
     },
     "e4 cavalo a6 cavalo f3 c5": {
-        "name": "zukertort Defesa sicilian cavalo Variação",
+        "name": "zukertort Defesa Siciliana cavalo Variação",
         "eco": "a04",
         "pgn": "e4 cavalo a6. cavalo f3 c5"
     },
@@ -1120,7 +1120,7 @@
         "pgn": "cavalo f3 e6. c4 a6. cavalo c3 c5. g3 b5"
     },
     "cavalo f3 c5": {
-        "name": "zukertort Abertura sicilian convite",
+        "name": "zukertort Abertura Siciliana convite",
         "eco": "a04",
         "pgn": "cavalo f3 c5"
     },
@@ -1250,7 +1250,7 @@
         "pgn": "cavalo f3 d5. g3 g6. Bispo g2 Bispo g7. castles kingside e5. d3 cavalo e7"
     },
     "cavalo f3 d5 g3 c5": {
-        "name": "Indiana do Rei Ataque sicilian Variação",
+        "name": "Indiana do Rei Ataque Siciliana Variação",
         "eco": "a07",
         "pgn": "cavalo f3 d5. g3 c5"
     },
@@ -1270,12 +1270,12 @@
         "pgn": "cavalo f3 d5. g3 c5. Bispo g2 cavalo c6"
     },
     "cavalo f3 d5 g3 c5 Bispo g2": {
-        "name": "Indiana do Rei Ataque sicilian Variação",
+        "name": "Indiana do Rei Ataque Siciliana Variação",
         "eco": "a08",
         "pgn": "cavalo f3 d5. g3 c5. Bispo g2"
     },
     "e4 e6 d3 d5 cavalo d2 cavalo f6 cavalo gf3 c5 g3 cavalo c6 Bispo g2 Bispo e7 castles kingside castles kingside rook e1": {
-        "name": "Indiana do Rei Ataque sicilian Variação",
+        "name": "Indiana do Rei Ataque Siciliana Variação",
         "eco": "a08",
         "pgn": "e4 e6. d3 d5. cavalo d2 cavalo f6. cavalo gf3 c5. g3 cavalo c6. Bispo g2 Bispo e7. castles kingside castles kingside. rook e1"
     },
@@ -1690,7 +1690,7 @@
         "pgn": "c4 cavalo f6. cavalo c3 e6. e4 c5. e5 cavalo g8"
     },
     "c4 cavalo f6 cavalo c3 e6 e4 c5": {
-        "name": "Abertura Inglesa mikenas carls sicilian",
+        "name": "Abertura Inglesa mikenas carls Siciliana",
         "eco": "a19",
         "pgn": "c4 cavalo f6. cavalo c3 e6. e4 c5"
     },
@@ -1735,7 +1735,7 @@
         "pgn": "c4 e5. cavalo c3 Bispo b4"
     },
     "c4 e5 cavalo c3": {
-        "name": "Abertura Inglesa Reis Inglesa Variação invertido sicilian",
+        "name": "Abertura Inglesa Reis Inglesa Variação invertido Siciliana",
         "eco": "a21",
         "pgn": "c4 e5. cavalo c3"
     },
@@ -1815,7 +1815,7 @@
         "pgn": "c4 e5. cavalo c3 cavalo c6. g3 g6. Bispo g2 Bispo g7. rook b1"
     },
     "c4 e5 cavalo c3 cavalo c6": {
-        "name": "Abertura Inglesa Reis Inglesa Variação invertido Fechada sicilian",
+        "name": "Abertura Inglesa Reis Inglesa Variação invertido Fechada Siciliana",
         "eco": "a25",
         "pgn": "c4 e5. cavalo c3 cavalo c6"
     },
@@ -2365,7 +2365,7 @@
         "pgn": "c4 g6. e4 Bispo g7. d4 d6. Bispo e3 cavalo f6. f3"
     },
     "e4 c5 cavalo f3 g6 d4": {
-        "name": "sicilian Defesa hyperaccelerated fianchetto",
+        "name": "Defesa Siciliana hyperaccelerated fianchetto",
         "eco": "a42",
         "pgn": "e4 c5. cavalo f3 g6. d4"
     },
@@ -2400,7 +2400,7 @@
         "pgn": "d4 c5. d takes c5 b6"
     },
     "d4 e6 c4 c5 d5 e takes d5 c takes d5 d6 cavalo c3 g6 e4 Bispo g7 cavalo f3 cavalo e7": {
-        "name": "Defesa Benoni franco sicilian hybrid",
+        "name": "Defesa Benoni franco Siciliana hybrid",
         "eco": "a43",
         "pgn": "d4 e6. c4 c5. d5 e takes d5. c takes d5 d6. cavalo c3 g6. e4 Bispo g7. cavalo f3 cavalo e7"
     },
@@ -4615,37 +4615,37 @@
         "pgn": "e4 g6. d4 Bispo g7. g3 c5. d takes c5 Rainha a5 check"
     },
     "e4 c5 cavalo f3 g6 d4 Bispo g7 cavalo c3 Rainha a5 Bispo e3": {
-        "name": "pterodactyl Defesa sicilian anhanguera",
+        "name": "pterodactyl Defesa Siciliana anhanguera",
         "eco": "b06",
         "pgn": "e4 c5. cavalo f3 g6. d4 Bispo g7. cavalo c3 Rainha a5. Bispo e3"
     },
     "e4 c5 cavalo f3 g6 d4 Bispo g7 cavalo c3 Rainha a5 d5": {
-        "name": "pterodactyl Defesa sicilian benoni gambito",
+        "name": "pterodactyl Defesa Siciliana benoni gambito",
         "eco": "b06",
         "pgn": "e4 c5. cavalo f3 g6. d4 Bispo g7. cavalo c3 Rainha a5. d5"
     },
     "e4 c5 cavalo f3 g6 d4 Bispo g7 d takes c5 Rainha a5 check cavalo c3 Bispo takes c3 check b takes c3": {
-        "name": "pterodactyl Defesa sicilian pteranodon",
+        "name": "pterodactyl Defesa Siciliana pteranodon",
         "eco": "b06",
         "pgn": "e4 c5. cavalo f3 g6. d4 Bispo g7. d takes c5 Rainha a5 check. cavalo c3 Bispo takes c3 check. b takes c3"
     },
     "e4 g6 d4 Bispo g7 cavalo c3 c5 cavalo f3 Rainha a5 Bispo e2 d6": {
-        "name": "pterodactyl Defesa sicilian quetzalcoatlus",
+        "name": "pterodactyl Defesa Siciliana quetzalcoatlus",
         "eco": "b06",
         "pgn": "e4 g6. d4 Bispo g7. cavalo c3 c5. cavalo f3 Rainha a5. Bispo e2 d6"
     },
     "e4 c5 cavalo f3 g6 d4 Bispo g7 d takes c5 Rainha a5 check cavalo c3": {
-        "name": "pterodactyl Defesa sicilian rhamporhynchus",
+        "name": "pterodactyl Defesa Siciliana rhamporhynchus",
         "eco": "b06",
         "pgn": "e4 c5. cavalo f3 g6. d4 Bispo g7. d takes c5 Rainha a5 check. cavalo c3"
     },
     "e4 g6 d4 Bispo g7 cavalo c3 c5 cavalo f3 Rainha a5 Bispo c4": {
-        "name": "pterodactyl Defesa sicilian siroccopteryx",
+        "name": "pterodactyl Defesa Siciliana siroccopteryx",
         "eco": "b06",
         "pgn": "e4 g6. d4 Bispo g7. cavalo c3 c5. cavalo f3 Rainha a5. Bispo c4"
     },
     "e4 c5 cavalo f3 g6 d4 Bispo g7 cavalo c3 Rainha a5 Bispo d2": {
-        "name": "pterodactyl Defesa sicilian unpin",
+        "name": "pterodactyl Defesa Siciliana unpin",
         "eco": "b06",
         "pgn": "e4 c5. cavalo f3 g6. d4 Bispo g7. cavalo c3 Rainha a5. Bispo d2"
     },
@@ -5380,1807 +5380,1807 @@
         "pgn": "e4 e5. Rainha e2 cavalo c6. c3 cavalo f6. cavalo f3 Bispo c5. d4 e takes d4. c takes d4 cavalo takes d4"
     },
     "e4 c5": {
-        "name": "sicilian Defesa",
+        "name": "Defesa Siciliana",
         "eco": "b20",
         "pgn": "e4 c5"
     },
     "e4 c5 Rainha g4": {
-        "name": "sicilian Defesa amazon Ataque",
+        "name": "Defesa Siciliana amazon Ataque",
         "eco": "b20",
         "pgn": "e4 c5. Rainha g4"
     },
     "e4 c5 d3 cavalo c6 c3 d6 f4": {
-        "name": "sicilian Defesa big clamp formação",
+        "name": "Defesa Siciliana big clamp formação",
         "eco": "b20",
         "pgn": "e4 c5. d3 cavalo c6. c3 d6. f4"
     },
     "e4 c5 Bispo c4": {
-        "name": "sicilian Defesa bowdler Ataque",
+        "name": "Defesa Siciliana bowdler Ataque",
         "eco": "b20",
         "pgn": "e4 c5. Bispo c4"
     },
     "e4 c5 cavalo h3": {
-        "name": "sicilian Defesa brick Variação",
+        "name": "Defesa Siciliana brick Variação",
         "eco": "b20",
         "pgn": "e4 c5. cavalo h3"
     },
     "e4 c5 c4 d6 cavalo c3 cavalo c6 g3 h5": {
-        "name": "sicilian Defesa gloria Variação",
+        "name": "Defesa Siciliana gloria Variação",
         "eco": "b20",
         "pgn": "e4 c5. c4 d6. cavalo c3 cavalo c6. g3 h5"
     },
     "e4 c5 g4": {
-        "name": "sicilian Defesa grob Variação",
+        "name": "Defesa Siciliana grob Variação",
         "eco": "b20",
         "pgn": "e4 c5. g4"
     },
     "e4 c5 cavalo e2": {
-        "name": "sicilian Defesa keres Variação",
+        "name": "Defesa Siciliana keres Variação",
         "eco": "b20",
         "pgn": "e4 c5. cavalo e2"
     },
     "e4 c5 Rei e2": {
-        "name": "sicilian Defesa Rei davids Abertura",
+        "name": "Defesa Siciliana Rei davids Abertura",
         "eco": "b20",
         "pgn": "e4 c5. Rei e2"
     },
     "e4 c5 cavalo a3": {
-        "name": "sicilian Defesa kronberger Variação",
+        "name": "Defesa Siciliana kronberger Variação",
         "eco": "b20",
         "pgn": "e4 c5. cavalo a3"
     },
     "e4 c5 cavalo a3 cavalo c6 d4 c takes d4 Bispo c4": {
-        "name": "sicilian Defesa kronberger Variação nemeth gambito",
+        "name": "Defesa Siciliana kronberger Variação nemeth gambito",
         "eco": "b20",
         "pgn": "e4 c5. cavalo a3 cavalo c6. d4 c takes d4. Bispo c4"
     },
     "e4 c5 g3": {
-        "name": "sicilian Defesa lasker dunne Ataque",
+        "name": "Defesa Siciliana lasker dunne Ataque",
         "eco": "b20",
         "pgn": "e4 c5. g3"
     },
     "e4 c5 a3": {
-        "name": "sicilian Defesa mengarini Variação",
+        "name": "Defesa Siciliana mengarini Variação",
         "eco": "b20",
         "pgn": "e4 c5. a3"
     },
     "e4 c5 h4": {
-        "name": "sicilian Defesa myers Ataque",
+        "name": "Defesa Siciliana myers Ataque",
         "eco": "b20",
         "pgn": "e4 c5. h4"
     },
     "e4 c5 a4": {
-        "name": "sicilian Defesa myers Ataque",
+        "name": "Defesa Siciliana myers Ataque",
         "eco": "b20",
         "pgn": "e4 c5. a4"
     },
     "e4 c5 b3": {
-        "name": "sicilian Defesa snyder Variação",
+        "name": "Defesa Siciliana snyder Variação",
         "eco": "b20",
         "pgn": "e4 c5. b3"
     },
     "e4 c5 b3 b6": {
-        "name": "sicilian Defesa snyder Variação Rainha fianchetto Variação",
+        "name": "Defesa Siciliana snyder Variação Rainha fianchetto Variação",
         "eco": "b20",
         "pgn": "e4 c5. b3 b6"
     },
     "e4 c5 c4": {
-        "name": "sicilian Defesa staunton cochrane Variação",
+        "name": "Defesa Siciliana staunton cochrane Variação",
         "eco": "b20",
         "pgn": "e4 c5. c4"
     },
     "e4 c5 b4": {
-        "name": "sicilian Defesa wing gambito",
+        "name": "Defesa Siciliana wing gambito",
         "eco": "b20",
         "pgn": "e4 c5. b4"
     },
     "e4 c5 b4 c takes b4 Bispo b2": {
-        "name": "sicilian Defesa wing gambito abrahams Variação",
+        "name": "Defesa Siciliana wing gambito abrahams Variação",
         "eco": "b20",
         "pgn": "e4 c5. b4 c takes b4. Bispo b2"
     },
     "e4 c5 b4 c takes b4 a3 b takes a3": {
-        "name": "sicilian Defesa wing gambito carlsbad Variação",
+        "name": "Defesa Siciliana wing gambito carlsbad Variação",
         "eco": "b20",
         "pgn": "e4 c5. b4 c takes b4. a3 b takes a3"
     },
     "e4 c5 b4 c takes b4 a3 d5 e takes d5 Rainha takes d5 Bispo b2": {
-        "name": "sicilian Defesa wing gambito marienbad Variação",
+        "name": "Defesa Siciliana wing gambito marienbad Variação",
         "eco": "b20",
         "pgn": "e4 c5. b4 c takes b4. a3 d5. e takes d5 Rainha takes d5. Bispo b2"
     },
     "e4 c5 b4 c takes b4 a3": {
-        "name": "sicilian Defesa wing gambito marshall Variação",
+        "name": "Defesa Siciliana wing gambito marshall Variação",
         "eco": "b20",
         "pgn": "e4 c5. b4 c takes b4. a3"
     },
     "e4 c5 b4 c takes b4 a3 d5 e takes d5 Rainha takes d5 cavalo f3 e5 c4 Rainha e6 Bispo d3": {
-        "name": "sicilian Defesa wing gambito nanu gambito",
+        "name": "Defesa Siciliana wing gambito nanu gambito",
         "eco": "b20",
         "pgn": "e4 c5. b4 c takes b4. a3 d5. e takes d5 Rainha takes d5. cavalo f3 e5. c4 Rainha e6. Bispo d3"
     },
     "e4 c5 b4 c takes b4 a3 d5 e takes d5 Rainha takes d5 cavalo f3 e5 Bispo b2 cavalo c6 c4 Rainha e6": {
-        "name": "sicilian Defesa wing gambito romanian Defesa",
+        "name": "Defesa Siciliana wing gambito romanian Defesa",
         "eco": "b20",
         "pgn": "e4 c5. b4 c takes b4. a3 d5. e takes d5 Rainha takes d5. cavalo f3 e5. Bispo b2 cavalo c6. c4 Rainha e6"
     },
     "e4 c5 b4 c takes b4 c4": {
-        "name": "sicilian Defesa wing gambito santasiere Variação",
+        "name": "Defesa Siciliana wing gambito santasiere Variação",
         "eco": "b20",
         "pgn": "e4 c5. b4 c takes b4. c4"
     },
     "e4 c5 d4 c takes d4 Rainha takes d4 cavalo c6 Rainha d1 cavalo f6 Bispo c4": {
-        "name": "sicilian Defesa coles sicilian gambito",
+        "name": "Defesa Siciliana coles Siciliana gambito",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. Rainha takes d4 cavalo c6. Rainha d1 cavalo f6. Bispo c4"
     },
     "e4 c5 d4 c takes d4 f4": {
-        "name": "sicilian Defesa halasz gambito",
+        "name": "Defesa Siciliana halasz gambito",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. f4"
     },
     "e4 c5 f4": {
-        "name": "sicilian Defesa mcdonnell Ataque",
+        "name": "Defesa Siciliana mcdonnell Ataque",
         "eco": "b21",
         "pgn": "e4 c5. f4"
     },
     "e4 c5 f4 d5 e takes d5 cavalo f6": {
-        "name": "sicilian Defesa mcdonnell Ataque tal gambito",
+        "name": "Defesa Siciliana mcdonnell Ataque tal gambito",
         "eco": "b21",
         "pgn": "e4 c5. f4 d5. e takes d5 cavalo f6"
     },
     "d4 c5 e4 c takes d4 cavalo f3": {
-        "name": "sicilian Defesa morphy gambito",
+        "name": "Defesa Siciliana morphy gambito",
         "eco": "b21",
         "pgn": "d4 c5. e4 c takes d4. cavalo f3"
     },
     "d4 c5 e4 c takes d4 cavalo f3 e5 c3": {
-        "name": "sicilian Defesa morphy gambito andreaschek gambito",
+        "name": "Defesa Siciliana morphy gambito andreaschek gambito",
         "eco": "b21",
         "pgn": "d4 c5. e4 c takes d4. cavalo f3 e5. c3"
     },
     "e4 c5 d4 c takes d4 c3": {
-        "name": "sicilian Defesa smith morra gambito",
+        "name": "Defesa Siciliana smith morra gambito",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3"
     },
     "e4 c5 d4": {
-        "name": "sicilian Defesa smith morra gambito",
+        "name": "Defesa Siciliana smith morra gambito",
         "eco": "b21",
         "pgn": "e4 c5. d4"
     },
     "e4 c5 d4 c takes d4 c3 d takes c3 cavalo takes c3 d6 cavalo f3 e6 Bispo c4 cavalo f6 castles kingside a6": {
-        "name": "sicilian Defesa smith morra gambito Aceito chicago Defesa",
+        "name": "Defesa Siciliana smith morra gambito Aceito chicago Defesa",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3 d takes c3. cavalo takes c3 d6. cavalo f3 e6. Bispo c4 cavalo f6. castles kingside a6"
     },
     "e4 c5 d4 c takes d4 c3 d takes c3 cavalo takes c3 cavalo c6 cavalo f3 d6 Bispo c4 a6 castles kingside cavalo f6": {
-        "name": "sicilian Defesa smith morra gambito Aceito clássica formação",
+        "name": "Defesa Siciliana smith morra gambito Aceito clássica formação",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3 d takes c3. cavalo takes c3 cavalo c6. cavalo f3 d6. Bispo c4 a6. castles kingside cavalo f6"
     },
     "e4 c5 d4 c takes d4 c3 d takes c3 cavalo takes c3 cavalo c6 cavalo f3 g6": {
-        "name": "sicilian Defesa smith morra gambito Aceito fianchetto Defesa",
+        "name": "Defesa Siciliana smith morra gambito Aceito fianchetto Defesa",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3 d takes c3. cavalo takes c3 cavalo c6. cavalo f3 g6"
     },
     "e4 c5 d4 c takes d4 c3 d takes c3 cavalo takes c3 e6 cavalo f3 a6": {
-        "name": "sicilian Defesa smith morra gambito Aceito kan formação",
+        "name": "Defesa Siciliana smith morra gambito Aceito kan formação",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3 d takes c3. cavalo takes c3 e6. cavalo f3 a6"
     },
     "e4 c5 d4 c takes d4 c3 d takes c3 cavalo takes c3 cavalo c6 cavalo f3 e6 Bispo c4 Rainha c7 Rainha e2 a6\ncastles kingside Bispo d6": {
-        "name": "sicilian Defesa smith morra gambito Aceito larsen Defesa",
+        "name": "Defesa Siciliana smith morra gambito Aceito larsen Defesa",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3 d takes c3. cavalo takes c3 cavalo c6. cavalo f3 e6. Bispo c4 Rainha c7. Rainha e2 a6.\ncastles kingside Bispo d6"
     },
     "e4 c5 d4 c takes d4 c3 d takes c3 cavalo takes c3 cavalo c6 cavalo f3 e6 Bispo c4 Bispo c5": {
-        "name": "sicilian Defesa smith morra gambito Aceito morphy Defesa",
+        "name": "Defesa Siciliana smith morra gambito Aceito morphy Defesa",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3 d takes c3. cavalo takes c3 cavalo c6. cavalo f3 e6. Bispo c4 Bispo c5"
     },
     "e4 c5 d4 c takes d4 c3 d takes c3 cavalo takes c3 cavalo c6 cavalo f3 e6 Bispo c4 a6 castles kingside b5 Bispo b3\nbishop c5": {
-        "name": "sicilian Defesa smith morra gambito Aceito morphy Defesa deferred",
+        "name": "Defesa Siciliana smith morra gambito Aceito morphy Defesa deferred",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3 d takes c3. cavalo takes c3 cavalo c6. cavalo f3 e6. Bispo c4 a6. castles kingside b5. Bispo b3\nbishop c5"
     },
     "e4 c5 d4 c takes d4 c3 d takes c3 cavalo takes c3 cavalo c6 cavalo f3 e6 Bispo c4 a6": {
-        "name": "sicilian Defesa smith morra gambito Aceito paulsen formação",
+        "name": "Defesa Siciliana smith morra gambito Aceito paulsen formação",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3 d takes c3. cavalo takes c3 cavalo c6. cavalo f3 e6. Bispo c4 a6"
     },
     "e4 c5 d4 c takes d4 c3 d takes c3 cavalo takes c3 cavalo c6 cavalo f3 e6 Bispo c4 Bispo b4": {
-        "name": "sicilian Defesa smith morra gambito Aceito pin Defesa",
+        "name": "Defesa Siciliana smith morra gambito Aceito pin Defesa",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3 d takes c3. cavalo takes c3 cavalo c6. cavalo f3 e6. Bispo c4 Bispo b4"
     },
     "e4 c5 d4 c takes d4 c3 d takes c3 cavalo takes c3 cavalo c6 cavalo f3 d6 Bispo c4 e6": {
-        "name": "sicilian Defesa smith morra gambito Aceito scheveningen formação",
+        "name": "Defesa Siciliana smith morra gambito Aceito scheveningen formação",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3 d takes c3. cavalo takes c3 cavalo c6. cavalo f3 d6. Bispo c4 e6"
     },
     "e4 c5 d4 c takes d4 c3 d takes c3 cavalo takes c3 cavalo c6 Bispo c4 e6 cavalo f3 d6 castles kingside a6 Rainha e2\nb5": {
-        "name": "sicilian Defesa smith morra gambito Aceito sozin formação",
+        "name": "Defesa Siciliana smith morra gambito Aceito sozin formação",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3 d takes c3. cavalo takes c3 cavalo c6. Bispo c4 e6. cavalo f3 d6. castles kingside a6. Rainha e2\nb5"
     },
     "e4 c5 d4 c takes d4 c3 d takes c3 cavalo takes c3 e6 Bispo c4 a6 cavalo f3 cavalo e7": {
-        "name": "sicilian Defesa smith morra gambito Aceito taimanov formação",
+        "name": "Defesa Siciliana smith morra gambito Aceito taimanov formação",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3 d takes c3. cavalo takes c3 e6. Bispo c4 a6. cavalo f3 cavalo e7"
     },
     "e4 c5 d4 c takes d4 c3 cavalo f6": {
-        "name": "sicilian Defesa smith morra gambito Declinado alapin formação",
+        "name": "Defesa Siciliana smith morra gambito Declinado alapin formação",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3 cavalo f6"
     },
     "e4 c5 c3 e5 d4 c takes d4": {
-        "name": "sicilian Defesa smith morra gambito Declinado center formação",
+        "name": "Defesa Siciliana smith morra gambito Declinado center formação",
         "eco": "b21",
         "pgn": "e4 c5. c3 e5. d4 c takes d4"
     },
     "e4 c5 d4 c takes d4 c3 d3 c4": {
-        "name": "sicilian Defesa smith morra gambito Declinado dubois Variação",
+        "name": "Defesa Siciliana smith morra gambito Declinado dubois Variação",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3 d3. c4"
     },
     "e4 c5 d4 c takes d4 c3 d3": {
-        "name": "sicilian Defesa smith morra gambito Declinado push Variação",
+        "name": "Defesa Siciliana smith morra gambito Declinado push Variação",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3 d3"
     },
     "e4 c5 d4 c takes d4 c3 d5": {
-        "name": "sicilian Defesa smith morra gambito Declinado scandinavian formação",
+        "name": "Defesa Siciliana smith morra gambito Declinado scandinavian formação",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3 d5"
     },
     "e4 c5 d4 c takes d4 c3 Rainha a5": {
-        "name": "sicilian Defesa smith morra gambito Declinado wing formação",
+        "name": "Defesa Siciliana smith morra gambito Declinado wing formação",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3 Rainha a5"
     },
     "e4 c5 d4 c takes d4 c3 d takes c3 cavalo takes c3 cavalo c6 Bispo c4 e6 cavalo f3 d6 castles kingside a6 Rainha e2\nb5 Bispo b3 rook a7": {
-        "name": "sicilian Defesa smith morra gambito chicago Defesa",
+        "name": "Defesa Siciliana smith morra gambito chicago Defesa",
         "eco": "b21",
         "pgn": "e4 c5. d4 c takes d4. c3 d takes c3. cavalo takes c3 cavalo c6. Bispo c4 e6. cavalo f3 d6. castles kingside a6. Rainha e2\nb5. Bispo b3 rook a7"
     },
     "e4 c5 c3 cavalo f6 e5 cavalo d5 cavalo f3 cavalo c6 cavalo a3": {
-        "name": "sicilian Defesa 2. c3 heidenfeld Variação",
+        "name": "Defesa Siciliana 2. c3 heidenfeld Variação",
         "eco": "b22",
         "pgn": "e4 c5. c3 cavalo f6. e5 cavalo d5. cavalo f3 cavalo c6. cavalo a3"
     },
     "e4 c5 c3": {
-        "name": "sicilian Defesa alapin Variação",
+        "name": "Defesa Siciliana alapin Variação",
         "eco": "b22",
         "pgn": "e4 c5. c3"
     },
     "e4 c5 c3 d5 e takes d5 Rainha takes d5": {
-        "name": "sicilian Defesa alapin Variação barmen Defesa",
+        "name": "Defesa Siciliana alapin Variação barmen Defesa",
         "eco": "b22",
         "pgn": "e4 c5. c3 d5. e takes d5 Rainha takes d5"
     },
     "e4 c5 c3 d5 e takes d5 Rainha takes d5 d4 c takes d4 c takes d4 cavalo c6 cavalo f3 Bispo g4": {
-        "name": "sicilian Defesa alapin Variação barmen Defesa central exchange",
+        "name": "Defesa Siciliana alapin Variação barmen Defesa central exchange",
         "eco": "b22",
         "pgn": "e4 c5. c3 d5. e takes d5 Rainha takes d5. d4 c takes d4. c takes d4 cavalo c6. cavalo f3 Bispo g4"
     },
     "e4 c5 c3 d5 e takes d5 Rainha takes d5 d4 c takes d4 c takes d4 cavalo c6 cavalo f3 Bispo g4 cavalo c3 Bispo takes f3\ng takes f3 Rainha takes d4 Rainha takes d4 cavalo takes d4": {
-        "name": "sicilian Defesa alapin Variação barmen Defesa endgame Variação",
+        "name": "Defesa Siciliana alapin Variação barmen Defesa endgame Variação",
         "eco": "b22",
         "pgn": "e4 c5. c3 d5. e takes d5 Rainha takes d5. d4 c takes d4. c takes d4 cavalo c6. cavalo f3 Bispo g4. cavalo c3 Bispo takes f3.\ng takes f3 Rainha takes d4. Rainha takes d4 cavalo takes d4"
     },
     "e4 c5 c3 d5 e takes d5 Rainha takes d5 d4 cavalo c6 cavalo f3 c takes d4 c takes d4 e5 cavalo c3 Bispo b4\nbishop e2": {
-        "name": "sicilian Defesa alapin Variação barmen Defesa milner barry Ataque",
+        "name": "Defesa Siciliana alapin Variação barmen Defesa milner barry Ataque",
         "eco": "b22",
         "pgn": "e4 c5. c3 d5. e takes d5 Rainha takes d5. d4 cavalo c6. cavalo f3 c takes d4. c takes d4 e5. cavalo c3 Bispo b4.\nbishop e2"
     },
     "e4 c5 c3 d5 e takes d5 Rainha takes d5 d4 cavalo f6 cavalo f3 Bispo g4": {
-        "name": "sicilian Defesa alapin Variação barmen Defesa Moderna linha",
+        "name": "Defesa Siciliana alapin Variação barmen Defesa Moderna linha",
         "eco": "b22",
         "pgn": "e4 c5. c3 d5. e takes d5 Rainha takes d5. d4 cavalo f6. cavalo f3 Bispo g4"
     },
     "e4 c5 cavalo f3 e6 c3 cavalo f6 e5 cavalo d5 d4 cavalo c6": {
-        "name": "sicilian Defesa alapin Variação sherzer Variação",
+        "name": "Defesa Siciliana alapin Variação sherzer Variação",
         "eco": "b22",
         "pgn": "e4 c5. cavalo f3 e6. c3 cavalo f6. e5 cavalo d5. d4 cavalo c6"
     },
     "e4 c5 c3 cavalo f6 e5 cavalo d5 d4 c takes d4": {
-        "name": "sicilian Defesa alapin Variação smith morra Declinado",
+        "name": "Defesa Siciliana alapin Variação smith morra Declinado",
         "eco": "b22",
         "pgn": "e4 c5. c3 cavalo f6. e5 cavalo d5. d4 c takes d4"
     },
     "e4 c5 c3 cavalo f6 e5 cavalo d5 cavalo f3 cavalo c6 Bispo c4 cavalo b6 Bispo b3": {
-        "name": "sicilian Defesa alapin Variação stoltz Ataque",
+        "name": "Defesa Siciliana alapin Variação stoltz Ataque",
         "eco": "b22",
         "pgn": "e4 c5. c3 cavalo f6. e5 cavalo d5. cavalo f3 cavalo c6. Bispo c4 cavalo b6. Bispo b3"
     },
     "e4 c5 c3 cavalo f6 e5 cavalo d5 cavalo f3 cavalo c6 Bispo c4 cavalo b6 Bispo b3 c4 Bispo c2 Rainha c7 Rainha e2\ng5": {
-        "name": "sicilian Defesa alapin Variação stoltz Ataque ivanchuk linha",
+        "name": "Defesa Siciliana alapin Variação stoltz Ataque ivanchuk linha",
         "eco": "b22",
         "pgn": "e4 c5. c3 cavalo f6. e5 cavalo d5. cavalo f3 cavalo c6. Bispo c4 cavalo b6. Bispo b3 c4. Bispo c2 Rainha c7. Rainha e2\ng5"
     },
     "e4 c5 cavalo c3 e6": {
-        "name": "sicilian Defesa Fechada",
+        "name": "Defesa Siciliana Fechada",
         "eco": "b23",
         "pgn": "e4 c5. cavalo c3 e6"
     },
     "e4 c5 cavalo c3 e6 g3": {
-        "name": "sicilian Defesa Fechada",
+        "name": "Defesa Siciliana Fechada",
         "eco": "b23",
         "pgn": "e4 c5. cavalo c3 e6. g3"
     },
     "e4 c5 cavalo c3": {
-        "name": "sicilian Defesa Fechada Variação",
+        "name": "Defesa Siciliana Fechada Variação",
         "eco": "b23",
         "pgn": "e4 c5. cavalo c3"
     },
     "e4 c5 cavalo c3 cavalo c6 cavalo ge2": {
-        "name": "sicilian Defesa Fechada Variação chameleon Variação",
+        "name": "Defesa Siciliana Fechada Variação chameleon Variação",
         "eco": "b23",
         "pgn": "e4 c5. cavalo c3 cavalo c6. cavalo ge2"
     },
     "e4 c5 cavalo c3 cavalo c6 g4": {
-        "name": "sicilian Defesa Fechada Variação grob Ataque",
+        "name": "Defesa Siciliana Fechada Variação grob Ataque",
         "eco": "b23",
         "pgn": "e4 c5. cavalo c3 cavalo c6. g4"
     },
     "e4 c5 cavalo c3 e6 g3 d5": {
-        "name": "sicilian Defesa Fechada Variação korchnoi Defesa",
+        "name": "Defesa Siciliana Fechada Variação korchnoi Defesa",
         "eco": "b23",
         "pgn": "e4 c5. cavalo c3 e6. g3 d5"
     },
     "e4 c5 cavalo c3 cavalo c6 f4": {
-        "name": "sicilian Defesa grand prix Ataque",
+        "name": "Defesa Siciliana grand prix Ataque",
         "eco": "b23",
         "pgn": "e4 c5. cavalo c3 cavalo c6. f4"
     },
     "e4 c5 cavalo c3 cavalo c6 f4 g6 cavalo f3 Bispo g7 Bispo c4 e6 f5": {
-        "name": "sicilian Defesa grand prix Ataque schofman Variação",
+        "name": "Defesa Siciliana grand prix Ataque schofman Variação",
         "eco": "b23",
         "pgn": "e4 c5. cavalo c3 cavalo c6. f4 g6. cavalo f3 Bispo g7. Bispo c4 e6. f5"
     },
     "e4 c5 cavalo c3 e6 d4 d5": {
-        "name": "sicilian Defesa marshall gambito",
+        "name": "Defesa Siciliana marshall gambito",
         "eco": "b23",
         "pgn": "e4 c5. cavalo c3 e6. d4 d5"
     },
     "e4 c5 cavalo c3 cavalo c6 g3 g6": {
-        "name": "sicilian Defesa Fechada",
+        "name": "Defesa Siciliana Fechada",
         "eco": "b24",
         "pgn": "e4 c5. cavalo c3 cavalo c6. g3 g6"
     },
     "e4 c5 cavalo c3 cavalo c6 g3 g6 Bispo g2 Bispo g7": {
-        "name": "sicilian Defesa Fechada",
+        "name": "Defesa Siciliana Fechada",
         "eco": "b24",
         "pgn": "e4 c5. cavalo c3 cavalo c6. g3 g6. Bispo g2 Bispo g7"
     },
     "e4 c5 cavalo c3 cavalo c6 g3": {
-        "name": "sicilian Defesa Fechada Variação fianchetto Variação",
+        "name": "Defesa Siciliana Fechada Variação fianchetto Variação",
         "eco": "b24",
         "pgn": "e4 c5. cavalo c3 cavalo c6. g3"
     },
     "e4 c5 cavalo c3 cavalo c6 g3 g6 Bispo g2 Bispo g7 d3 e6 Bispo e3 cavalo d4 cavalo ce2": {
-        "name": "sicilian Defesa Fechada smyslov Variação",
+        "name": "Defesa Siciliana Fechada smyslov Variação",
         "eco": "b24",
         "pgn": "e4 c5. cavalo c3 cavalo c6. g3 g6. Bispo g2 Bispo g7. d3 e6. Bispo e3 cavalo d4. cavalo ce2"
     },
     "e4 c5 cavalo c3 cavalo c6 g3 g6 Bispo g2 Bispo g7 d3 d6": {
-        "name": "sicilian Defesa Fechada",
+        "name": "Defesa Siciliana Fechada",
         "eco": "b25",
         "pgn": "e4 c5. cavalo c3 cavalo c6. g3 g6. Bispo g2 Bispo g7. d3 d6"
     },
     "e4 c5 cavalo c3 cavalo c6 g3 g6 Bispo g2 Bispo g7 d3 d6 f4": {
-        "name": "sicilian Defesa Fechada Variação",
+        "name": "Defesa Siciliana Fechada Variação",
         "eco": "b25",
         "pgn": "e4 c5. cavalo c3 cavalo c6. g3 g6. Bispo g2 Bispo g7. d3 d6. f4"
     },
     "e4 c5 cavalo c3 cavalo c6 g3 g6 Bispo g2 Bispo g7 d3 d6 f4 e5": {
-        "name": "sicilian Defesa Fechada Variação botvinnik Defesa",
+        "name": "Defesa Siciliana Fechada Variação botvinnik Defesa",
         "eco": "b25",
         "pgn": "e4 c5. cavalo c3 cavalo c6. g3 g6. Bispo g2 Bispo g7. d3 d6. f4 e5"
     },
     "e4 c5 cavalo c3 cavalo c6 g3 g6 Bispo g2 Bispo g7 d3 d6 cavalo ge2 e5": {
-        "name": "sicilian Defesa Fechada Variação botvinnik Defesa",
+        "name": "Defesa Siciliana Fechada Variação botvinnik Defesa",
         "eco": "b25",
         "pgn": "e4 c5. cavalo c3 cavalo c6. g3 g6. Bispo g2 Bispo g7. d3 d6. cavalo ge2 e5"
     },
     "e4 c5 cavalo c3 cavalo c6 g3 g6 Bispo g2 Bispo g7 d3 d6 f4 e5 cavalo h3 cavalo ge7": {
-        "name": "sicilian Defesa Fechada Variação botvinnik Defesa edge Variação",
+        "name": "Defesa Siciliana Fechada Variação botvinnik Defesa edge Variação",
         "eco": "b25",
         "pgn": "e4 c5. cavalo c3 cavalo c6. g3 g6. Bispo g2 Bispo g7. d3 d6. f4 e5. cavalo h3 cavalo ge7"
     },
     "e4 c5 cavalo c3 cavalo c6": {
-        "name": "sicilian Defesa Fechada Variação traditional",
+        "name": "Defesa Siciliana Fechada Variação traditional",
         "eco": "b25",
         "pgn": "e4 c5. cavalo c3 cavalo c6"
     },
     "e4 c5 cavalo c3 cavalo c6 g3 g6 Bispo g2 Bispo g7 d3 d6 Bispo e3": {
-        "name": "sicilian Defesa Fechada Variação",
+        "name": "Defesa Siciliana Fechada Variação",
         "eco": "b26",
         "pgn": "e4 c5. cavalo c3 cavalo c6. g3 g6. Bispo g2 Bispo g7. d3 d6. Bispo e3"
     },
     "e4 c5 cavalo f3": {
-        "name": "sicilian Defesa",
+        "name": "Defesa Siciliana",
         "eco": "b27",
         "pgn": "e4 c5. cavalo f3"
     },
     "e4 c5 cavalo f3 g6 c4 Bispo h6": {
-        "name": "sicilian Defesa acton extension",
+        "name": "Defesa Siciliana acton extension",
         "eco": "b27",
         "pgn": "e4 c5. cavalo f3 g6. c4 Bispo h6"
     },
     "e4 c5 cavalo f3 f5": {
-        "name": "sicilian Defesa brussels gambito",
+        "name": "Defesa Siciliana brussels gambito",
         "eco": "b27",
         "pgn": "e4 c5. cavalo f3 f5"
     },
     "e4 c5 cavalo f3 h6": {
-        "name": "sicilian Defesa bücker Variação",
+        "name": "Defesa Siciliana bücker Variação",
         "eco": "b27",
         "pgn": "e4 c5. cavalo f3 h6"
     },
     "e4 c5 cavalo f3 g6 d4 f5": {
-        "name": "sicilian Defesa frederico Variação",
+        "name": "Defesa Siciliana frederico Variação",
         "eco": "b27",
         "pgn": "e4 c5. cavalo f3 g6. d4 f5"
     },
     "e4 c5 cavalo f3 g6": {
-        "name": "sicilian Defesa hyperaccelerated dragon",
+        "name": "Defesa Siciliana hyperaccelerated dragon",
         "eco": "b27",
         "pgn": "e4 c5. cavalo f3 g6"
     },
     "e4 c5 cavalo f3 g6 d4 Bispo g7": {
-        "name": "sicilian Defesa hyperaccelerated pterodactyl",
+        "name": "Defesa Siciliana hyperaccelerated pterodactyl",
         "eco": "b27",
         "pgn": "e4 c5. cavalo f3 g6. d4 Bispo g7"
     },
     "e4 c5 cavalo f3 g6 d4 Bispo g7 d takes c5 Rainha a5 check cavalo c3 Bispo takes c3 check b takes c3 Rainha takes c3 check": {
-        "name": "sicilian Defesa hyperaccelerated pterodactyl exchange Variação",
+        "name": "Defesa Siciliana hyperaccelerated pterodactyl exchange Variação",
         "eco": "b27",
         "pgn": "e4 c5. cavalo f3 g6. d4 Bispo g7. d takes c5 Rainha a5 check. cavalo c3 Bispo takes c3 check. b takes c3 Rainha takes c3 check"
     },
     "e4 c5 cavalo f3 e5": {
-        "name": "sicilian Defesa jalalabad Variação",
+        "name": "Defesa Siciliana jalalabad Variação",
         "eco": "b27",
         "pgn": "e4 c5. cavalo f3 e5"
     },
     "e4 c5 cavalo f3 b6": {
-        "name": "sicilian Defesa katalimov Variação",
+        "name": "Defesa Siciliana katalimov Variação",
         "eco": "b27",
         "pgn": "e4 c5. cavalo f3 b6"
     },
     "e4 c5 cavalo f3 Rainha a5": {
-        "name": "sicilian Defesa mongoose Variação",
+        "name": "Defesa Siciliana mongoose Variação",
         "eco": "b27",
         "pgn": "e4 c5. cavalo f3 Rainha a5"
     },
     "e4 c5 cavalo f3 b5": {
-        "name": "sicilian Defesa polish gambito",
+        "name": "Defesa Siciliana polish gambito",
         "eco": "b27",
         "pgn": "e4 c5. cavalo f3 b5"
     },
     "e4 c5 cavalo f3 Rainha c7": {
-        "name": "sicilian Defesa quinteros Variação",
+        "name": "Defesa Siciliana quinteros Variação",
         "eco": "b27",
         "pgn": "e4 c5. cavalo f3 Rainha c7"
     },
     "e4 c5 cavalo f3 f5 e takes f5 cavalo h6": {
-        "name": "sicilian Defesa double dutch gambito",
+        "name": "Defesa Siciliana double dutch gambito",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 f5. e takes f5 cavalo h6"
     },
     "e4 c5 cavalo f3 a6": {
-        "name": "sicilian Defesa okelly Variação",
+        "name": "Defesa Siciliana okelly Variação",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6"
     },
     "e4 c5 cavalo f3 a6 Bispo e2": {
-        "name": "sicilian Defesa okelly Variação aronin sistema",
+        "name": "Defesa Siciliana okelly Variação aronin sistema",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. Bispo e2"
     },
     "e4 c5 cavalo f3 a6 b3": {
-        "name": "sicilian Defesa okelly Variação kieseritzky sistema",
+        "name": "Defesa Siciliana okelly Variação kieseritzky sistema",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. b3"
     },
     "e4 c5 cavalo f3 a6 c4": {
-        "name": "sicilian Defesa okelly Variação maróczy bind",
+        "name": "Defesa Siciliana okelly Variação maróczy bind",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. c4"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 a6 c4 e5": {
-        "name": "sicilian Defesa okelly Variação maróczy bind geller linha",
+        "name": "Defesa Siciliana okelly Variação maróczy bind geller linha",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 a6. c4 e5"
     },
     "e4 c5 cavalo f3 a6 c4 e6": {
-        "name": "sicilian Defesa okelly Variação maróczy bind paulsen linha",
+        "name": "Defesa Siciliana okelly Variação maróczy bind paulsen linha",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. c4 e6"
     },
     "e4 c5 cavalo f3 a6 c4 d6": {
-        "name": "sicilian Defesa okelly Variação maróczy bind robatsch linha",
+        "name": "Defesa Siciliana okelly Variação maróczy bind robatsch linha",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. c4 d6"
     },
     "e4 c5 cavalo f3 a6 d4": {
-        "name": "sicilian Defesa okelly Variação normal sistema",
+        "name": "Defesa Siciliana okelly Variação normal sistema",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. d4"
     },
     "e4 c5 cavalo f3 a6 d4 c takes d4 Bispo c4": {
-        "name": "sicilian Defesa okelly Variação normal sistema cortlever gambito",
+        "name": "Defesa Siciliana okelly Variação normal sistema cortlever gambito",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. d4 c takes d4. Bispo c4"
     },
     "e4 c5 cavalo f3 a6 d4 c takes d4 c3": {
-        "name": "sicilian Defesa okelly Variação normal sistema smith morra linha",
+        "name": "Defesa Siciliana okelly Variação normal sistema smith morra linha",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. d4 c takes d4. c3"
     },
     "e4 c5 cavalo f3 a6 d4 c takes d4 cavalo takes d4 e5": {
-        "name": "sicilian Defesa okelly Variação normal sistema taimanov linha",
+        "name": "Defesa Siciliana okelly Variação normal sistema taimanov linha",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. d4 c takes d4. cavalo takes d4 e5"
     },
     "e4 c5 cavalo f3 a6 d4 c takes d4 Rainha takes d4": {
-        "name": "sicilian Defesa okelly Variação normal sistema zagorovsky linha",
+        "name": "Defesa Siciliana okelly Variação normal sistema zagorovsky linha",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. d4 c takes d4. Rainha takes d4"
     },
     "e4 c5 cavalo f3 a6 d3": {
-        "name": "sicilian Defesa okelly Variação quiet sistema",
+        "name": "Defesa Siciliana okelly Variação quiet sistema",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. d3"
     },
     "e4 c5 cavalo f3 a6 g3": {
-        "name": "sicilian Defesa okelly Variação reti sistema",
+        "name": "Defesa Siciliana okelly Variação reti sistema",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. g3"
     },
     "e4 c5 cavalo f3 a6 c3": {
-        "name": "sicilian Defesa okelly Variação venice sistema",
+        "name": "Defesa Siciliana okelly Variação venice sistema",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. c3"
     },
     "e4 c5 cavalo f3 a6 c3 cavalo f6": {
-        "name": "sicilian Defesa okelly Variação venice sistema barcza linha",
+        "name": "Defesa Siciliana okelly Variação venice sistema barcza linha",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. c3 cavalo f6"
     },
     "e4 c5 cavalo f3 a6 c3 d5 e takes d5 cavalo f6": {
-        "name": "sicilian Defesa okelly Variação venice sistema gambito linha",
+        "name": "Defesa Siciliana okelly Variação venice sistema gambito linha",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. c3 d5. e takes d5 cavalo f6"
     },
     "e4 c5 cavalo f3 a6 c3 b5": {
-        "name": "sicilian Defesa okelly Variação venice sistema ljubojevic linha",
+        "name": "Defesa Siciliana okelly Variação venice sistema ljubojevic linha",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. c3 b5"
     },
     "e4 c5 cavalo f3 a6 c3 d6": {
-        "name": "sicilian Defesa okelly Variação venice sistema steiner linha",
+        "name": "Defesa Siciliana okelly Variação venice sistema steiner linha",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. c3 d6"
     },
     "e4 c5 cavalo f3 a6 b4": {
-        "name": "sicilian Defesa okelly Variação wing gambito",
+        "name": "Defesa Siciliana okelly Variação wing gambito",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. b4"
     },
     "e4 c5 cavalo f3 a6 cavalo c3": {
-        "name": "sicilian Defesa okelly Variação yerevan sistema",
+        "name": "Defesa Siciliana okelly Variação yerevan sistema",
         "eco": "b28",
         "pgn": "e4 c5. cavalo f3 a6. cavalo c3"
     },
     "e4 c5 cavalo f3 cavalo f6": {
-        "name": "sicilian Defesa nimzowitsch Variação",
+        "name": "Defesa Siciliana nimzowitsch Variação",
         "eco": "b29",
         "pgn": "e4 c5. cavalo f3 cavalo f6"
     },
     "e4 c5 cavalo f3 cavalo f6 e5": {
-        "name": "sicilian Defesa nimzowitsch Variação advance Variação",
+        "name": "Defesa Siciliana nimzowitsch Variação advance Variação",
         "eco": "b29",
         "pgn": "e4 c5. cavalo f3 cavalo f6. e5"
     },
     "e4 c5 cavalo f3 cavalo f6 cavalo c3": {
-        "name": "sicilian Defesa nimzowitsch Variação Fechada Variação",
+        "name": "Defesa Siciliana nimzowitsch Variação Fechada Variação",
         "eco": "b29",
         "pgn": "e4 c5. cavalo f3 cavalo f6. cavalo c3"
     },
     "e4 c5 cavalo f3 cavalo f6 e5 cavalo d5 cavalo c3 cavalo takes c3": {
-        "name": "sicilian Defesa nimzowitsch Variação exchange Variação",
+        "name": "Defesa Siciliana nimzowitsch Variação exchange Variação",
         "eco": "b29",
         "pgn": "e4 c5. cavalo f3 cavalo f6. e5 cavalo d5. cavalo c3 cavalo takes c3"
     },
     "e4 c5 cavalo f3 cavalo f6 e5 cavalo d5 cavalo c3 e6 cavalo takes d5 e takes d5 d4 cavalo c6": {
-        "name": "sicilian Defesa nimzowitsch Variação main linha",
+        "name": "Defesa Siciliana nimzowitsch Variação main linha",
         "eco": "b29",
         "pgn": "e4 c5. cavalo f3 cavalo f6. e5 cavalo d5. cavalo c3 e6. cavalo takes d5 e takes d5. d4 cavalo c6"
     },
     "e4 c5 cavalo f3 cavalo c6 cavalo c3 e5 Bispo c4 Bispo e7 d3 d6 cavalo d2 Bispo g5": {
-        "name": "sicilian Defesa Fechada sicilian anti sveshnikov Variação kharlov kramnik linha",
+        "name": "Defesa Siciliana Fechada Siciliana anti sveshnikov Variação kharlov kramnik linha",
         "eco": "b30",
         "pgn": "e4 c5. cavalo f3 cavalo c6. cavalo c3 e5. Bispo c4 Bispo e7. d3 d6. cavalo d2 Bispo g5"
     },
     "e4 c5 cavalo f3 cavalo c6 Bispo b5": {
-        "name": "sicilian Defesa nyezhmetdinov rossolimo Ataque",
+        "name": "Defesa Siciliana nyezhmetdinov rossolimo Ataque",
         "eco": "b30",
         "pgn": "e4 c5. cavalo f3 cavalo c6. Bispo b5"
     },
     "e4 c5 cavalo f3 cavalo c6": {
-        "name": "sicilian Defesa Antiga sicilian",
+        "name": "Defesa Siciliana Antiga Siciliana",
         "eco": "b30",
         "pgn": "e4 c5. cavalo f3 cavalo c6"
     },
     "e4 c5 cavalo f3 cavalo c6 Bispo b5 g6": {
-        "name": "sicilian Defesa nyezhmetdinov rossolimo Ataque fianchetto Variação",
+        "name": "Defesa Siciliana nyezhmetdinov rossolimo Ataque fianchetto Variação",
         "eco": "b31",
         "pgn": "e4 c5. cavalo f3 cavalo c6. Bispo b5 g6"
     },
     "e4 c5 cavalo f3 cavalo c6 Bispo b5 g6 castles kingside Bispo g7 c3 e5 d4": {
-        "name": "sicilian Defesa nyezhmetdinov rossolimo Ataque fianchetto Variação gufeld gambito",
+        "name": "Defesa Siciliana nyezhmetdinov rossolimo Ataque fianchetto Variação gufeld gambito",
         "eco": "b31",
         "pgn": "e4 c5. cavalo f3 cavalo c6. Bispo b5 g6. castles kingside Bispo g7. c3 e5. d4"
     },
     "e4 c5 cavalo f3 cavalo c6 Bispo b5 g6 castles kingside Bispo g7 c3 cavalo f6 d4": {
-        "name": "sicilian Defesa nyezhmetdinov rossolimo Ataque fianchetto Variação lutikov gambito",
+        "name": "Defesa Siciliana nyezhmetdinov rossolimo Ataque fianchetto Variação lutikov gambito",
         "eco": "b31",
         "pgn": "e4 c5. cavalo f3 cavalo c6. Bispo b5 g6. castles kingside Bispo g7. c3 cavalo f6. d4"
     },
     "e4 c5 cavalo f3 cavalo c6 Bispo b5 g6 castles kingside Bispo g7 c3 cavalo f6 Rainha a4": {
-        "name": "sicilian Defesa nyezhmetdinov rossolimo Ataque fianchetto Variação totsky Ataque",
+        "name": "Defesa Siciliana nyezhmetdinov rossolimo Ataque fianchetto Variação totsky Ataque",
         "eco": "b31",
         "pgn": "e4 c5. cavalo f3 cavalo c6. Bispo b5 g6. castles kingside Bispo g7. c3 cavalo f6. Rainha a4"
     },
     "e4 c5 cavalo f3 cavalo c6 Bispo b5 g6 castles kingside Bispo g7 rook e1 e5 b4": {
-        "name": "sicilian Defesa nyezhmetdinov rossolimo Ataque gurgenidze Variação",
+        "name": "Defesa Siciliana nyezhmetdinov rossolimo Ataque gurgenidze Variação",
         "eco": "b31",
         "pgn": "e4 c5. cavalo f3 cavalo c6. Bispo b5 g6. castles kingside Bispo g7. rook e1 e5. b4"
     },
     "e4 c5 cavalo f3 cavalo c6 Bispo b5 cavalo a5 b4": {
-        "name": "sicilian Defesa nyezhmetdinov rossolimo Ataque san francisco gambito",
+        "name": "Defesa Siciliana nyezhmetdinov rossolimo Ataque san francisco gambito",
         "eco": "b31",
         "pgn": "e4 c5. cavalo f3 cavalo c6. Bispo b5 cavalo a5. b4"
     },
     "e4 c5 cavalo f3 cavalo c6 Bispo b5 cavalo b8": {
-        "name": "sicilian Defesa rossolimo Variação brooklyn retreat Defesa",
+        "name": "Defesa Siciliana rossolimo Variação brooklyn retreat Defesa",
         "eco": "b31",
         "pgn": "e4 c5. cavalo f3 cavalo c6. Bispo b5 cavalo b8"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 Rainha c7": {
-        "name": "sicilian Defesa flohr Variação",
+        "name": "Defesa Siciliana flohr Variação",
         "eco": "b32",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 Rainha c7"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 e6": {
-        "name": "sicilian Defesa franco sicilian Variação",
+        "name": "Defesa Siciliana franco Siciliana Variação",
         "eco": "b32",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 e6"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 Rainha b6": {
-        "name": "sicilian Defesa godiva Variação",
+        "name": "Defesa Siciliana godiva Variação",
         "eco": "b32",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 Rainha b6"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 e5 cavalo b5 d6": {
-        "name": "sicilian Defesa kalashnikov Variação",
+        "name": "Defesa Siciliana kalashnikov Variação",
         "eco": "b32",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 e5. cavalo b5 d6"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 e5": {
-        "name": "sicilian Defesa löwenthal Variação",
+        "name": "Defesa Siciliana löwenthal Variação",
         "eco": "b32",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 e5"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 d5": {
-        "name": "sicilian Defesa nimzo american Variação",
+        "name": "Defesa Siciliana nimzo american Variação",
         "eco": "b32",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 d5"
     },
     "e4 c5 cavalo f3 cavalo c6 d4": {
-        "name": "sicilian Defesa open",
+        "name": "Defesa Siciliana open",
         "eco": "b32",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4": {
-        "name": "sicilian Defesa open",
+        "name": "Defesa Siciliana open",
         "eco": "b32",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4": {
-        "name": "sicilian Defesa open",
+        "name": "Defesa Siciliana open",
         "eco": "b32",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 e5": {
-        "name": "sicilian Defesa lasker pelikan Variação",
+        "name": "Defesa Siciliana lasker pelikan Variação",
         "eco": "b33",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 e5"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 e5 cavalo db5 d6 Bispo g5 a6\nknight a3 Bispo e6": {
-        "name": "sicilian Defesa lasker pelikan Variação bird Variação",
+        "name": "Defesa Siciliana lasker pelikan Variação bird Variação",
         "eco": "b33",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 e5. cavalo db5 d6. Bispo g5 a6.\nknight a3 Bispo e6"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 e5 cavalo takes c6": {
-        "name": "sicilian Defesa lasker pelikan Variação exchange Variação",
+        "name": "Defesa Siciliana lasker pelikan Variação exchange Variação",
         "eco": "b33",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 e5. cavalo takes c6"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 e5 cavalo f3": {
-        "name": "sicilian Defesa lasker pelikan Variação retreat Variação",
+        "name": "Defesa Siciliana lasker pelikan Variação retreat Variação",
         "eco": "b33",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 e5. cavalo f3"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 e5 cavalo b3": {
-        "name": "sicilian Defesa lasker pelikan Variação schlechter Variação",
+        "name": "Defesa Siciliana lasker pelikan Variação schlechter Variação",
         "eco": "b33",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 e5. cavalo b3"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 e5 cavalo db5 d6 Bispo g5 a6\nknight a3 b5": {
-        "name": "sicilian Defesa lasker pelikan Variação sveshnikov Variação",
+        "name": "Defesa Siciliana lasker pelikan Variação sveshnikov Variação",
         "eco": "b33",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 e5. cavalo db5 d6. Bispo g5 a6.\nknight a3 b5"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 e5 cavalo db5 d6 Bispo g5 a6\nknight a3 b5 Bispo takes f6 g takes f6 cavalo d5 f5": {
-        "name": "sicilian Defesa lasker pelikan Variação sveshnikov Variação",
+        "name": "Defesa Siciliana lasker pelikan Variação sveshnikov Variação",
         "eco": "b33",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 e5. cavalo db5 d6. Bispo g5 a6.\nknight a3 b5. Bispo takes f6 g takes f6. cavalo d5 f5"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 e5 cavalo db5 d6 Bispo g5 a6\nknight a3 b5 cavalo d5": {
-        "name": "sicilian Defesa lasker pelikan Variação sveshnikov Variação chelyabinsk Variação",
+        "name": "Defesa Siciliana lasker pelikan Variação sveshnikov Variação chelyabinsk Variação",
         "eco": "b33",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 e5. cavalo db5 d6. Bispo g5 a6.\nknight a3 b5. cavalo d5"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 e5 cavalo db5 d6 Bispo g5 a6\nknight a3 b5 Bispo takes f6 g takes f6 cavalo d5 Bispo g7": {
-        "name": "sicilian Defesa lasker pelikan Variação sveshnikov Variação novosibirsk Variação",
+        "name": "Defesa Siciliana lasker pelikan Variação sveshnikov Variação novosibirsk Variação",
         "eco": "b33",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 e5. cavalo db5 d6. Bispo g5 a6.\nknight a3 b5. Bispo takes f6 g takes f6. cavalo d5 Bispo g7"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 e5 cavalo db5 d6 Bispo g5 a6\nknight a3 b5 Bispo takes f6 g takes f6 cavalo d5 f5 1 Bispo takes b5": {
-        "name": "sicilian Defesa lasker pelikan Variação sveshnikov Variação peresypkins sacrifice",
+        "name": "Defesa Siciliana lasker pelikan Variação sveshnikov Variação peresypkins sacrifice",
         "eco": "b33",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 e5. cavalo db5 d6. Bispo g5 a6.\nknight a3 b5. Bispo takes f6 g takes f6. cavalo d5 f5 1 Bispo takes b5"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6": {
-        "name": "sicilian Defesa open",
+        "name": "Defesa Siciliana open",
         "eco": "b33",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 g6": {
-        "name": "sicilian Defesa accelerated dragon",
+        "name": "Defesa Siciliana accelerated dragon",
         "eco": "b34",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 g6"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 g6 cavalo takes c6": {
-        "name": "sicilian Defesa accelerated dragon exchange Variação",
+        "name": "Defesa Siciliana accelerated dragon exchange Variação",
         "eco": "b34",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 g6. cavalo takes c6"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 g6 cavalo c3": {
-        "name": "sicilian Defesa accelerated dragon Moderna Variação",
+        "name": "Defesa Siciliana accelerated dragon Moderna Variação",
         "eco": "b34",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 g6. cavalo c3"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 g6 cavalo c3 Bispo g7 Bispo e3 cavalo f6 Bispo c4": {
-        "name": "sicilian Defesa accelerated dragon Moderna bc4 Variação",
+        "name": "Defesa Siciliana accelerated dragon Moderna bc4 Variação",
         "eco": "b35",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 g6. cavalo c3 Bispo g7. Bispo e3 cavalo f6. Bispo c4"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 g6 cavalo c3 Bispo g7 Bispo e3 cavalo f6 Bispo c4 d6": {
-        "name": "sicilian Defesa dragon Variação Moderna bc4 Variação",
+        "name": "Defesa Siciliana dragon Variação Moderna bc4 Variação",
         "eco": "b35",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 g6. cavalo c3 Bispo g7. Bispo e3 cavalo f6. Bispo c4 d6"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 g6": {
-        "name": "sicilian Defesa accelerated dragon",
+        "name": "Defesa Siciliana accelerated dragon",
         "eco": "b36",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 g6"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 g6 c4": {
-        "name": "sicilian Defesa accelerated dragon maróczy bind",
+        "name": "Defesa Siciliana accelerated dragon maróczy bind",
         "eco": "b36",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 g6. c4"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 g6 c4 cavalo f6 cavalo c3 cavalo takes d4 Rainha takes d4 d6": {
-        "name": "sicilian Defesa accelerated dragon maróczy bind gurgenidze Variação",
+        "name": "Defesa Siciliana accelerated dragon maróczy bind gurgenidze Variação",
         "eco": "b36",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 g6. c4 cavalo f6. cavalo c3 cavalo takes d4. Rainha takes d4 d6"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 g6 c4 Bispo g7": {
-        "name": "sicilian Defesa accelerated fianchetto maróczy bind 5... bg7",
+        "name": "Defesa Siciliana accelerated fianchetto maróczy bind 5... bg7",
         "eco": "b37",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 g6. c4 Bispo g7"
     },
     "cavalo f3 c5 c4 g6 d4 c takes d4 cavalo takes d4 cavalo c6 cavalo c2 Bispo g7 e4 d6 Bispo e2 cavalo h6": {
-        "name": "sicilian Defesa accelerated fianchetto simagin Variação",
+        "name": "Defesa Siciliana accelerated fianchetto simagin Variação",
         "eco": "b37",
         "pgn": "cavalo f3 c5. c4 g6. d4 c takes d4. cavalo takes d4 cavalo c6. cavalo c2 Bispo g7. e4 d6. Bispo e2 cavalo h6"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 g6 c4 Bispo g7 Bispo e3": {
-        "name": "sicilian Defesa accelerated dragon maróczy bind",
+        "name": "Defesa Siciliana accelerated dragon maróczy bind",
         "eco": "b38",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 g6. c4 Bispo g7. Bispo e3"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 g6 c4 Bispo g7 Bispo e3 cavalo f6 cavalo c3 cavalo g4": {
-        "name": "sicilian Defesa accelerated dragon maróczy bind breyer Variação",
+        "name": "Defesa Siciliana accelerated dragon maróczy bind breyer Variação",
         "eco": "b39",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 g6. c4 Bispo g7. Bispo e3 cavalo f6. cavalo c3 cavalo g4"
     },
     "e4 c5 cavalo f3 e6 c3": {
-        "name": "sicilian Defesa delayed alapin Variação",
+        "name": "Defesa Siciliana delayed alapin Variação",
         "eco": "b40",
         "pgn": "e4 c5. cavalo f3 e6. c3"
     },
     "e4 e6 d4 c5 cavalo f3 a6": {
-        "name": "sicilian Defesa drazic Variação",
+        "name": "Defesa Siciliana drazic Variação",
         "eco": "b40",
         "pgn": "e4 e6. d4 c5. cavalo f3 a6"
     },
     "e4 c5 cavalo f3 e6": {
-        "name": "sicilian Defesa french Variação",
+        "name": "Defesa Siciliana french Variação",
         "eco": "b40",
         "pgn": "e4 c5. cavalo f3 e6"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo f6": {
-        "name": "sicilian Defesa french Variação normal",
+        "name": "Defesa Siciliana french Variação normal",
         "eco": "b40",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo f6"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4": {
-        "name": "sicilian Defesa french Variação open",
+        "name": "Defesa Siciliana french Variação open",
         "eco": "b40",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4"
     },
     "e4 c5 cavalo f3 e6 b3": {
-        "name": "sicilian Defesa french Variação westerinen Ataque",
+        "name": "Defesa Siciliana french Variação westerinen Ataque",
         "eco": "b40",
         "pgn": "e4 c5. cavalo f3 e6. b3"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 Rainha b6": {
-        "name": "sicilian Defesa gaw paw Variação",
+        "name": "Defesa Siciliana gaw paw Variação",
         "eco": "b40",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 Rainha b6"
     },
     "e4 c5 cavalo f3 e6 c4": {
-        "name": "sicilian Defesa kramnik Variação",
+        "name": "Defesa Siciliana kramnik Variação",
         "eco": "b40",
         "pgn": "e4 c5. cavalo f3 e6. c4"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 Rainha b6": {
-        "name": "sicilian Defesa kveinis Variação",
+        "name": "Defesa Siciliana kveinis Variação",
         "eco": "b40",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 Rainha b6"
     },
     "e4 c5 cavalo f3 e6 d4 d5": {
-        "name": "sicilian Defesa marshall counterAtaque",
+        "name": "Defesa Siciliana marshall counterAtaque",
         "eco": "b40",
         "pgn": "e4 c5. cavalo f3 e6. d4 d5"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 Bispo c5": {
-        "name": "sicilian Defesa paulsen basman Defesa",
+        "name": "Defesa Siciliana paulsen basman Defesa",
         "eco": "b40",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 Bispo c5"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 Bispo b4": {
-        "name": "sicilian Defesa pin Variação",
+        "name": "Defesa Siciliana pin Variação",
         "eco": "b40",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 Bispo b4"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 Bispo b4 Bispo d3 e5": {
-        "name": "sicilian Defesa pin Variação jaffe Variação",
+        "name": "Defesa Siciliana pin Variação jaffe Variação",
         "eco": "b40",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 Bispo b4. Bispo d3 e5"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 Bispo b4 e5": {
-        "name": "sicilian Defesa pin Variação koch Variação",
+        "name": "Defesa Siciliana pin Variação koch Variação",
         "eco": "b40",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 Bispo b4. e5"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 c3": {
-        "name": "sicilian Defesa smith morra gambito deferred",
+        "name": "Defesa Siciliana smith morra gambito deferred",
         "eco": "b40",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. c3"
     },
     "e4 c5 cavalo f3 e6 b4": {
-        "name": "sicilian Defesa wing gambito deferred",
+        "name": "Defesa Siciliana wing gambito deferred",
         "eco": "b40",
         "pgn": "e4 c5. cavalo f3 e6. b4"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 a6": {
-        "name": "sicilian Defesa kan Variação",
+        "name": "Defesa Siciliana kan Variação",
         "eco": "b41",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 a6"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 a6 c4 cavalo f6 cavalo c3 Bispo b4 Bispo d3 cavalo c6": {
-        "name": "sicilian Defesa kan Variação maróczy bind bronstein Variação",
+        "name": "Defesa Siciliana kan Variação maróczy bind bronstein Variação",
         "eco": "b41",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 a6. c4 cavalo f6. cavalo c3 Bispo b4. Bispo d3 cavalo c6"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 a6 c4 g6": {
-        "name": "sicilian Defesa kan Variação maróczy bind hedgehog Variação",
+        "name": "Defesa Siciliana kan Variação maróczy bind hedgehog Variação",
         "eco": "b41",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 a6. c4 g6"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 a6 c4": {
-        "name": "sicilian Defesa kan Variação maróczy bind reti Variação",
+        "name": "Defesa Siciliana kan Variação maróczy bind reti Variação",
         "eco": "b41",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 a6. c4"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 a6 c4 cavalo f6 cavalo c3 Bispo b4 Bispo d3 cavalo c6 Bispo c2": {
-        "name": "sicilian Defesa kan maróczy bind bronstein Variação",
+        "name": "Defesa Siciliana kan maróczy bind bronstein Variação",
         "eco": "b41",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 a6. c4 cavalo f6. cavalo c3 Bispo b4. Bispo d3 cavalo c6. Bispo c2"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 a6 Bispo d3": {
-        "name": "sicilian Defesa kan Variação Moderna Variação",
+        "name": "Defesa Siciliana kan Variação Moderna Variação",
         "eco": "b42",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 a6. Bispo d3"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 a6 Bispo d3 Bispo c5": {
-        "name": "sicilian Defesa kan Variação polugaevsky Variação",
+        "name": "Defesa Siciliana kan Variação polugaevsky Variação",
         "eco": "b42",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 a6. Bispo d3 Bispo c5"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 a6 Bispo d3 g6": {
-        "name": "sicilian Defesa kan Variação swiss cheese Variação",
+        "name": "Defesa Siciliana kan Variação swiss cheese Variação",
         "eco": "b42",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 a6. Bispo d3 g6"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 a6 Bispo d3 cavalo f6 castles kingside d6 c4 g6": {
-        "name": "sicilian Defesa kan gipslis Variação",
+        "name": "Defesa Siciliana kan gipslis Variação",
         "eco": "b42",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 a6. Bispo d3 cavalo f6. castles kingside d6. c4 g6"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 a6 cavalo c3": {
-        "name": "sicilian Defesa kan Variação cavalo Variação",
+        "name": "Defesa Siciliana kan Variação cavalo Variação",
         "eco": "b43",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 a6. cavalo c3"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 a6 cavalo c3 b5": {
-        "name": "sicilian Defesa kan Variação wing Ataque",
+        "name": "Defesa Siciliana kan Variação wing Ataque",
         "eco": "b43",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 a6. cavalo c3 b5"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 a6 cavalo c3 b5 Bispo d3 Rainha b6 Bispo e3 Bispo c5 Rainha g4": {
-        "name": "sicilian Defesa kan Variação wing Ataque christiansens dream",
+        "name": "Defesa Siciliana kan Variação wing Ataque christiansens dream",
         "eco": "b43",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 a6. cavalo c3 b5. Bispo d3 Rainha b6. Bispo e3 Bispo c5. Rainha g4"
     },
     "e4 c5 cavalo f3 e6 cavalo c3 a6 g3 b5 d4 c takes d4 cavalo takes d4": {
-        "name": "sicilian Defesa kan Variação wing Ataque fianchetto Variação",
+        "name": "Defesa Siciliana kan Variação wing Ataque fianchetto Variação",
         "eco": "b43",
         "pgn": "e4 c5. cavalo f3 e6. cavalo c3 a6. g3 b5. d4 c takes d4. cavalo takes d4"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 a6 cavalo c3 b5 Bispo d3 Rainha b6 cavalo f3": {
-        "name": "sicilian Defesa kan Variação wing Ataque spraggett Ataque",
+        "name": "Defesa Siciliana kan Variação wing Ataque spraggett Ataque",
         "eco": "b43",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 a6. cavalo c3 b5. Bispo d3 Rainha b6. cavalo f3"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo c6": {
-        "name": "sicilian Defesa paulsen Variação",
+        "name": "Defesa Siciliana paulsen Variação",
         "eco": "b44",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo c6"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo c6 cavalo b5 d6 c4 cavalo f6 cavalo 1c3 a6 cavalo a3\nd5": {
-        "name": "sicilian Defesa paulsen Variação gary gambito",
+        "name": "Defesa Siciliana paulsen Variação gary gambito",
         "eco": "b44",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo c6. cavalo b5 d6. c4 cavalo f6. cavalo 1c3 a6. cavalo a3\nd5"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo c6 cavalo b5 d6 c4 cavalo f6 cavalo 1c3 a6 cavalo a3\nbishop e7 Bispo e2 castles kingside castles kingside b6": {
-        "name": "sicilian Defesa paulsen Variação Moderna linha",
+        "name": "Defesa Siciliana paulsen Variação Moderna linha",
         "eco": "b44",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo c6. cavalo b5 d6. c4 cavalo f6. cavalo 1c3 a6. cavalo a3\nbishop e7. Bispo e2 castles kingside. castles kingside b6"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo c6 cavalo b5": {
-        "name": "sicilian Defesa paulsen Variação szen Variação",
+        "name": "Defesa Siciliana paulsen Variação szen Variação",
         "eco": "b44",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo c6. cavalo b5"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6": {
-        "name": "sicilian Defesa four cavalos Variação",
+        "name": "Defesa Siciliana four cavalos Variação",
         "eco": "b45",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 e6 cavalo db5 Bispo c5": {
-        "name": "sicilian Defesa four cavalos Variação cobra Variação",
+        "name": "Defesa Siciliana four cavalos Variação cobra Variação",
         "eco": "b45",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 e6. cavalo db5 Bispo c5"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 cavalo takes c6": {
-        "name": "sicilian Defesa four cavalos Variação exchange Variação",
+        "name": "Defesa Siciliana four cavalos Variação exchange Variação",
         "eco": "b45",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. cavalo takes c6"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 cavalo db5 Bispo b4 cavalo d6 check": {
-        "name": "sicilian Defesa paulsen Variação american Ataque",
+        "name": "Defesa Siciliana paulsen Variação american Ataque",
         "eco": "b45",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. cavalo db5 Bispo b4. cavalo d6 check"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo c6 cavalo c3": {
-        "name": "sicilian Defesa paulsen Variação normal Variação",
+        "name": "Defesa Siciliana paulsen Variação normal Variação",
         "eco": "b45",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo c6. cavalo c3"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo c6 cavalo c3 a6": {
-        "name": "sicilian Defesa paulsen Variação",
+        "name": "Defesa Siciliana paulsen Variação",
         "eco": "b46",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo c6. cavalo c3 a6"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo c6 cavalo c3 a6 Bispo e2 cavalo ge7": {
-        "name": "sicilian Defesa paulsen Variação taimanov Variação",
+        "name": "Defesa Siciliana paulsen Variação taimanov Variação",
         "eco": "b46",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo c6. cavalo c3 a6. Bispo e2 cavalo ge7"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo c6 cavalo c3 Rainha c7": {
-        "name": "sicilian Defesa paulsen Variação bastrikov Variação",
+        "name": "Defesa Siciliana paulsen Variação bastrikov Variação",
         "eco": "b47",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo c6. cavalo c3 Rainha c7"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo c6 cavalo c3 Rainha c7 Bispo e3": {
-        "name": "sicilian Defesa paulsen Variação bastrikov Variação",
+        "name": "Defesa Siciliana paulsen Variação bastrikov Variação",
         "eco": "b48",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo c6. cavalo c3 Rainha c7. Bispo e3"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo c6 cavalo c3 Rainha c7 Bispo e3 a6 Rainha d2": {
-        "name": "sicilian Defesa paulsen Variação bastrikov Variação Inglesa Ataque",
+        "name": "Defesa Siciliana paulsen Variação bastrikov Variação Inglesa Ataque",
         "eco": "b48",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo c6. cavalo c3 Rainha c7. Bispo e3 a6. Rainha d2"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo c6 cavalo c3 Rainha c7 cavalo db5 Rainha b8 Bispo e3 a6\nbishop b6": {
-        "name": "sicilian Defesa paulsen Variação bastrikov Variação ponomariov gambito",
+        "name": "Defesa Siciliana paulsen Variação bastrikov Variação ponomariov gambito",
         "eco": "b48",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo c6. cavalo c3 Rainha c7. cavalo db5 Rainha b8. Bispo e3 a6.\nbishop b6"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo c6 cavalo c3 Rainha c7 Bispo e3 a6 Bispo e2": {
-        "name": "sicilian Defesa paulsen Variação bastrikov Variação",
+        "name": "Defesa Siciliana paulsen Variação bastrikov Variação",
         "eco": "b49",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo c6. cavalo c3 Rainha c7. Bispo e3 a6. Bispo e2"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 Rainha c7 cavalo c3 e6 Bispo e3 a6 f3": {
-        "name": "sicilian Defesa paulsen Variação bastrikov Variação Inglesa Ataque",
+        "name": "Defesa Siciliana paulsen Variação bastrikov Variação Inglesa Ataque",
         "eco": "b49",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 Rainha c7. cavalo c3 e6. Bispo e3 a6. f3"
     },
     "e4 c5 cavalo f3 d6": {
-        "name": "sicilian Defesa",
+        "name": "Defesa Siciliana",
         "eco": "b50",
         "pgn": "e4 c5. cavalo f3 d6"
     },
     "e4 c5 cavalo f3 d6 c3": {
-        "name": "sicilian Defesa delayed alapin",
+        "name": "Defesa Siciliana delayed alapin",
         "eco": "b50",
         "pgn": "e4 c5. cavalo f3 d6. c3"
     },
     "e4 c5 cavalo f3 d6 c3 cavalo f6 Bispo e2 cavalo c6 d4 c takes d4 c takes d4 cavalo takes e4 d5 Rainha a5 check\nknight c3 cavalo takes c3 b takes c3": {
-        "name": "sicilian Defesa delayed alapin basman palatnik double gambito",
+        "name": "Defesa Siciliana delayed alapin basman palatnik double gambito",
         "eco": "b50",
         "pgn": "e4 c5. cavalo f3 d6. c3 cavalo f6. Bispo e2 cavalo c6. d4 c takes d4. c takes d4 cavalo takes e4. d5 Rainha a5 check.\nknight c3 cavalo takes c3. b takes c3"
     },
     "e4 c5 cavalo f3 d6 c3 cavalo f6 Bispo e2 cavalo c6 d4 c takes d4 c takes d4 cavalo takes e4": {
-        "name": "sicilian Defesa delayed alapin basman palatnik gambito",
+        "name": "Defesa Siciliana delayed alapin basman palatnik gambito",
         "eco": "b50",
         "pgn": "e4 c5. cavalo f3 d6. c3 cavalo f6. Bispo e2 cavalo c6. d4 c takes d4. c takes d4 cavalo takes e4"
     },
     "e4 c5 cavalo f3 d6 g3 b5": {
-        "name": "sicilian Defesa kotov gambito",
+        "name": "Defesa Siciliana kotov gambito",
         "eco": "b50",
         "pgn": "e4 c5. cavalo f3 d6. g3 b5"
     },
     "e4 c5 cavalo f3 d6 d4 cavalo f6": {
-        "name": "sicilian Defesa Moderna variations anti qxd4 move order",
+        "name": "Defesa Siciliana Moderna variations anti qxd4 move order",
         "eco": "b50",
         "pgn": "e4 c5. cavalo f3 d6. d4 cavalo f6"
     },
     "e4 c5 cavalo f3 d6 d4 cavalo f6 d takes c5 cavalo takes e4": {
-        "name": "sicilian Defesa Moderna variations anti qxd4 move order Aceito",
+        "name": "Defesa Siciliana Moderna variations anti qxd4 move order Aceito",
         "eco": "b50",
         "pgn": "e4 c5. cavalo f3 d6. d4 cavalo f6. d takes c5 cavalo takes e4"
     },
     "e4 c5 cavalo f3 d6 b4": {
-        "name": "sicilian Defesa wing gambito deferred Variação",
+        "name": "Defesa Siciliana wing gambito deferred Variação",
         "eco": "b50",
         "pgn": "e4 c5. cavalo f3 d6. b4"
     },
     "e4 c5 cavalo f3 d6 Bispo b5 check Bispo d7 Bispo takes d7 check Rainha takes d7 castles kingside cavalo c6 c3 cavalo f6 d4": {
-        "name": "sicilian Defesa canal Ataque haag gambito",
+        "name": "Defesa Siciliana canal Ataque haag gambito",
         "eco": "b51",
         "pgn": "e4 c5. cavalo f3 d6. Bispo b5 check Bispo d7. Bispo takes d7 check Rainha takes d7. castles kingside cavalo c6. c3 cavalo f6. d4"
     },
     "e4 c5 cavalo f3 d6 Bispo b5 check cavalo c6 castles kingside Bispo d7 c3 cavalo f6 rook e1 a6 Bispo takes c6 Bispo takes c6\nd4 Bispo takes e4 Bispo g5": {
-        "name": "sicilian Defesa canal Ataque moscow gambito",
+        "name": "Defesa Siciliana canal Ataque moscow gambito",
         "eco": "b51",
         "pgn": "e4 c5. cavalo f3 d6. Bispo b5 check cavalo c6. castles kingside Bispo d7. c3 cavalo f6. rook e1 a6. Bispo takes c6 Bispo takes c6.\nd4 Bispo takes e4. Bispo g5"
     },
     "e4 c5 cavalo f3 d6 Bispo b5 check": {
-        "name": "sicilian Defesa canal sokolsky Ataque",
+        "name": "Defesa Siciliana canal sokolsky Ataque",
         "eco": "b51",
         "pgn": "e4 c5. cavalo f3 d6. Bispo b5 check"
     },
     "e4 c5 cavalo f3 d6 Bispo b5 check cavalo c6 castles kingside Bispo d7 Rainha e2 g6 e5": {
-        "name": "sicilian Defesa canal Ataque dorfman gambito",
+        "name": "Defesa Siciliana canal Ataque dorfman gambito",
         "eco": "b52",
         "pgn": "e4 c5. cavalo f3 d6. Bispo b5 check cavalo c6. castles kingside Bispo d7. Rainha e2 g6. e5"
     },
     "e4 c5 cavalo f3 d6 Bispo b5 check Bispo d7": {
-        "name": "sicilian Defesa canal Ataque main linha",
+        "name": "Defesa Siciliana canal Ataque main linha",
         "eco": "b52",
         "pgn": "e4 c5. cavalo f3 d6. Bispo b5 check Bispo d7"
     },
     "e4 c5 cavalo f3 d6 Bispo b5 check Bispo d7 Bispo takes d7 check Rainha takes d7 c4": {
-        "name": "sicilian Defesa canal sokolsky Ataque sokolsky Variação",
+        "name": "Defesa Siciliana canal sokolsky Ataque sokolsky Variação",
         "eco": "b52",
         "pgn": "e4 c5. cavalo f3 d6. Bispo b5 check Bispo d7. Bispo takes d7 check Rainha takes d7. c4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 Rainha takes d4": {
-        "name": "sicilian Defesa chekhover Variação",
+        "name": "Defesa Siciliana chekhover Variação",
         "eco": "b53",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. Rainha takes d4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 Rainha takes d4 cavalo c6 Bispo b5 Rainha d7": {
-        "name": "sicilian Defesa chekhover Variação zaitsev Defesa",
+        "name": "Defesa Siciliana chekhover Variação zaitsev Defesa",
         "eco": "b53",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. Rainha takes d4 cavalo c6. Bispo b5 Rainha d7"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 c3": {
-        "name": "sicilian Defesa Moderna variations tartakower",
+        "name": "Defesa Siciliana Moderna variations tartakower",
         "eco": "b53",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. c3"
     },
     "e4 c5 cavalo f3 d6 d4": {
-        "name": "sicilian Defesa",
+        "name": "Defesa Siciliana",
         "eco": "b54",
         "pgn": "e4 c5. cavalo f3 d6. d4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4": {
-        "name": "sicilian Defesa",
+        "name": "Defesa Siciliana",
         "eco": "b54",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 f3": {
-        "name": "sicilian Defesa prins Variação",
+        "name": "Defesa Siciliana prins Variação",
         "eco": "b54",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. f3"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 f3 e5 Bispo b5 check": {
-        "name": "sicilian Defesa prins Variação venice Ataque",
+        "name": "Defesa Siciliana prins Variação venice Ataque",
         "eco": "b55",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. f3 e5. Bispo b5 check"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6": {
-        "name": "sicilian Defesa clássica Variação",
+        "name": "Defesa Siciliana clássica Variação",
         "eco": "b56",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 Bispo d7": {
-        "name": "sicilian Defesa kupreichik Variação",
+        "name": "Defesa Siciliana kupreichik Variação",
         "eco": "b56",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 Bispo d7"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3": {
-        "name": "sicilian Defesa Moderna variations",
+        "name": "Defesa Siciliana Moderna variations",
         "eco": "b56",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 cavalo de2": {
-        "name": "sicilian Defesa spielmann Variação",
+        "name": "Defesa Siciliana spielmann Variação",
         "eco": "b56",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. cavalo de2"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 e5 Bispo b5 check": {
-        "name": "sicilian Defesa venice Ataque",
+        "name": "Defesa Siciliana venice Ataque",
         "eco": "b56",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 e5. Bispo b5 check"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo d3": {
-        "name": "sicilian Defesa yates Variação",
+        "name": "Defesa Siciliana yates Variação",
         "eco": "b56",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo d3"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo c4 Rainha b6": {
-        "name": "sicilian Defesa clássica Variação anti sozin Variação",
+        "name": "Defesa Siciliana clássica Variação anti sozin Variação",
         "eco": "b57",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo c4 Rainha b6"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo c4 g6 cavalo takes c6 b takes c6\ne5": {
-        "name": "sicilian Defesa magnus smith trap",
+        "name": "Defesa Siciliana magnus smith trap",
         "eco": "b57",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo c4 g6. cavalo takes c6 b takes c6.\ne5"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6": {
-        "name": "sicilian Defesa Moderna variations main linha",
+        "name": "Defesa Siciliana Moderna variations main linha",
         "eco": "b57",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo c4": {
-        "name": "sicilian Defesa sozin not scheveningen",
+        "name": "Defesa Siciliana sozin not scheveningen",
         "eco": "b57",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo c4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 Bispo e2 e5": {
-        "name": "sicilian Defesa boleslavsky Variação",
+        "name": "Defesa Siciliana boleslavsky Variação",
         "eco": "b58",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. Bispo e2 e5"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo e2 e5 cavalo takes c6": {
-        "name": "sicilian Defesa boleslavsky Variação louma Variação",
+        "name": "Defesa Siciliana boleslavsky Variação louma Variação",
         "eco": "b58",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo e2 e5. cavalo takes c6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 Bispo e2": {
-        "name": "sicilian Defesa clássica Variação",
+        "name": "Defesa Siciliana clássica Variação",
         "eco": "b58",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. Bispo e2"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 Bispo e2 cavalo takes d4 Rainha takes d4 g6": {
-        "name": "sicilian Defesa clássica Variação dragon transfer",
+        "name": "Defesa Siciliana clássica Variação dragon transfer",
         "eco": "b58",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. Bispo e2 cavalo takes d4. Rainha takes d4 g6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 g3": {
-        "name": "sicilian Defesa clássica Variação fianchetto Variação",
+        "name": "Defesa Siciliana clássica Variação fianchetto Variação",
         "eco": "b58",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. g3"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo e2 e5 cavalo b3": {
-        "name": "sicilian Defesa boleslavsky Variação",
+        "name": "Defesa Siciliana boleslavsky Variação",
         "eco": "b59",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo e2 e5. cavalo b3"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 Bispo g5": {
-        "name": "sicilian Defesa richter rauzer Variação",
+        "name": "Defesa Siciliana richter rauzer Variação",
         "eco": "b60",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. Bispo g5"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo g5 g6": {
-        "name": "sicilian Defesa richter rauzer Variação dragon Variação",
+        "name": "Defesa Siciliana richter rauzer Variação dragon Variação",
         "eco": "b60",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo g5 g6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 Bispo g5 Bispo d7": {
-        "name": "sicilian Defesa richter rauzer Variação Moderna Variação",
+        "name": "Defesa Siciliana richter rauzer Variação Moderna Variação",
         "eco": "b60",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. Bispo g5 Bispo d7"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo g5 Bispo d7 Rainha d2": {
-        "name": "sicilian Defesa richter rauzer Variação Moderna Variação",
+        "name": "Defesa Siciliana richter rauzer Variação Moderna Variação",
         "eco": "b61",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo g5 Bispo d7. Rainha d2"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 Bispo g5 e6 Rainha d3": {
-        "name": "sicilian Defesa richter rauzer Variação",
+        "name": "Defesa Siciliana richter rauzer Variação",
         "eco": "b62",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. Bispo g5 e6. Rainha d3"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 Bispo g5 e6 cavalo takes c6": {
-        "name": "sicilian Defesa richter rauzer Variação exchange Variação",
+        "name": "Defesa Siciliana richter rauzer Variação exchange Variação",
         "eco": "b62",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. Bispo g5 e6. cavalo takes c6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 Bispo g5 e6 Rainha d2 a6": {
-        "name": "sicilian Defesa richter rauzer Variação neo Moderna Variação early deviations",
+        "name": "Defesa Siciliana richter rauzer Variação neo Moderna Variação early deviations",
         "eco": "b62",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. Bispo g5 e6. Rainha d2 a6"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo g5 e6 cavalo b3": {
-        "name": "sicilian Defesa richter rauzer Variação podebrady Variação",
+        "name": "Defesa Siciliana richter rauzer Variação podebrady Variação",
         "eco": "b62",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo g5 e6. cavalo b3"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 Bispo g5 e6 Bispo b5": {
-        "name": "sicilian Defesa richter rauzer Variação vitolins Variação",
+        "name": "Defesa Siciliana richter rauzer Variação vitolins Variação",
         "eco": "b62",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. Bispo g5 e6. Bispo b5"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 Bispo g5 e6": {
-        "name": "sicilian Defesa richter rauzer 6... e6",
+        "name": "Defesa Siciliana richter rauzer 6... e6",
         "eco": "b62",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. Bispo g5 e6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 Bispo g5 e6 Rainha d2 Bispo e7": {
-        "name": "sicilian Defesa richter rauzer Variação clássica Variação",
+        "name": "Defesa Siciliana richter rauzer Variação clássica Variação",
         "eco": "b63",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. Bispo g5 e6. Rainha d2 Bispo e7"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 Bispo g5 e6 Rainha d2 Rainha b6": {
-        "name": "sicilian Defesa richter rauzer Variação ivanov Variação",
+        "name": "Defesa Siciliana richter rauzer Variação ivanov Variação",
         "eco": "b63",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. Bispo g5 e6. Rainha d2 Rainha b6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 Bispo g5 e6 Rainha d2": {
-        "name": "sicilian Defesa richter rauzer Variação traditional Variação",
+        "name": "Defesa Siciliana richter rauzer Variação traditional Variação",
         "eco": "b63",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. Bispo g5 e6. Rainha d2"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 Bispo g5 e6 Rainha d2 Bispo e7\ncastles queenside castles kingside f4": {
-        "name": "sicilian Defesa richter rauzer Variação clássica Variação",
+        "name": "Defesa Siciliana richter rauzer Variação clássica Variação",
         "eco": "b64",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. Bispo g5 e6. Rainha d2 Bispo e7.\ncastles queenside castles kingside. f4"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo g5 e6 Rainha d2 Bispo e7\ncastles queenside castles kingside f4 e5": {
-        "name": "sicilian Defesa richter rauzer Variação clássica Variação",
+        "name": "Defesa Siciliana richter rauzer Variação clássica Variação",
         "eco": "b64",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo g5 e6. Rainha d2 Bispo e7.\ncastles queenside castles kingside. f4 e5"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 Bispo g5 e6 Rainha d2 Bispo e7\ncastles queenside castles kingside f4 cavalo takes d4 Rainha takes d4": {
-        "name": "sicilian Defesa richter rauzer Variação clássica Variação",
+        "name": "Defesa Siciliana richter rauzer Variação clássica Variação",
         "eco": "b65",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. Bispo g5 e6. Rainha d2 Bispo e7.\ncastles queenside castles kingside. f4 cavalo takes d4. Rainha takes d4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 Bispo g5 e6 Rainha d2 Bispo e7\ncastles queenside castles kingside f4 cavalo takes d4": {
-        "name": "sicilian Defesa richter rauzer rauzer Ataque 7... be7 Defesa 9... nxd4",
+        "name": "Defesa Siciliana richter rauzer rauzer Ataque 7... be7 Defesa 9... nxd4",
         "eco": "b65",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. Bispo g5 e6. Rainha d2 Bispo e7.\ncastles queenside castles kingside. f4 cavalo takes d4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 Bispo g5 e6 Rainha d2 Bispo e7\ncastles queenside cavalo takes d4 Rainha takes d4 a6 f4 b5": {
-        "name": "sicilian Defesa richter rauzer Variação clássica Variação kantscher linha",
+        "name": "Defesa Siciliana richter rauzer Variação clássica Variação kantscher linha",
         "eco": "b66",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. Bispo g5 e6. Rainha d2 Bispo e7.\ncastles queenside cavalo takes d4. Rainha takes d4 a6. f4 b5"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo g5 e6 Rainha d2 a6\ncastles queenside Bispo d7": {
-        "name": "sicilian Defesa richter rauzer Variação neo Moderna Variação",
+        "name": "Defesa Siciliana richter rauzer Variação neo Moderna Variação",
         "eco": "b67",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo g5 e6. Rainha d2 a6.\ncastles queenside Bispo d7"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo g5 e6 Rainha d2 a6\ncastles queenside Bispo d7 f4 Bispo e7": {
-        "name": "sicilian Defesa richter rauzer Variação neo Moderna Variação",
+        "name": "Defesa Siciliana richter rauzer Variação neo Moderna Variação",
         "eco": "b68",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo g5 e6. Rainha d2 a6.\ncastles queenside Bispo d7. f4 Bispo e7"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo g5 e6 Rainha d2 a6\ncastles queenside Bispo d7 f4 Bispo e7 cavalo f3 b5 1 Bispo takes f6": {
-        "name": "sicilian Defesa richter rauzer Variação neo Moderna Variação nyezhmetdinov Ataque",
+        "name": "Defesa Siciliana richter rauzer Variação neo Moderna Variação nyezhmetdinov Ataque",
         "eco": "b69",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo g5 e6. Rainha d2 a6.\ncastles queenside Bispo d7. f4 Bispo e7. cavalo f3 b5 1 Bispo takes f6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6": {
-        "name": "sicilian Defesa dragon Variação",
+        "name": "Defesa Siciliana dragon Variação",
         "eco": "b70",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 g3": {
-        "name": "sicilian Defesa dragon Variação fianchetto Variação",
+        "name": "Defesa Siciliana dragon Variação fianchetto Variação",
         "eco": "b70",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. g3"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 f4": {
-        "name": "sicilian Defesa dragon Variação levenfish Variação",
+        "name": "Defesa Siciliana dragon Variação levenfish Variação",
         "eco": "b71",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. f4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 f4 cavalo bd7": {
-        "name": "sicilian Defesa dragon Variação levenfish Variação main linha",
+        "name": "Defesa Siciliana dragon Variação levenfish Variação main linha",
         "eco": "b71",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. f4 cavalo bd7"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3 Bispo g7 Bispo e2 cavalo c6\nknight b3": {
-        "name": "sicilian Defesa dragon Variação clássica Variação",
+        "name": "Defesa Siciliana dragon Variação clássica Variação",
         "eco": "b72",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3 Bispo g7. Bispo e2 cavalo c6.\nknight b3"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e2": {
-        "name": "sicilian Defesa dragon Variação clássica Variação",
+        "name": "Defesa Siciliana dragon Variação clássica Variação",
         "eco": "b72",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e2"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3": {
-        "name": "sicilian Defesa dragon 6. be3",
+        "name": "Defesa Siciliana dragon 6. be3",
         "eco": "b72",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3 Bispo g7 Bispo e2": {
-        "name": "sicilian Defesa dragon clássica Ataque",
+        "name": "Defesa Siciliana dragon clássica Ataque",
         "eco": "b72",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3 Bispo g7. Bispo e2"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo e2 g6 Bispo e3 Bispo g7\nqueen d2": {
-        "name": "sicilian Defesa dragon clássica amsterdam Variação",
+        "name": "Defesa Siciliana dragon clássica amsterdam Variação",
         "eco": "b72",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo e2 g6. Bispo e3 Bispo g7.\nqueen d2"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo e2 g6 Bispo e3 Bispo g7\nqueen d2 castles kingside castles queenside": {
-        "name": "sicilian Defesa dragon clássica grigoriev Variação",
+        "name": "Defesa Siciliana dragon clássica grigoriev Variação",
         "eco": "b72",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo e2 g6. Bispo e3 Bispo g7.\nqueen d2 castles kingside. castles queenside"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e2 Bispo g7 castles kingside cavalo c6\nbishop e3": {
-        "name": "sicilian Defesa dragon Variação clássica Variação",
+        "name": "Defesa Siciliana dragon Variação clássica Variação",
         "eco": "b73",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e2 Bispo g7. castles kingside cavalo c6.\nbishop e3"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3 Bispo g7 Bispo e2 cavalo c6": {
-        "name": "sicilian Defesa dragon Variação clássica Variação",
+        "name": "Defesa Siciliana dragon Variação clássica Variação",
         "eco": "b73",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3 Bispo g7. Bispo e2 cavalo c6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e2 Bispo g7 castles kingside castles kingside\nbishop e3 cavalo c6 Rainha d2": {
-        "name": "sicilian Defesa dragon Variação clássica Variação battery Variação",
+        "name": "Defesa Siciliana dragon Variação clássica Variação battery Variação",
         "eco": "b73",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e2 Bispo g7. castles kingside castles kingside.\nbishop e3 cavalo c6. Rainha d2"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 g6 Bispo e3 Bispo g7 Bispo e2 cavalo f6 cavalo c3 castles kingside\ncastles kingside d6 f4 Rainha b6 e5": {
-        "name": "sicilian Defesa dragon clássica zollner gambito",
+        "name": "Defesa Siciliana dragon clássica zollner gambito",
         "eco": "b73",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 g6. Bispo e3 Bispo g7. Bispo e2 cavalo f6. cavalo c3 castles kingside.\ncastles kingside d6. f4 Rainha b6. e5"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 g6 cavalo c3 Bispo g7 Bispo e3 cavalo f6 Bispo e2 castles kingside\ncastles kingside d6 cavalo b3 a5": {
-        "name": "sicilian Defesa dragon Variação clássica Variação alekhine linha",
+        "name": "Defesa Siciliana dragon Variação clássica Variação alekhine linha",
         "eco": "b74",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 g6. cavalo c3 Bispo g7. Bispo e3 cavalo f6. Bispo e2 castles kingside.\ncastles kingside d6. cavalo b3 a5"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e2 Bispo g7 castles kingside castles kingside\nbishop e3 cavalo c6 cavalo b3 Bispo e6 f4 cavalo a5": {
-        "name": "sicilian Defesa dragon Variação clássica Variação maróczy linha",
+        "name": "Defesa Siciliana dragon Variação clássica Variação maróczy linha",
         "eco": "b74",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e2 Bispo g7. castles kingside castles kingside.\nbishop e3 cavalo c6. cavalo b3 Bispo e6. f4 cavalo a5"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e2 Bispo g7 castles kingside castles kingside\nbishop e3 cavalo c6 cavalo b3": {
-        "name": "sicilian Defesa dragon Variação clássica Variação normal linha",
+        "name": "Defesa Siciliana dragon Variação clássica Variação normal linha",
         "eco": "b74",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e2 Bispo g7. castles kingside castles kingside.\nbishop e3 cavalo c6. cavalo b3"
     },
     "e4 c5 cavalo c3 d6 f4 cavalo c6 cavalo f3 g6 d4 c takes d4 cavalo takes d4 Bispo g7 Bispo e3 cavalo f6 Bispo e2\ncastles kingside cavalo b3 Bispo e6 castles kingside cavalo a5 1 f5 Bispo c4 cavalo takes a5 Bispo takes e2 Rainha takes e2 Rainha takes a5 g4": {
-        "name": "sicilian Defesa dragon Variação clássica Variação stockholm Ataque",
+        "name": "Defesa Siciliana dragon Variação clássica Variação stockholm Ataque",
         "eco": "b74",
         "pgn": "e4 c5. cavalo c3 d6. f4 cavalo c6. cavalo f3 g6. d4 c takes d4. cavalo takes d4 Bispo g7. Bispo e3 cavalo f6. Bispo e2\ncastles kingside. cavalo b3 Bispo e6. castles kingside cavalo a5 1 f5 Bispo c4. cavalo takes a5 Bispo takes e2. Rainha takes e2 Rainha takes a5. g4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e2 Bispo g7 castles kingside castles kingside\nbishop e3 cavalo c6 cavalo b3 Bispo e6 f4 Rainha c8": {
-        "name": "sicilian Defesa dragon Variação clássica Variação tartakower linha",
+        "name": "Defesa Siciliana dragon Variação clássica Variação tartakower linha",
         "eco": "b74",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e2 Bispo g7. castles kingside castles kingside.\nbishop e3 cavalo c6. cavalo b3 Bispo e6. f4 Rainha c8"
     },
     "e4 c5 cavalo f3 g6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo e2 Bispo g7 castles kingside castles kingside\nbishop e3 cavalo c6 cavalo b3 Bispo e6 f4 cavalo a5 1 f5 Bispo c4 Bispo d3 Bispo takes d3 c takes d3 d5": {
-        "name": "sicilian Defesa dragon clássica bernard Defesa",
+        "name": "Defesa Siciliana dragon clássica bernard Defesa",
         "eco": "b74",
         "pgn": "e4 c5. cavalo f3 g6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo e2 Bispo g7. castles kingside castles kingside.\nbishop e3 cavalo c6. cavalo b3 Bispo e6. f4 cavalo a5 1 f5 Bispo c4. Bispo d3 Bispo takes d3. c takes d3 d5"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 g6 cavalo c3 Bispo g7 Bispo e3 cavalo f6 Bispo e2 castles kingside\nknight b3 d6 castles kingside Bispo e6 f4 cavalo a5 1 f5 Bispo c4 Bispo d3": {
-        "name": "sicilian Defesa dragon clássica spielmann Variação",
+        "name": "Defesa Siciliana dragon clássica spielmann Variação",
         "eco": "b74",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 g6. cavalo c3 Bispo g7. Bispo e3 cavalo f6. Bispo e2 castles kingside.\nknight b3 d6. castles kingside Bispo e6. f4 cavalo a5 1 f5 Bispo c4. Bispo d3"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3 Bispo g7 f3": {
-        "name": "sicilian Defesa dragon Variação yugoslav Ataque early deviations",
+        "name": "Defesa Siciliana dragon Variação yugoslav Ataque early deviations",
         "eco": "b75",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3 Bispo g7. f3"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3 Bispo g7 f3 castles kingside": {
-        "name": "sicilian Defesa dragon Variação yugoslav Ataque",
+        "name": "Defesa Siciliana dragon Variação yugoslav Ataque",
         "eco": "b76",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3 Bispo g7. f3 castles kingside"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3 Bispo g7 f3 cavalo c6": {
-        "name": "sicilian Defesa dragon Variação yugoslav Ataque belezky linha",
+        "name": "Defesa Siciliana dragon Variação yugoslav Ataque belezky linha",
         "eco": "b76",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3 Bispo g7. f3 cavalo c6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3 Bispo g7 f3 cavalo c6 Rainha d2\ncastles kingside castles queenside": {
-        "name": "sicilian Defesa dragon Variação yugoslav Ataque Moderna linha",
+        "name": "Defesa Siciliana dragon Variação yugoslav Ataque Moderna linha",
         "eco": "b76",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3 Bispo g7. f3 cavalo c6. Rainha d2\ncastles kingside. castles queenside"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3 Bispo g7 f3 castles kingside Rainha d2\nknight c6 g4": {
-        "name": "sicilian Defesa dragon Variação yugoslav Ataque panov Variação",
+        "name": "Defesa Siciliana dragon Variação yugoslav Ataque panov Variação",
         "eco": "b76",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3 Bispo g7. f3 castles kingside. Rainha d2\nknight c6. g4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3 Bispo g7 f3 castles kingside Rainha d2\nknight c6 Bispo c4 Bispo d7": {
-        "name": "sicilian Defesa dragon Variação yugoslav Ataque",
+        "name": "Defesa Siciliana dragon Variação yugoslav Ataque",
         "eco": "b77",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3 Bispo g7. f3 castles kingside. Rainha d2\nknight c6. Bispo c4 Bispo d7"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3 Bispo g7 f3 castles kingside Rainha d2\nknight c6": {
-        "name": "sicilian Defesa dragon Variação yugoslav Ataque",
+        "name": "Defesa Siciliana dragon Variação yugoslav Ataque",
         "eco": "b77",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3 Bispo g7. f3 castles kingside. Rainha d2\nknight c6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3 Bispo g7 f3 cavalo c6 Rainha d2\ncastles kingside Bispo c4 cavalo takes d4 Bispo takes d4 Bispo e6": {
-        "name": "sicilian Defesa dragon Variação yugoslav Ataque czerniak Variação",
+        "name": "Defesa Siciliana dragon Variação yugoslav Ataque czerniak Variação",
         "eco": "b77",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3 Bispo g7. f3 cavalo c6. Rainha d2\ncastles kingside. Bispo c4 cavalo takes d4. Bispo takes d4 Bispo e6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3 Bispo g7 f3 castles kingside Rainha d2\nknight c6 Bispo c4": {
-        "name": "sicilian Defesa dragon Variação yugoslav Ataque main linha",
+        "name": "Defesa Siciliana dragon Variação yugoslav Ataque main linha",
         "eco": "b77",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3 Bispo g7. f3 castles kingside. Rainha d2\nknight c6. Bispo c4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3 Bispo g7 f3 cavalo c6 Rainha d2\ncastles kingside Bispo c4 cavalo d7": {
-        "name": "sicilian Defesa dragon Variação yugoslav Ataque sosonko Variação",
+        "name": "Defesa Siciliana dragon Variação yugoslav Ataque sosonko Variação",
         "eco": "b77",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3 Bispo g7. f3 cavalo c6. Rainha d2\ncastles kingside. Bispo c4 cavalo d7"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3 Bispo g7 f3 castles kingside Rainha d2\nknight c6 Bispo c4 a5": {
-        "name": "sicilian Defesa dragon yugoslav Ataque byrne Variação",
+        "name": "Defesa Siciliana dragon yugoslav Ataque byrne Variação",
         "eco": "b77",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3 Bispo g7. f3 castles kingside. Rainha d2\nknight c6. Bispo c4 a5"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3 Bispo g7 f3 castles kingside Rainha d2\nknight c6 Bispo c4 Bispo d7 castles queenside": {
-        "name": "sicilian Defesa dragon Variação yugoslav Ataque",
+        "name": "Defesa Siciliana dragon Variação yugoslav Ataque",
         "eco": "b78",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3 Bispo g7. f3 castles kingside. Rainha d2\nknight c6. Bispo c4 Bispo d7. castles queenside"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3 Bispo g7 f3 castles kingside Rainha d2\nknight c6 Bispo c4 Bispo d7 castles queenside rook c8": {
-        "name": "sicilian Defesa dragon Variação yugoslav Ataque Antiga linha",
+        "name": "Defesa Siciliana dragon Variação yugoslav Ataque Antiga linha",
         "eco": "b78",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3 Bispo g7. f3 castles kingside. Rainha d2\nknight c6. Bispo c4 Bispo d7. castles queenside rook c8"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3 Bispo g7 f3 castles kingside Rainha d2\nknight c6 Bispo c4 Bispo d7 castles queenside Rainha a5 1 h4 rook fc8 Bispo b3 h5": {
-        "name": "sicilian Defesa dragon Variação yugoslav Ataque soltis Variação",
+        "name": "Defesa Siciliana dragon Variação yugoslav Ataque soltis Variação",
         "eco": "b79",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3 Bispo g7. f3 castles kingside. Rainha d2\nknight c6. Bispo c4 Bispo d7. castles queenside Rainha a5 1 h4 rook fc8. Bispo b3 h5"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 g6 Bispo e3 Bispo g7 f3 castles kingside Rainha d2\nknight c6 Bispo c4 Bispo d7 h4 Rainha a5 1 castles queenside rook fc8 Bispo b3": {
-        "name": "sicilian Defesa dragon yugoslav Ataque 12. h4",
+        "name": "Defesa Siciliana dragon yugoslav Ataque 12. h4",
         "eco": "b79",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 g6. Bispo e3 Bispo g7. f3 castles kingside. Rainha d2\nknight c6. Bispo c4 Bispo d7. h4 Rainha a5 1 castles queenside rook fc8. Bispo b3"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6": {
-        "name": "sicilian Defesa scheveningen Variação",
+        "name": "Defesa Siciliana scheveningen Variação",
         "eco": "b80",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo e3 e6 Rainha d2": {
-        "name": "sicilian Defesa scheveningen Variação Inglesa Ataque",
+        "name": "Defesa Siciliana scheveningen Variação Inglesa Ataque",
         "eco": "b80",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo e3 e6. Rainha d2"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo e3 e6 f3": {
-        "name": "sicilian Defesa scheveningen Variação Inglesa Ataque",
+        "name": "Defesa Siciliana scheveningen Variação Inglesa Ataque",
         "eco": "b80",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo e3 e6. f3"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 g3": {
-        "name": "sicilian Defesa scheveningen Variação fianchetto Variação",
+        "name": "Defesa Siciliana scheveningen Variação fianchetto Variação",
         "eco": "b80",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. g3"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo b5 check": {
-        "name": "sicilian Defesa scheveningen Variação vitolins Variação",
+        "name": "Defesa Siciliana scheveningen Variação vitolins Variação",
         "eco": "b80",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo b5 check"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo e3 e6 g4": {
-        "name": "sicilian Defesa scheveningen Variação delayed keres Ataque",
+        "name": "Defesa Siciliana scheveningen Variação delayed keres Ataque",
         "eco": "b81",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo e3 e6. g4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo e3 e6 g4 e5 cavalo f5\ng6 g5": {
-        "name": "sicilian Defesa scheveningen Variação delayed keres Ataque perenyi gambito",
+        "name": "Defesa Siciliana scheveningen Variação delayed keres Ataque perenyi gambito",
         "eco": "b81",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo e3 e6. g4 e5. cavalo f5\ng6. g5"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 g4": {
-        "name": "sicilian Defesa scheveningen Variação keres Ataque",
+        "name": "Defesa Siciliana scheveningen Variação keres Ataque",
         "eco": "b81",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. g4"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 f4": {
-        "name": "sicilian Defesa scheveningen Variação matanovic Ataque",
+        "name": "Defesa Siciliana scheveningen Variação matanovic Ataque",
         "eco": "b82",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. f4"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 f4 cavalo c6 Bispo e3 Bispo e7 Rainha f3": {
-        "name": "sicilian Defesa scheveningen Variação tal Variação",
+        "name": "Defesa Siciliana scheveningen Variação tal Variação",
         "eco": "b82",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. f4 cavalo c6. Bispo e3 Bispo e7. Rainha f3"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo e2": {
-        "name": "sicilian Defesa scheveningen Variação clássica Variação",
+        "name": "Defesa Siciliana scheveningen Variação clássica Variação",
         "eco": "b83",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo e2"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo e2 Bispo e7 castles kingside castles kingside f4\nknight c6 Bispo e3": {
-        "name": "sicilian Defesa scheveningen Variação Moderna Variação",
+        "name": "Defesa Siciliana scheveningen Variação Moderna Variação",
         "eco": "b83",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo e2 Bispo e7. castles kingside castles kingside. f4\nknight c6. Bispo e3"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo e2 Bispo e7 castles kingside castles kingside f4\nknight c6 Bispo e3 Bispo d7 cavalo b3": {
-        "name": "sicilian Defesa scheveningen Variação Moderna Variação",
+        "name": "Defesa Siciliana scheveningen Variação Moderna Variação",
         "eco": "b83",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo e2 Bispo e7. castles kingside castles kingside. f4\nknight c6. Bispo e3 Bispo d7. cavalo b3"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo c6 cavalo c3 d6 Bispo e2 cavalo f6": {
-        "name": "sicilian Defesa scheveningen Variação Moderna Variação",
+        "name": "Defesa Siciliana scheveningen Variação Moderna Variação",
         "eco": "b83",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo c6. cavalo c3 d6. Bispo e2 cavalo f6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo e2 e6 castles kingside cavalo bd7": {
-        "name": "sicilian Defesa najdorf Variação scheveningen Variação",
+        "name": "Defesa Siciliana najdorf Variação scheveningen Variação",
         "eco": "b84",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo e2 e6. castles kingside cavalo bd7"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo e2 e6": {
-        "name": "sicilian Defesa scheveningen Variação clássica Variação",
+        "name": "Defesa Siciliana scheveningen Variação clássica Variação",
         "eco": "b84",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo e2 e6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo e2 e6 castles kingside Rainha c7": {
-        "name": "sicilian Defesa scheveningen Variação clássica Variação",
+        "name": "Defesa Siciliana scheveningen Variação clássica Variação",
         "eco": "b84",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo e2 e6. castles kingside Rainha c7"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo c6 cavalo c3 Rainha c7 Bispo e2 a6 castles kingside cavalo f6\nbishop e3 d6 f4": {
-        "name": "sicilian Defesa scheveningen Variação clássica Variação paulsen Variação",
+        "name": "Defesa Siciliana scheveningen Variação clássica Variação paulsen Variação",
         "eco": "b85",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo c6. cavalo c3 Rainha c7. Bispo e2 a6. castles kingside cavalo f6.\nbishop e3 d6. f4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 f4 e6 Bispo e2 Rainha c7 castles kingside\nknight c6": {
-        "name": "sicilian Defesa scheveningen Variação clássica Variação paulsen Variação",
+        "name": "Defesa Siciliana scheveningen Variação clássica Variação paulsen Variação",
         "eco": "b85",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. f4 e6. Bispo e2 Rainha c7. castles kingside\nknight c6"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo c6 cavalo c3 Rainha c7 Bispo e2 a6 castles kingside cavalo f6\nking h1 Bispo e7 f4 d6 a4": {
-        "name": "sicilian Defesa scheveningen Variação clássica Variação paulsen Variação",
+        "name": "Defesa Siciliana scheveningen Variação clássica Variação paulsen Variação",
         "eco": "b85",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo c6. cavalo c3 Rainha c7. Bispo e2 a6. castles kingside cavalo f6.\nking h1 Bispo e7. f4 d6. a4"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo c6 cavalo c3 Rainha c7 Bispo e2 a6 castles kingside cavalo f6\nbishop e3 Bispo e7 f4 d6 Rainha e1 castles kingside": {
-        "name": "sicilian Defesa scheveningen clássica main linha",
+        "name": "Defesa Siciliana scheveningen clássica main linha",
         "eco": "b85",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo c6. cavalo c3 Rainha c7. Bispo e2 a6. castles kingside cavalo f6.\nbishop e3 Bispo e7. f4 d6. Rainha e1 castles kingside"
     },
     "e4 c5 cavalo f3 e6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo c4": {
-        "name": "sicilian Defesa sozin Ataque",
+        "name": "Defesa Siciliana sozin Ataque",
         "eco": "b86",
         "pgn": "e4 c5. cavalo f3 e6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo c4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo c4 e6 Bispo b3 b5": {
-        "name": "sicilian Defesa sozin Ataque flank Variação",
+        "name": "Defesa Siciliana sozin Ataque flank Variação",
         "eco": "b87",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo c4 e6. Bispo b3 b5"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo c4 e6": {
-        "name": "sicilian Defesa sozin Ataque leonhardt Variação",
+        "name": "Defesa Siciliana sozin Ataque leonhardt Variação",
         "eco": "b88",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo c4 e6"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo c4 e6 Bispo b3 Bispo e7\nbishop e3 castles kingside f4": {
-        "name": "sicilian Defesa sozin fischer Variação",
+        "name": "Defesa Siciliana sozin fischer Variação",
         "eco": "b88",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo c4 e6. Bispo b3 Bispo e7.\nbishop e3 castles kingside. f4"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo c4 e6 Bispo e3": {
-        "name": "sicilian Defesa sozin Ataque main linha",
+        "name": "Defesa Siciliana sozin Ataque main linha",
         "eco": "b89",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo c4 e6. Bispo e3"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 cavalo c6 Bispo c4 e6 Bispo e3 Bispo e7\nbishop b3 castles kingside castles kingside cavalo a5 f4 b6": {
-        "name": "sicilian Defesa sozin Ataque main linha sherbakov Variação",
+        "name": "Defesa Siciliana sozin Ataque main linha sherbakov Variação",
         "eco": "b89",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 cavalo c6. Bispo c4 e6. Bispo e3 Bispo e7.\nbishop b3 castles kingside. castles kingside cavalo a5. f4 b6"
     },
     "e4 c5 cavalo f3 cavalo c6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 d6 Bispo c4 e6 Bispo e3 Bispo e7\nqueen e2": {
-        "name": "sicilian Defesa velimirovic Ataque",
+        "name": "Defesa Siciliana velimirovic Ataque",
         "eco": "b89",
         "pgn": "e4 c5. cavalo f3 cavalo c6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 d6. Bispo c4 e6. Bispo e3 Bispo e7.\nqueen e2"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6": {
-        "name": "sicilian Defesa najdorf Variação",
+        "name": "Defesa Siciliana najdorf Variação",
         "eco": "b90",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 h3": {
-        "name": "sicilian Defesa najdorf Variação adams Ataque",
+        "name": "Defesa Siciliana najdorf Variação adams Ataque",
         "eco": "b90",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. h3"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 g4": {
-        "name": "sicilian Defesa najdorf Variação dekker gambito",
+        "name": "Defesa Siciliana najdorf Variação dekker gambito",
         "eco": "b90",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. g4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo e3": {
-        "name": "sicilian Defesa najdorf Variação Inglesa Ataque",
+        "name": "Defesa Siciliana najdorf Variação Inglesa Ataque",
         "eco": "b90",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo e3"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo e3 cavalo g4": {
-        "name": "sicilian Defesa najdorf Variação Inglesa Ataque anti Inglesa",
+        "name": "Defesa Siciliana najdorf Variação Inglesa Ataque anti Inglesa",
         "eco": "b90",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo e3 cavalo g4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 rook g1": {
-        "name": "sicilian Defesa najdorf Variação freak Ataque",
+        "name": "Defesa Siciliana najdorf Variação freak Ataque",
         "eco": "b90",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. rook g1"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo c4": {
-        "name": "sicilian Defesa najdorf lipnitsky Ataque",
+        "name": "Defesa Siciliana najdorf lipnitsky Ataque",
         "eco": "b90",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo c4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 g3": {
-        "name": "sicilian Defesa najdorf Variação zagreb (fianchetto) Variação",
+        "name": "Defesa Siciliana najdorf Variação zagreb (fianchetto) Variação",
         "eco": "b91",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. g3"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo e2": {
-        "name": "sicilian Defesa najdorf Variação opocensky Variação",
+        "name": "Defesa Siciliana najdorf Variação opocensky Variação",
         "eco": "b92",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo e2"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo e2 e5 cavalo b3 Bispo e7 castles kingside\nbishop e6": {
-        "name": "sicilian Defesa najdorf Variação opocensky Variação Moderna linha",
+        "name": "Defesa Siciliana najdorf Variação opocensky Variação Moderna linha",
         "eco": "b92",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo e2 e5. cavalo b3 Bispo e7. castles kingside\nbishop e6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo e2 e5 cavalo b3 Bispo e7 castles kingside\ncastles kingside": {
-        "name": "sicilian Defesa najdorf Variação opocensky Variação traditional linha",
+        "name": "Defesa Siciliana najdorf Variação opocensky Variação traditional linha",
         "eco": "b92",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo e2 e5. cavalo b3 Bispo e7. castles kingside\ncastles kingside"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 f4": {
-        "name": "sicilian Defesa najdorf Variação amsterdam Variação",
+        "name": "Defesa Siciliana najdorf Variação amsterdam Variação",
         "eco": "b93",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. f4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo g5": {
-        "name": "sicilian Defesa najdorf Variação",
+        "name": "Defesa Siciliana najdorf Variação",
         "eco": "b94",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo g5"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo g5 cavalo bd7 Bispo c4 Rainha a5\nqueen d2 e6 castles queenside b5 Bispo b3 Bispo b7 1 rook he1 cavalo c5 e5": {
-        "name": "sicilian Defesa najdorf ivkov Variação",
+        "name": "Defesa Siciliana najdorf ivkov Variação",
         "eco": "b94",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo g5 cavalo bd7. Bispo c4 Rainha a5.\nqueen d2 e6. castles queenside b5. Bispo b3 Bispo b7 1 rook he1 cavalo c5. e5"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo g5 e6": {
-        "name": "sicilian Defesa najdorf Variação",
+        "name": "Defesa Siciliana najdorf Variação",
         "eco": "b95",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo g5 e6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo g5 e6 f4": {
-        "name": "sicilian Defesa najdorf Variação",
+        "name": "Defesa Siciliana najdorf Variação",
         "eco": "b96",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo g5 e6. f4"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo g5 e6 f4 cavalo c6": {
-        "name": "sicilian Defesa najdorf Variação neo clássica Defesa",
+        "name": "Defesa Siciliana najdorf Variação neo clássica Defesa",
         "eco": "b96",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo g5 e6. f4 cavalo c6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo g5 e6 f4 b5": {
-        "name": "sicilian Defesa najdorf Variação polugaevsky Variação",
+        "name": "Defesa Siciliana najdorf Variação polugaevsky Variação",
         "eco": "b96",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo g5 e6. f4 b5"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo g5 e6 f4 b5 e5\nd takes e5 f takes e5 Rainha c7 Rainha e2": {
-        "name": "sicilian Defesa najdorf Variação polugaevsky Variação simagin linha",
+        "name": "Defesa Siciliana najdorf Variação polugaevsky Variação simagin linha",
         "eco": "b96",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo g5 e6. f4 b5. e5\nd takes e5. f takes e5 Rainha c7. Rainha e2"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo g5 e6 f4 Rainha b6 Rainha d2\nqueen takes b2 rook b1 Rainha a3": {
-        "name": "sicilian Defesa najdorf Variação poisoned peão Aceito",
+        "name": "Defesa Siciliana najdorf Variação poisoned peão Aceito",
         "eco": "b97",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo g5 e6. f4 Rainha b6. Rainha d2\nqueen takes b2. rook b1 Rainha a3"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo g5 e6 f4 Rainha b6": {
-        "name": "sicilian Defesa najdorf Variação poisoned peão Variação",
+        "name": "Defesa Siciliana najdorf Variação poisoned peão Variação",
         "eco": "b97",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo g5 e6. f4 Rainha b6"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo g5 e6 f4 Bispo e7": {
-        "name": "sicilian Defesa najdorf Variação",
+        "name": "Defesa Siciliana najdorf Variação",
         "eco": "b98",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo g5 e6. f4 Bispo e7"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo g5 e6 f4 Bispo e7 Rainha f3\nh6 Bispo h4 Rainha c7": {
-        "name": "sicilian Defesa najdorf Variação browne Variação",
+        "name": "Defesa Siciliana najdorf Variação browne Variação",
         "eco": "b98",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo g5 e6. f4 Bispo e7. Rainha f3\nh6. Bispo h4 Rainha c7"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo g5 e6 f4 Bispo e7 Rainha f3\nh6 Bispo h4 g5": {
-        "name": "sicilian Defesa najdorf Variação goteborg (argentine)",
+        "name": "Defesa Siciliana najdorf Variação goteborg (argentine)",
         "eco": "b98",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo g5 e6. f4 Bispo e7. Rainha f3\nh6. Bispo h4 g5"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo g5 e6 f4 Bispo e7 Rainha f3\nqueen c7": {
-        "name": "sicilian Defesa najdorf Variação traditional linha",
+        "name": "Defesa Siciliana najdorf Variação traditional linha",
         "eco": "b98",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo g5 e6. f4 Bispo e7. Rainha f3\nqueen c7"
     },
     "e4 c5 cavalo f3 d6 d4 c takes d4 cavalo takes d4 cavalo f6 cavalo c3 a6 Bispo g5 e6 f4 Bispo e7 Rainha f3\nqueen c7 castles queenside cavalo bd7": {
-        "name": "sicilian Defesa najdorf Variação main linha",
+        "name": "Defesa Siciliana najdorf Variação main linha",
         "eco": "b99",
         "pgn": "e4 c5. cavalo f3 d6. d4 c takes d4. cavalo takes d4 cavalo f6. cavalo c3 a6. Bispo g5 e6. f4 Bispo e7. Rainha f3\nqueen c7. castles queenside cavalo bd7"
     },
@@ -7320,7 +7320,7 @@
         "pgn": "e4 e6. cavalo f3 d5. e5 c5. b4"
     },
     "e4 e6 d4 c5": {
-        "name": "Peão da Rainha Jogo franco sicilian Defesa",
+        "name": "Peão da Rainha Jogo franco Defesa Siciliana",
         "eco": "c00",
         "pgn": "e4 e6. d4 c5"
     },
@@ -8280,7 +8280,7 @@
         "pgn": "e4 e5. d4 d5"
     },
     "e4 c5 d4 c takes d4 c3 d takes c3 cavalo f3": {
-        "name": "sicilian Defesa smith morra gambito danish Variação",
+        "name": "Defesa Siciliana smith morra gambito danish Variação",
         "eco": "c21",
         "pgn": "e4 c5. d4 c takes d4. c3 d takes c3. cavalo f3"
     },
