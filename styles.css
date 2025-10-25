@@ -573,3 +573,70 @@ a {
             color: #ffffff;
         }
 
+        .square-highlight-from {
+    background-color: rgba(155, 199, 0, 0.41) !important;
+    box-shadow: inset 0 0 0 3px rgba(155, 199, 0, 0.8) !important;
+}
+
+.square-highlight-to {
+    background-color: rgba(155, 199, 0, 0.61) !important;
+    box-shadow: inset 0 0 0 3px rgba(155, 199, 0, 1) !important;
+}
+
+.selected-piece {
+    box-shadow: inset 0 0 0 4px #FFD700 !important;
+}
+
+.possible-move {
+    background-color: rgba(255, 215, 0, 0.4) !important;
+    cursor: pointer;
+}
+
+.move-entry {
+    padding: 2px 4px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.move-entry:last-child {
+    border-bottom: none;
+}
+
+/* Estilos para o modo de jogo */
+.selected-piece {
+    box-shadow: inset 0 0 0 4px #FFD700 !important;
+}
+
+.possible-move {
+    position: relative;
+}
+
+.possible-move::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 25%;
+    height: 25%;
+    background-color: rgba(255, 215, 0, 0.6);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.square-highlight-from {
+    background-color: rgba(155, 199, 0, 0.41) !important;
+}
+
+.square-highlight-to {
+    background-color: rgba(155, 199, 0, 0.61) !important;
+}
+
+.move-entry {
+    padding: 2px 4px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.move-entry:last-child {
+    border-bottom: none;
+}
+

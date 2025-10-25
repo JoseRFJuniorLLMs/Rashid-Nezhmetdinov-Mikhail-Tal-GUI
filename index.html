@@ -607,7 +607,7 @@
                 <div class="pgn-navigation">
                     <p id="current-move">Folha de PGN</p>
                 </div>
-                
+
                 <div id="pgn-score-sheet" class="score-sheet" style="display:none; margin:15px 0;">
                     <div
                         style="padding:8px; background:#eee; border-bottom:1px solid #ccc; font-weight:bold; color:#333; display:flex;">
@@ -771,23 +771,29 @@
             </div>
 
             <div class="stockfish-panel">
-                <h4>🤖 Análise Stockfish</h4>
-                <div id="stockfish-status">⏳ Inicializando engine...</div>
+                <!-- <h4>🤖 Análise Stockfish</h4>
+                <div id="stockfish-status">⏳ Inicializando engine...</div>-->
                 <button id="btn-analyze" disabled>Analisar Posição</button>
                 <button id="btn-visual-analysis" disabled>🌳 Análise Visual (Multi-PV)</button>
-                
+                <button id="btn-play-vs-stockfish" class="myButton"
+                    style="width: 100%; margin: 10px 0; background: linear-gradient(to bottom, #FF5722 5%, #F4511E 100%); color: white;">
+                    🎮 Jogar contra Stockfish
+                </button>
                 <div id="stockfish-eval"></div>
                 <div id="stockfish-bestmove"></div>
                 <div id="stockfish-depth"></div>
             </div>
 
-            <div id="multi-pv-list" style="margin-top:8px; font-size:0.9em; max-height:200px; overflow-y:auto;">
-            </div>
+
+            <div id="square-clicked"></div>
+
+            <!--<div id="multi-pv-list" style="margin-top:8px; font-size:0.9em; max-height:200px; overflow-y:auto;">
+            </div>-->
         </div>
 
         <div class="setting-buttons">
         </div>
-        
+
     </div>
 
     <footer>
@@ -797,6 +803,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.min.js"></script>
     <script src="game.js"></script>
+    <script src="play-vs-stockfish.js"></script>
 </body>
 
 </html>

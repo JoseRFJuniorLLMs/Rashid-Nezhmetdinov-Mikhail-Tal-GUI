@@ -33,12 +33,12 @@ var previousEvaluations = {}; // ARMAZENA AVALIAÇÕES
 const MOVE_QUALITY = {
     BRILLIANT: { threshold: 300, icon: '!!', color: '#1BADA6', label: 'brilliant' },
     GREAT: { threshold: 100, icon: '!', color: '#5C9ECC', label: 'greatmove' },
-    BEST: { threshold: 50, icon: '✓', color: '#9BC93E', label: 'bestmove' },
+    BEST: { threshold: 50, icon: '✓', color: '#96BC4B', label: 'bestmove' },
     EXCELLENT: { threshold: 20, icon: '⚡', color: '#96BC4B', label: 'excellent' },
     GOOD: { threshold: -10, icon: '▽', color: '#96AF8B', label: 'good' },
     INACCURACY: { threshold: -50, icon: '?!', color: '#F0C15C', label: 'inaccuracy' },
     MISTAKE: { threshold: -100, icon: '?', color: '#E58F2A', label: 'mistake' },
-    BLUNDER: { threshold: -Infinity, icon: '??', color: '#CA3431', label: 'blunder' }
+    BLUNDER: { threshold: -Infinity, icon: '✕', color: '#CA3431', label: 'blunder' }
 };
 
 // ===================================
@@ -66,7 +66,7 @@ function initStockfish() {
 
                 stockfish.postMessage('setoption name Hash value 256');
                 stockfish.postMessage('setoption name Threads value 2');
-                stockfish.postMessage('setoption name MultiPV value 5');
+                stockfish.postMessage('setoption name MultiPV value 8');
                 stockfish.postMessage('ucinewgame');
             }
 
@@ -163,7 +163,7 @@ function analyzePosition() {
     const fen = loadedPgnGame.fen();
 
     stockfish.postMessage('stop');
-    stockfish.postMessage('setoption name MultiPV value 5');
+    stockfish.postMessage('setoption name MultiPV value 8');
     stockfish.postMessage('position fen ' + fen);
     stockfish.postMessage('go depth 20');
 
@@ -390,8 +390,14 @@ $('#btn-pgn-start').click(function () {
     playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
 });
 
-$('#btn-pgn-prev').click(function () {
+$('#btn-pgn-prev').click(async function () {
     if (currentMoveIndex >= 0) {
+        // Analisa posição atual antes de voltar
+        if (previousEvaluations[currentMoveIndex] === undefined && stockfishReady) {
+            const fenCurrent = loadedPgnGame.fen();
+            previousEvaluations[currentMoveIndex] = await quickEval(fenCurrent);
+        }
+        
         var undoneMove = loadedPgnGame.undo();
         currentMoveIndex--;
         updateBoardDisplay();
@@ -406,8 +412,16 @@ $('#btn-pgn-prev').click(function () {
     }
 });
 
-$('#btn-pgn-next').click(function () {
+$('#btn-pgn-next').click(async function () {
     if (currentMoveIndex < moveHistory.length - 1) {
+        
+        // Análise ANTES do movimento
+        if (previousEvaluations[currentMoveIndex] === undefined && stockfishReady) {
+            const fenBefore = loadedPgnGame.fen();
+            previousEvaluations[currentMoveIndex] = await quickEval(fenBefore);
+        }
+        
+        // Faz o movimento
         currentMoveIndex++;
         var moveObj = loadedPgnGame.move(moveHistory[currentMoveIndex]);
         updateBoardDisplay();
@@ -415,8 +429,8 @@ $('#btn-pgn-next').click(function () {
         updateMoveListHighlight(currentMoveIndex);
 
         if (moveObj) {
+            $("#square-clicked").text(moveObj.to.toUpperCase());
             speakSquare(moveObj.san);
-            drawArrow(moveObj.from, moveObj.to);
 
             if (soundsOn) {
                 if (moveObj.captured) {
@@ -426,8 +440,95 @@ $('#btn-pgn-next').click(function () {
                 }
             }
         }
+        
+        // Análise DEPOIS do movimento
+        let quality = null;
+        
+        if (stockfishReady && moveObj) {
+            const fenAfter = loadedPgnGame.fen();
+            previousEvaluations[currentMoveIndex] = await quickEval(fenAfter);
+            
+            if (previousEvaluations[currentMoveIndex - 1] !== undefined && 
+                previousEvaluations[currentMoveIndex] !== undefined) {
+                
+                quality = evaluateMoveQuality(
+                    previousEvaluations[currentMoveIndex - 1],
+                    previousEvaluations[currentMoveIndex],
+                    moveObj.color
+                );
+                
+                if (quality) {
+                    const $moveSpan = $(`.move-san[data-move-index="${currentMoveIndex}"]`);
+                    
+                    if ($moveSpan.length > 0) {
+                        $moveSpan.attr('data-quality', quality.label);
+                        $moveSpan.attr('data-quality-icon', quality.icon);
+                        $moveSpan.find('.quality-badge').remove();
+                        $moveSpan.append(`<span class="quality-badge" style="color:${quality.color}; font-weight:bold; margin-left:4px;">${quality.icon}</span>`);
+                    }
+                }
+            }
+        }
+        
+        // Desenha seta com badge de qualidade e marca casas
+        if (moveObj) {
+            drawArrow(moveObj.from, moveObj.to, quality);
+        }
     }
 });
+
+// Adicione esta função NOVA no game.js
+function quickEval(fen) {
+    return new Promise((resolve) => {
+        let resolved = false;
+        const localPvData = [];
+        
+        const handler = (event) => {
+            const line = event.data;
+            
+            if (line.startsWith('info') && line.includes('score')) {
+                const scoreCp = line.match(/score cp (-?\d+)/)?.[1];
+                const scoreMate = line.match(/score mate (-?\d+)/)?.[1];
+                
+                if (scoreCp) {
+                    localPvData[0] = { score: (parseInt(scoreCp) / 100).toFixed(2) };
+                } else if (scoreMate) {
+                    const mate = parseInt(scoreMate);
+                    localPvData[0] = { score: mate > 0 ? `M${mate}` : `-M${Math.abs(mate)}` };
+                }
+            }
+            
+            if (line.startsWith('bestmove') && !resolved) {
+                resolved = true;
+                stockfish.removeEventListener('message', handler);
+                
+                let evalScore = 0;
+                if (localPvData[0] && localPvData[0].score) {
+                    const score = localPvData[0].score;
+                    if (score.startsWith('M') || score.startsWith('-M')) {
+                        evalScore = score.includes('-') ? -900 : 900;
+                    } else {
+                        evalScore = parseFloat(score) * 100;
+                    }
+                }
+                resolve(evalScore);
+            }
+        };
+        
+        stockfish.addEventListener('message', handler);
+        stockfish.postMessage('stop');
+        stockfish.postMessage('position fen ' + fen);
+        stockfish.postMessage('go depth 12');
+        
+        setTimeout(() => {
+            if (!resolved) {
+                resolved = true;
+                stockfish.removeEventListener('message', handler);
+                resolve(0);
+            }
+        }, 3000);
+    });
+}
 
 $('#btn-pgn-end').click(function () {
     loadedPgnGame.load_pgn($('#pgn-input').val().trim());
@@ -559,6 +660,7 @@ function populateMoveList(history) {
 
         let qualityAttr = '';
         let iconAttr = '';
+        let qualityBadge = '';
 
         if (previousEvaluations[index] !== undefined && previousEvaluations[index - 1] !== undefined) {
             const quality = evaluateMoveQuality(
@@ -570,19 +672,20 @@ function populateMoveList(history) {
             if (quality) {
                 qualityAttr = `data-quality="${quality.label}"`;
                 iconAttr = `data-quality-icon="${quality.icon}"`;
+                qualityBadge = `<span style="color:${quality.color}; font-weight:bold; margin-left:4px;">${quality.icon}</span>`;
             }
         }
 
         if (move.color === 'w') {
             if ($currentRow) $moveList.append($currentRow);
             $currentRow = $('<div class="move-row" style="display:grid; grid-template-columns: 1fr 1fr;"></div>');
-            $currentRow.append(`<span class="move-san" data-move-index="${index}" ${qualityAttr} ${iconAttr} style="text-align:left; padding-left:5px;">${calculatedMoveNumber}. ${san}</span>`);
+            $currentRow.append(`<span class="move-san" data-move-index="${index}" ${qualityAttr} ${iconAttr} style="text-align:left; padding-left:5px;">${calculatedMoveNumber}. ${san}${qualityBadge}</span>`);
         } else {
             if (!$currentRow) {
                 $currentRow = $('<div class="move-row" style="display:grid; grid-template-columns: 1fr 1fr;"></div>');
                 $currentRow.append(`<span class="move-san" data-move-index="-1" style="text-align:left; padding-left:5px;">${calculatedMoveNumber}. ...</span>`);
             }
-            $currentRow.append(`<span class="move-san" data-move-index="${index}" ${qualityAttr} ${iconAttr} style="text-align:left;">${san}</span>`);
+            $currentRow.append(`<span class="move-san" data-move-index="${index}" ${qualityAttr} ${iconAttr} style="text-align:left;">${san}${qualityBadge}</span>`);
             $moveList.append($currentRow);
             $currentRow = null;
         }
@@ -700,7 +803,9 @@ function updateMoveInfo() {
 // ARROWS
 // ===================================
 
-function drawArrow(fromSquareId, toSquareId) {
+// SUBSTITUA a função drawArrow() completa:
+
+function drawArrow(fromSquareId, toSquareId, quality = null) {
     const svg = document.getElementById('move-arrow-layer');
     if (!svg) return;
 
@@ -711,6 +816,13 @@ function drawArrow(fromSquareId, toSquareId) {
 
     if (!fromEl || !toEl) return;
 
+    // Remove marcações antigas
+    $('.chess-square').removeClass('square-highlight-from square-highlight-to');
+    
+    // Marca as casas (estilo Chess.com)
+    fromEl.classList.add('square-highlight-from');
+    toEl.classList.add('square-highlight-to');
+
     const fromRect = fromEl.getBoundingClientRect();
     const toRect = toEl.getBoundingClientRect();
     const boardRect = document.querySelector('.chess-board').getBoundingClientRect();
@@ -720,17 +832,26 @@ function drawArrow(fromSquareId, toSquareId) {
     const x2 = toRect.left + toRect.width / 2 - boardRect.left;
     const y2 = toRect.top + toRect.height / 2 - boardRect.top;
 
+    // Define cor da seta baseada na qualidade
+    let arrowColor = '#4CAF50'; // Verde padrão
+    
+    if (quality) {
+        arrowColor = quality.color;
+    }
+
+    // Linha da seta
     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     line.setAttribute('x1', x1);
     line.setAttribute('y1', y1);
     line.setAttribute('x2', x2);
     line.setAttribute('y2', y2);
-    line.setAttribute('stroke', '#4CAF50');
+    line.setAttribute('stroke', arrowColor);
     line.setAttribute('stroke-width', '6');
     line.setAttribute('stroke-linecap', 'round');
-    line.setAttribute('opacity', '0.8');
+    line.setAttribute('opacity', '0.85');
     svg.appendChild(line);
 
+    // Ponta da seta
     const angle = Math.atan2(y2 - y1, x2 - x1);
     const size = 20;
     const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
@@ -740,9 +861,41 @@ function drawArrow(fromSquareId, toSquareId) {
         [x2 - size * Math.cos(angle + Math.PI / 6), y2 - size * Math.sin(angle + Math.PI / 6)]
     ];
     arrow.setAttribute('points', points.map(p => p.join(',')).join(' '));
-    arrow.setAttribute('fill', '#4CAF50');
-    arrow.setAttribute('opacity', '0.8');
+    arrow.setAttribute('fill', arrowColor);
+    arrow.setAttribute('opacity', '0.85');
     svg.appendChild(arrow);
+
+    // Badge de qualidade na ponta da seta (estilo Chess.com)
+    if (quality && quality.icon) {
+        const badgeDistance = 40;
+        const badgeX = x2 - badgeDistance * Math.cos(angle);
+        const badgeY = y2 - badgeDistance * Math.sin(angle);
+
+        const badge = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+
+        // Círculo de fundo
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', badgeX);
+        circle.setAttribute('cy', badgeY);
+        circle.setAttribute('r', '18');
+        circle.setAttribute('fill', quality.color);
+        circle.setAttribute('stroke', '#ffffff');
+        circle.setAttribute('stroke-width', '3');
+        badge.appendChild(circle);
+
+        // Ícone
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', badgeX);
+        text.setAttribute('y', badgeY + 6);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('font-size', '18');
+        text.setAttribute('font-weight', 'bold');
+        text.setAttribute('fill', '#ffffff');
+        text.textContent = quality.icon;
+        badge.appendChild(text);
+
+        svg.appendChild(badge);
+    }
 
     svg.style.display = 'block';
 }
@@ -753,7 +906,7 @@ function clearArrow() {
         svg.innerHTML = '';
         svg.style.display = 'none';
     }
-    $('.chess-square').removeClass('highlight-from highlight-to');
+    $('.chess-square').removeClass('square-highlight-from square-highlight-to');
 }
 
 // ===================================
@@ -1266,6 +1419,14 @@ $(document).ready(function() {
     loadOpeningBook();
     initStockfish();
 
+   const checkStockfish = setInterval(() => {
+        if (stockfish && stockfishReady) {
+            clearInterval(checkStockfish);
+            PlayVsStockfish.init(stockfish);
+            console.log('🎮 Módulo de jogo conectado ao Stockfish');
+        }
+    }, 500);
+
     $('#pgn-move-list').on('click', '.move-san', function() {
         const moveIndex = $(this).data('move-index');
 
@@ -1287,4 +1448,46 @@ $(document).ready(function() {
     });
 });
 
-console.log('✅ game.js carregado - VERSÃO ESTÁVEL!');
+function populateMoveList(history) {
+    const $moveList = $('#pgn-move-list').empty().show();
+    let $currentRow = null;
+
+    history.forEach((move, index) => {
+        const san = move.san;
+        const calculatedMoveNumber = Math.floor(index / 2) + 1;
+
+        let qualityAttr = '';
+        let iconAttr = '';
+        let qualityBadge = '';
+
+        if (previousEvaluations[index] !== undefined && previousEvaluations[index - 1] !== undefined) {
+            const quality = evaluateMoveQuality(
+                previousEvaluations[index - 1],
+                previousEvaluations[index],
+                move.color
+            );
+
+            if (quality) {
+                qualityAttr = `data-quality="${quality.label}"`;
+                iconAttr = `data-quality-icon="${quality.icon}"`;
+                qualityBadge = `<span style="color:${quality.color}; font-weight:bold; margin-left:4px;">${quality.icon}</span>`;
+            }
+        }
+
+        if (move.color === 'w') {
+            if ($currentRow) $moveList.append($currentRow);
+            $currentRow = $('<div class="move-row" style="display:grid; grid-template-columns: 1fr 1fr;"></div>');
+            $currentRow.append(`<span class="move-san" data-move-index="${index}" ${qualityAttr} ${iconAttr} style="text-align:left; padding-left:5px;">${calculatedMoveNumber}. ${san}${qualityBadge}</span>`);
+        } else {
+            if (!$currentRow) {
+                $currentRow = $('<div class="move-row" style="display:grid; grid-template-columns: 1fr 1fr;"></div>');
+                $currentRow.append(`<span class="move-san" data-move-index="-1" style="text-align:left; padding-left:5px;">${calculatedMoveNumber}. ...</span>`);
+            }
+            $currentRow.append(`<span class="move-san" data-move-index="${index}" ${qualityAttr} ${iconAttr} style="text-align:left;">${san}${qualityBadge}</span>`);
+            $moveList.append($currentRow);
+            $currentRow = null;
+        }
+    });
+
+    if ($currentRow) $moveList.append($currentRow);
+}
