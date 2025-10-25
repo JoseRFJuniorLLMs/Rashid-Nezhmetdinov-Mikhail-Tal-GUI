@@ -343,6 +343,9 @@ $("#btn-reverse").click(function () {
 // ===============
 // PGN Functions
 // ===============
+// ===============
+// PGN Functions
+// ===============
 $('#btn-load-pgn').click(function () {
     var pgnText = $('#pgn-input').val().trim();
 
@@ -351,29 +354,28 @@ $('#btn-load-pgn').click(function () {
         return;
     }
 
-    // AQUI COMEÇA A VERSÃO ATUALIZADA:
     try {
         loadedPgnGame = new Chess();
         if (loadedPgnGame.load_pgn(pgnText)) {
-            moveHistory = loadedPgnGame.history();
+            moveHistory = loadedPgnGame.history(); //
 
-            loadedPgnGame.reset();
-            currentMoveIndex = -1;
-            currentOpeningName = "";
-
-            // --- [INÍCIO DA ATUALIZAÇÃO] ---
-            // 1. Pega TODO o cabeçalho do PGN
-            const header = loadedPgnGame.header();
+            // 1. Pega TODO o cabeçalho do PGN (ANTES DE RESETAR!)
+            const header = loadedPgnGame.header(); //
             
-            // 2. Define os valores (com um padrão caso não existam)
-            const white = header['White'] || 'Jogador (Brancas)';
-            const black = header['Black'] || 'Jogador (Pretas)';
-            const event = header['Event'] || 'Partida Casual';
-            const site = header['Site'] || 'Local Desconhecido';
-            const date = header['Date'] || 'Ano Desconhecido';
-            const result = header['Result'] || '*';
+            // 2. Agora sim, reseta o jogo para a posição inicial
+            loadedPgnGame.reset(); //
+            currentMoveIndex = -1; //
+            currentOpeningName = ""; //
+                       
+            // 3. Define os valores (com um padrão caso não existam)
+            const white = header['White'] || 'Jogador (Brancas)'; //
+            const black = header['Black'] || 'Jogador (Pretas)'; //
+            const event = header['Event'] || 'Partida Casual'; //
+            const site = header['Site'] || 'Local Desconhecido'; //
+            const date = header['Date'] || 'Ano Desconhecido'; //
+            const result = header['Result'] || '*'; //
 
-            // 3. Formata a nova caixa de #pgn-status (MUITO MELHOR)
+            // 4. Formata a nova caixa de #pgn-status
             const statusHtml = `
                 <strong>${event}</strong><br>
                 <small>${site.split(',')[0]}, ${date.split('.')[0]}</small>
@@ -383,40 +385,40 @@ $('#btn-load-pgn').click(function () {
                 Resultado: <strong>${result}</strong>
                 <br>Total de Lances: <strong>${moveHistory.length}</strong>
             `;
-            $('#pgn-status').html(statusHtml); // Substitui a linha antiga
+            $('#pgn-status').html(statusHtml); //
 
-            // 4. Preenche os nomes dos jogadores no tabuleiro
-            $('#player-white-name').text(`⚪ ${white}`).show();
-            $('#player-black-name').text(`⚫ ${black}`).show();
-            // --- [FIM DA ATUALIZAÇÃO] ---
+            // 5. Preenche os nomes dos jogadores no tabuleiro
+            $('#player-white-name').text(`⚪ ${white}`).show(); //
+            $('#player-black-name').text(`⚫ ${black}`).show(); //
 
+          
             // O resto da função continua igual:
-            updateBoardDisplay();
-            updateOpeningName();
+            updateBoardDisplay(); //
+            updateOpeningName(); //
+            populateMoveList(loadedPgnGame.history({ verbose: true }));
+            updateMoveListHighlight(-1);
 
-            $('.pgn-navigation').show();
-            $('.stockfish-panel').show();
+            $('.pgn-navigation').show(); //
+            $('.stockfish-panel').show(); //
 
-            $("#square-clicked").text("-");
-            clearArrow();
+            $("#square-clicked").text("-"); //
+            clearArrow(); //
 
             if (stockfishReady) {
-                setTimeout(analyzePosition, 500);
+                setTimeout(analyzePosition, 500); //
             }
 
-            playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/game-start.mp3");
+            playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/game-start.mp3"); //
         
         } else {
-            // ATUALIZAÇÃO AQUI TAMBÉM (para esconder os nomes se der erro):
-            $('#pgn-status').html('❌ <strong>Erro:</strong> PGN inválido. Verifique o formato.');
-            $('#player-white-name').hide(); // Esconde os nomes
-            $('#player-black-name').hide(); // Esconde os nomes
+            $('#pgn-status').html('❌ <strong>Erro:</strong> PGN inválido. Verifique o formato.'); //
+            $('#player-white-name').hide(); //
+            $('#player-black-name').hide(); //
         }
     } catch (e) {
-        // ATUALIZAÇÃO AQUI TAMBÉM (para esconder os nomes se der erro):
-        $('#pgn-status').html('❌ <strong>Erro ao processar PGN:</strong> ' + e.message);
-        $('#player-white-name').hide(); // Esconde os nomes
-        $('#player-black-name').hide(); // Esconde os nomes
+        $('#pgn-status').html('❌ <strong>Erro ao processar PGN:</strong> ' + e.message); //
+        $('#player-white-name').hide(); //
+        $('#player-black-name').hide(); //
     }
 });
 
@@ -425,6 +427,7 @@ $('#btn-pgn-start').click(function () {
     currentMoveIndex = -1;
     updateBoardDisplay();
     updateMoveInfo();
+    updateMoveListHighlight(currentMoveIndex);
     $("#square-clicked").text("-");
     clearArrow();
 
@@ -441,6 +444,7 @@ $('#btn-pgn-prev').click(function () {
         currentMoveIndex--;
         updateBoardDisplay();
         updateMoveInfo();
+        updateMoveListHighlight(currentMoveIndex);
 
         if (undoneMove) {
             $("#square-clicked").text(undoneMove.san);
@@ -467,6 +471,7 @@ $('#btn-pgn-next').click(function () {
         var moveObj = loadedPgnGame.move(moveHistory[currentMoveIndex]);
         updateBoardDisplay();
         updateMoveInfo();
+        updateMoveListHighlight(currentMoveIndex);
 
         // Se o movimento for válido
         if (moveObj) {
@@ -510,6 +515,7 @@ $('#btn-pgn-end').click(function () {
 
     updateBoardDisplay();
     updateMoveInfo();
+    updateMoveListHighlight(currentMoveIndex);
 
     if (lastMoveObj) {
         $("#square-clicked").text(lastMoveObj.san);
@@ -1189,5 +1195,192 @@ $(document).ready(function() {
     // (Não precisamos mais do delay de 1000ms, o document.ready já cuida disso)
     console.log('🚀 Iniciando carregamento do Stockfish...');
     initStockfish();
+    // LISTENER PARA CLIQUE NO SCORE SHEET
+    $('#pgn-move-list').on('click', '.move-san', function() {
+        const moveIndex = $(this).data('move-index'); // Pega o índice (ex: 5)
+        
+        if (moveIndex !== undefined && moveIndex !== -1) {
+            goToMove(parseInt(moveIndex, 10)); // Pula para o lance
+            
+            // Tenta atualizar o display de lance clicado
+            try {
+                const moveObj = loadedPgnGame.history({ verbose: true })[moveIndex];
+                if (moveObj) {
+                    $("#square-clicked").text(moveObj.san);
+                }
+            } catch (e) {}
+        }
+    });
+
+    // Listener para a caixa de história (se você tiver)
+    $('#opening-name').on('click', '#opening-info-icon', function(e) {
+            e.stopPropagation(); 
+            $('#opening-history-box').slideToggle(200); 
+    });
 });
 
+// ... (depois da sua função updateOpeningName) ...
+
+/**
+ * Preenche o Score Sheet (#pgn-move-list) com os lances formatados.
+ * @param {Array} history - O histórico verbose do chess.js
+ */
+function populateMoveList(history) {
+    const $moveList = $('#pgn-move-list').empty().show(); // Limpa e exibe o div
+    let $currentRow = null;
+
+    history.forEach((move, index) => {
+        const moveNumber = move.turn; // Pega o número do lance (ex: 1, 2, 3...)
+        const san = move.san; // Pega a notação (ex: "Nf3")
+
+        // Se for lance das Brancas, cria uma nova linha
+        if (move.color === 'w') {
+            // Se uma linha anterior (só com pretas) ficou aberta, fecha
+            if ($currentRow) $moveList.append($currentRow); 
+            
+            // Cria a nova linha
+            $currentRow = $('<div class="move-row"></div>');
+            $currentRow.append(`<span class="move-number">${moveNumber}.</span>`);
+            $currentRow.append(`<span class="move-san" data-move-index="${index}">${san}</span>`);
+        
+        } else { // Se for lance das Pretas
+            // Se não tem linha (ex: PGN começa do lance das pretas)
+            if (!$currentRow) {
+                 $currentRow = $('<div class="move-row"></div>');
+                 $currentRow.append(`<span class="move-number">${moveNumber}.</span>`);
+                 // Adiciona um placeholder "..." para o lance branco
+                 $currentRow.append(`<span class="move-san" data-move-index="-1">...</span>`);
+            }
+            
+            // Adiciona o lance das pretas na linha atual
+            $currentRow.append(`<span class="move-san" data-move-index="${index}">${san}</span>`);
+            
+            // Anexa a linha completa no placar e reseta
+            $moveList.append($currentRow);
+            $currentRow = null;
+        }
+    });
+
+    // Se a última jogada foi das Brancas, a linha ainda está aberta. Anexa ela.
+    if ($currentRow) {
+        $moveList.append($currentRow);
+    }
+}
+
+/**
+ * Destaca o lance atual no Score Sheet
+ * @param {number} index - O índice do lance (currentMoveIndex)
+ */
+function updateMoveListHighlight(index) {
+    // 1. Remove o destaque de todos os lances
+    $('.move-san').removeClass('active-move');
+    
+    // 2. Adiciona o destaque no lance atual
+    const $activeMove = $(`.move-san[data-move-index="${index}"]`);
+    if ($activeMove.length > 0) {
+        $activeMove.addClass('active-move');
+
+        // 3. Auto-scroll para manter o lance visível
+        const $container = $('#pgn-move-list');
+        const $move = $activeMove;
+        
+        const containerTop = $container.scrollTop();
+        const containerBottom = containerTop + $container.height();
+        const moveTop = $move.position().top + containerTop;
+        const moveBottom = moveTop + $move.outerHeight();
+
+        if (moveTop < containerTop) { // Se o lance está acima da área visível
+            $container.scrollTop(moveTop);
+        } else if (moveBottom > containerBottom) { // Se o lance está abaixo
+            $container.scrollTop(moveBottom - $container.height() + $move.outerHeight());
+        }
+    }
+}
+
+/**
+ * Pula o tabuleiro para um lance específico (clicado no Score Sheet)
+ * @param {number} index - O índice do lance (currentMoveIndex)
+ */
+function goToMove(index) {
+    if (index < -1 || index >= moveHistory.length) return; // Índice inválido
+    
+    // Reseta o jogo
+    loadedPgnGame.reset();
+    
+    // Avança lance por lance até o índice desejado
+    for (let i = 0; i <= index; i++) {
+        loadedPgnGame.move(moveHistory[i]);
+    }
+    
+    // Atualiza o estado global
+    currentMoveIndex = index;
+    
+    // Atualiza a UI
+    updateBoardDisplay();
+    updateMoveInfo(); // Isso já chama updateOpeningName()
+    updateMoveListHighlight(currentMoveIndex);
+    
+    // Limpa setas e analisa
+    clearArrow();
+    if (stockfishReady) {
+        setTimeout(analyzePosition, 300);
+    }
+}
+
+// === BOTÃO: Colar PGN → Prompt → Carregar automático ===
+$('#btn-paste-pgn').on('click', function(e) {
+    e.preventDefault();
+    
+    const pgn = prompt("Cole o PGN completo da partida aqui:", "");
+    
+    if (pgn && pgn.trim().length > 10) { // Validação mínima
+        $('#pgn-input').val(pgn.trim());
+        $('#btn-load-pgn').click(); // Dispara o carregamento
+    } else if (pgn) {
+        alert("PGN muito curto ou inválido. Tente novamente.");
+    }
+});
+
+// === QUANDO CARREGAR O PGN → MOSTRAR A FOLHA DE PAPEL ===
+$('#btn-load-pgn').on('click', function() {
+    const pgnText = $('#pgn-input').val().trim();
+    
+    if (!pgnText) return;
+
+    try {
+        loadedPgnGame = new Chess();
+        if (loadedPgnGame.load_pgn(pgnText)) {
+            moveHistory = loadedPgnGame.history();
+
+            // === PREENCHE A FOLHA DE PAPEL ===
+            populateMoveList(loadedPgnGame.history({ verbose: true }));
+            $('#pgn-score-sheet').show();
+            $('#pgn-move-list').scrollTop(0);
+
+            // === Atualiza tudo ===
+            loadedPgnGame.reset();
+            currentMoveIndex = -1;
+            updateBoardDisplay();
+            updateOpeningName();
+            updateMoveListHighlight(-1);
+            $('.pgn-navigation').show();
+
+            // === Esconde botão de colar, mostra edição se quiser ===
+            $('#btn-paste-pgn').text('✏️ Editar PGN').off('click').on('click', function(e) {
+                e.preventDefault();
+                const novo = prompt("Edite o PGN:", pgnText);
+                if (novo && novo !== pgnText) {
+                    $('#pgn-input').val(novo);
+                    $('#btn-load-pgn').click();
+                }
+            });
+
+            if (stockfishReady) setTimeout(analyzePosition, 500);
+
+        } else {
+            alert("PGN inválido. Verifique o formato.");
+        }
+    } catch (e) {
+        alert("Erro ao processar PGN: " + e.message);
+    }
+});

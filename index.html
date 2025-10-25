@@ -511,6 +511,75 @@
             border-radius: 3px;
             z-index: 5;
         }
+
+        /* =================================================
+         INÍCIO DO NOVO CSS (FOLHA DE PAPEL)
+        =================================================
+        */
+        .score-sheet {
+            display: none;
+            /* Começa escondido, aparece após carregar PGN */
+            background-color: #f7f7f7;
+            /* Fundo de "papel" */
+            color: #333;
+            /* Texto escuro */
+            font-family: 'Courier New', Courier, monospace;
+            /* Fonte monoespaçada */
+            font-size: 0.9em;
+            max-height: 250px;
+            /* Altura máxima com scroll */
+            overflow-y: auto;
+            /* Adiciona scroll se a lista for longa */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        .move-row {
+            display: flex;
+            flex-wrap: nowrap;
+            padding: 2px 4px;
+            border-bottom: 1px solid #eee;
+            /* Linha fina entre os lances */
+        }
+
+        .move-row:last-child {
+            border-bottom: none;
+        }
+
+        .move-number {
+            width: 30px;
+            /* Espaço para o número (ex: "10.") */
+            color: #777;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .move-san {
+            flex-basis: 70px;
+            /* Largura para o lance (ex: "Nf3") */
+            font-weight: bold;
+            color: #111;
+            padding: 1px 4px;
+            border-radius: 3px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .move-san:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Destaque para o lance ativo */
+        .move-san.active-move {
+            background-color: #007bff;
+            /* Azul (como na foto) */
+            color: #ffffff;
+        }
+
+        /* FIM DO NOVO CSS */
     </style>
 
 </head>
@@ -519,18 +588,33 @@
     <div class="main">
         <div class="sidebar-left">
             <div class="pgn-loader-section">
-                <h3>📋 Carregar Partida PGN</h3>
+                   <div id="pgn-input-area">
 
-                <textarea id="pgn-input" rows="6" placeholder="Cole o PGN da partida aqui ou selecione uma partida acima...
 
-Exemplo:
-[Event &quot;Casual Game&quot;]
-[White &quot;Jogador 1&quot;]
-[Black &quot;Jogador 2&quot;]
+<div style="margin-bottom:15px;">
+    <a href="#" class="myButton" id="btn-paste-pgn">📋 Colar PGN da Partida</a>
+</div>
 
-1. e4 e5 2. Nf3 Nc6 3. Bc4..."></textarea>
-                <a href="#" class="myButton" id="btn-load-pgn">Carregar PGN</a>
+<textarea id="pgn-input" style="display:none;"></textarea>
+
+<div id="pgn-score-sheet" class="score-sheet" style="display:none; margin:15px 0;">
+    <div style="padding:8px; background:#eee; border-bottom:1px solid #ccc; font-weight:bold; color:#333; display:flex;">
+        <span style="width:30px;">#</span>
+        <span style="flex:1; text-align:center;">Brancas</span>
+        <span style="flex:1; text-align:center;">Pretas</span>
+    </div>
+    <div id="pgn-move-list"></div>
+</div>
+
+<a href="#" id="btn-load-pgn" style="display:none;">Carregar PGN</a>
+                    <a href="#" class="myButton" id="btn-load-pgn">Carregar PGN</a>
+                </div>
+
                 <p id="pgn-status">Nenhum PGN carregado.</p>
+
+                <div id="pgn-move-list" class="score-sheet">
+                    </div>
+
                 <div class="pgn-navigation">
                     <p id="current-move">Posição inicial</p>
 
@@ -685,6 +769,11 @@ Exemplo:
                 <h4 id="opening-name"
                     style="color: #F0D9B5; margin: 5px 0 10px; min-height: 1.2em; font-style: italic; font-weight: 500;">
                 </h4>
+            </div>
+
+            <div id="opening-history-box" style="display: none; margin-top: 15px; padding: 12px; background-color: #2a2926; border: 1px solid #B58863; border-radius: 5px; text-align: left; font-style: normal; font-size: 0.9em;">
+                <h5>Sobre a Abertura</h5>
+                <p id="opening-history-text"></p>
             </div>
 
             <div class="sidebar-game">

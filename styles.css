@@ -521,7 +521,55 @@ a {
   fill: red;
 }
 
+.score-sheet {
+            display: none; /* Começa escondido, aparece após carregar PGN */
+            background-color: #f7f7f7; /* Fundo de "papel" */
+            color: #333; /* Texto escuro */
+            font-family: 'Courier New', Courier, monospace; /* Fonte monoespaçada */
+            font-size: 0.9em;
+            max-height: 250px; /* Altura máxima com scroll */
+            overflow-y: auto; /* Adiciona scroll se a lista for longa */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            text-align: left;
+        }
 
-/* ======================================================= */
-/* FIM DO CÓDIGO ADICIONADO                              */
-/* ======================================================= */
+        .move-row {
+            display: flex;
+            flex-wrap: nowrap;
+            padding: 2px 4px;
+            border-bottom: 1px solid #eee; /* Linha fina entre os lances */
+        }
+        .move-row:last-child {
+            border-bottom: none;
+        }
+
+        .move-number {
+            width: 30px; /* Espaço para o número (ex: "10.") */
+            color: #777;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .move-san {
+            flex-basis: 70px; /* Largura para o lance (ex: "Nf3") */
+            font-weight: bold;
+            color: #111;
+            padding: 1px 4px;
+            border-radius: 3px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .move-san:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Destaque para o lance ativo */
+        .move-san.active-move {
+            background-color: #007bff; /* Azul (como na foto) */
+            color: #ffffff;
+        }
+
