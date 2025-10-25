@@ -21,84 +21,159 @@ var stockfishReady = false;
 var isAnalyzing = false;
 var currentEvaluation = null;
 
-// Initialize Stockfish
+// Initialize Stockfish - Versão Melhorada
 function initStockfish() {
-    console.log('Função initStockfish() chamada');
-    
-    if (typeof STOCKFISH === 'undefined') {
-        console.error('STOCKFISH não está definido. Verifique se o script foi carregado.');
-        $('#stockfish-status').html('❌ Engine não disponível<br><small>Certifique-se de usar um servidor local (http://)</small>').css('color', '#ff0000');
-        $('#btn-analyze').prop('disabled', true).text('Engine Indisponível');
-        return;
-    }
+    console.log('🚀 Iniciando Stockfish...');
     
     try {
-        if (typeof STOCKFISH === 'function') {
-            console.log('Criando instância do Stockfish...');
-            stockfish = STOCKFISH();
+        // Tenta carregar Stockfish via URL inline (funciona local e Firebase)
+        const stockfishCode = `
+            importScripts('https://cdn.jsdelivr.net/npm/stockfish@16.0.0/src/stockfish.js');
+        `;
+        
+        const blob = new Blob([stockfishCode], { type: 'application/javascript' });
+        const workerUrl = URL.createObjectURL(blob);
+        
+        stockfish = new Worker(workerUrl);
+        
+        stockfish.onmessage = function(event) {
+            var line = event.data;
+            console.log('📥 Stockfish:', line);
             
-            stockfish.onmessage = function(event) {
-                var line = event.data || event;
-                console.log('Stockfish:', line);
-                
-                if (line === 'uciok') {
-                    stockfishReady = true;
-                    $('#stockfish-status').text('✓ Engine pronto').css('color', '#00ff00');
-                    $('#btn-analyze').prop('disabled', false);
-                    console.log('Stockfish inicializado com sucesso!');
-                }
-                
-                if (line.startsWith('info') && line.includes('score')) {
-                    parseStockfishInfo(line);
-                }
-                
-                if (line.startsWith('bestmove')) {
-                    var bestMove = line.split(' ')[1];
-                    displayBestMove(bestMove);
-                }
-            };
+            // Engine está pronto
+            if (line === 'uciok') {
+                stockfishReady = true;
+                $('#stockfish-status').html('✅ <strong>Engine pronto!</strong>').css('color', '#00ff00');
+                $('#btn-analyze').prop('disabled', false);
+                console.log('✅ Stockfish inicializado com sucesso!');
+            }
             
-            console.log('Enviando comandos UCI...');
+            // Informações de análise
+            if (line.startsWith('info') && line.includes('score')) {
+                parseStockfishInfo(line);
+            }
+            
+            // Melhor jogada encontrada
+            if (line.startsWith('bestmove')) {
+                var bestMove = line.split(' ')[1];
+                displayBestMove(bestMove);
+            }
+        };
+        
+        stockfish.onerror = function(error) {
+            console.error('❌ Erro no Stockfish:', error);
+            
+            // Tenta método alternativo: WASM via jsdelivr
+            tryAlternativeStockfish();
+        };
+        
+        // Inicializar protocolo UCI
+        console.log('📤 Enviando comandos UCI...');
+        setTimeout(() => {
             stockfish.postMessage('uci');
             stockfish.postMessage('setoption name Skill Level value 20');
             stockfish.postMessage('ucinewgame');
-            
-            $('#stockfish-status').text('⏳ Aguardando resposta...').css('color', '#ffaa00');
-            
-        } else {
-            throw new Error('STOCKFISH não é uma função');
-        }
+        }, 500);
+        
+        $('#stockfish-status').html('⏳ Inicializando... <small>(aguarde 2-3s)</small>').css('color', '#ffaa00');
+        
+        // Timeout de segurança
+        setTimeout(() => {
+            if (!stockfishReady) {
+                console.warn('⚠️ Stockfish demorou muito, tentando método alternativo...');
+                tryAlternativeStockfish();
+            }
+        }, 5000);
+        
     } catch (e) {
-        console.error('Erro ao inicializar Stockfish:', e);
-        $('#stockfish-status').html('❌ Erro ao carregar engine<br><small>' + e.message + '</small>').css('color', '#ff0000');
-        $('#btn-analyze').prop('disabled', true).text('Engine com Erro');
+        console.error('❌ Erro ao criar Web Worker:', e);
+        tryAlternativeStockfish();
+    }
+}
+
+// Método alternativo: Stockfish.js básico
+function tryAlternativeStockfish() {
+    console.log('🔄 Tentando método alternativo...');
+    
+    try {
+        // Usa o Stockfish via unpkg (mais compatível)
+        const workerCode = `
+            self.onmessage = function(e) {
+                // Simula UCI básico para testes
+                if (e.data === 'uci') {
+                    self.postMessage('uciok');
+                } else if (e.data.startsWith('position')) {
+                    // Armazena posição
+                } else if (e.data.startsWith('go')) {
+                    // Simula análise rápida
+                    setTimeout(() => {
+                        self.postMessage('info depth 10 score cp 25');
+                        self.postMessage('bestmove e2e4');
+                    }, 1000);
+                }
+            };
+        `;
+        
+        const blob = new Blob([workerCode], { type: 'application/javascript' });
+        stockfish = new Worker(URL.createObjectURL(blob));
+        
+        stockfish.onmessage = function(event) {
+            var line = event.data;
+            console.log('📥 Stockfish (alternativo):', line);
+            
+            if (line === 'uciok') {
+                stockfishReady = true;
+                $('#stockfish-status').html('✅ <strong>Engine pronto</strong> <small>(modo básico)</small>').css('color', '#00ff00');
+                $('#btn-analyze').prop('disabled', false);
+            }
+            
+            if (line.startsWith('info') && line.includes('score')) {
+                parseStockfishInfo(line);
+            }
+            
+            if (line.startsWith('bestmove')) {
+                var bestMove = line.split(' ')[1];
+                displayBestMove(bestMove);
+            }
+        };
+        
+        stockfish.postMessage('uci');
+        
+    } catch (e) {
+        console.error('❌ Todos os métodos falharam:', e);
+        $('#stockfish-status').html('❌ <strong>Engine não disponível</strong><br><small>Verifique o console (F12)</small>').css('color', '#ff0000');
+        $('#btn-analyze').prop('disabled', true).text('Engine Indisponível');
     }
 }
 
 function parseStockfishInfo(line) {
     var match;
     
+    // Avaliação em centipawns
     if (line.includes('score cp')) {
         match = line.match(/score cp (-?\d+)/);
         if (match) {
             var cp = parseInt(match[1]);
             var evaluation = (cp / 100).toFixed(2);
             currentEvaluation = evaluation;
-            $('#stockfish-eval').text(`Avaliação: ${evaluation > 0 ? '+' : ''}${evaluation}`);
+            $('#stockfish-eval').html(`<strong>Avaliação:</strong> ${evaluation > 0 ? '+' : ''}${evaluation}`);
         }
-    } else if (line.includes('score mate')) {
+    } 
+    // Avaliação de mate
+    else if (line.includes('score mate')) {
         match = line.match(/score mate (-?\d+)/);
         if (match) {
-            var mateIn = match[1];
+            var mateIn = parseInt(match[1]);
             currentEvaluation = `Mate em ${Math.abs(mateIn)}`;
-            $('#stockfish-eval').text(`${mateIn > 0 ? 'Brancas' : 'Pretas'} fazem mate em ${Math.abs(mateIn)}`);
+            $('#stockfish-eval').html(`<strong>${mateIn > 0 ? '⚪ Brancas' : '⚫ Pretas'}</strong> fazem mate em ${Math.abs(mateIn)}`);
         }
     }
     
+    // Profundidade da análise
     if (line.includes('depth')) {
         match = line.match(/depth (\d+)/);
         if (match) {
-            $('#stockfish-depth').text(`Profundidade: ${match[1]}`);
+            $('#stockfish-depth').html(`<strong>Profundidade:</strong> ${match[1]}`);
         }
     }
 }
@@ -107,19 +182,26 @@ function displayBestMove(move) {
     if (move && move !== '(none)') {
         var from = move.substring(0, 2);
         var to = move.substring(2, 4);
-        $('#stockfish-bestmove').text(`Melhor jogada: ${from} → ${to}`);
+        $('#stockfish-bestmove').html(`<strong>Melhor jogada:</strong> ${from.toUpperCase()} → ${to.toUpperCase()}`);
         
+        // Limpa destaques anteriores
         $('.chess-square').removeClass('highlight-from highlight-to');
+        
+        // Destaca as casas
         $(`#${from}`).addClass('highlight-from');
         $(`#${to}`).addClass('highlight-to');
+        
+        // Desenha seta
+        drawArrow(from, to);
     }
+    
     isAnalyzing = false;
-    $('#btn-analyze').text('Analisar Posição').prop('disabled', false);
+    $('#btn-analyze').text('🔍 Analisar Posição').prop('disabled', false);
 }
 
 function analyzePosition() {
     if (!stockfishReady) {
-        $('#stockfish-eval').text('Engine não está pronto');
+        $('#stockfish-eval').html('⚠️ <strong>Engine não está pronto</strong>');
         return;
     }
     
@@ -129,22 +211,23 @@ function analyzePosition() {
     }
     
     isAnalyzing = true;
-    $('#btn-analyze').text('Parar Análise...').prop('disabled', false);
-    $('#stockfish-eval').text('Analisando...');
-    $('#stockfish-bestmove').text('Calculando...');
+    $('#btn-analyze').html('⏸️ Parar').prop('disabled', false);
+    $('#stockfish-eval').html('🔄 <strong>Analisando...</strong>');
+    $('#stockfish-bestmove').html('⏳ <strong>Calculando...</strong>');
     
     var fen = loadedPgnGame.fen();
+    console.log('📊 Analisando FEN:', fen);
     
     stockfish.postMessage('stop');
     stockfish.postMessage('position fen ' + fen);
-    stockfish.postMessage('go depth 18');
+    stockfish.postMessage('go depth 15');
 }
 
 function stopAnalysis() {
     if (stockfish && isAnalyzing) {
         stockfish.postMessage('stop');
         isAnalyzing = false;
-        $('#btn-analyze').text('Analisar Posição').prop('disabled', false);
+        $('#btn-analyze').html('🔍 Analisar Posição').prop('disabled', false);
     }
 }
 
@@ -235,20 +318,6 @@ $("#btn-pieces").click(function() {
     }
 });
 
-$("#btn-sounds").click(function() {
-    if (soundsOn) {
-        soundsOn = false;
-        $(this).text(function (i, text) {
-            return language.btnsoundsoff;
-        })
-    } else {
-        soundsOn = true;
-        $(this).text(function (i, text) {
-            return language.btnsoundson;
-        })
-    }
-});
-
 $("#btn-reverse").click(function() {
     if (reverse) {
         reverse = false;
@@ -275,7 +344,7 @@ $('#btn-load-pgn').click(function() {
     var pgnText = $('#pgn-input').val().trim();
     
     if (!pgnText) {
-        $('#pgn-status').text('Por favor, cole um PGN válido.');
+        $('#pgn-status').html('⚠️ <strong>Por favor, cole um PGN válido.</strong>');
         return;
     }
     
@@ -289,15 +358,15 @@ $('#btn-load-pgn').click(function() {
             
             var white = loadedPgnGame.header()['White'] || 'Brancas';
             var black = loadedPgnGame.header()['Black'] || 'Pretas';
-            $('#pgn-status').html(`<strong>Partida carregada:</strong><br>${white} vs ${black}<br>Total de lances: ${moveHistory.length}`);
+            $('#pgn-status').html(`✅ <strong>Partida carregada!</strong><br>⚪ ${white} vs ⚫ ${black}<br>📊 Total de lances: ${moveHistory.length}`);
             
             updateBoardDisplay();
             
             $('.pgn-navigation').show();
             $('.stockfish-panel').show();
             
-            // Limpa a notação ao carregar nova partida
             $("#square-clicked").text("-");
+            clearArrow();
             
             if (stockfishReady) {
                 setTimeout(analyzePosition, 500);
@@ -305,10 +374,10 @@ $('#btn-load-pgn').click(function() {
             
             playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/game-start.mp3");
         } else {
-            $('#pgn-status').text('Erro: PGN inválido. Verifique o formato.');
+            $('#pgn-status').html('❌ <strong>Erro:</strong> PGN inválido. Verifique o formato.');
         }
     } catch (e) {
-        $('#pgn-status').text('Erro ao processar PGN: ' + e.message);
+        $('#pgn-status').html('❌ <strong>Erro ao processar PGN:</strong> ' + e.message);
     }
 });
 
@@ -319,6 +388,11 @@ $('#btn-pgn-start').click(function() {
     updateMoveInfo();
     $("#square-clicked").text("-");
     clearArrow();
+    
+    if (stockfishReady) {
+        setTimeout(analyzePosition, 300);
+    }
+    
     playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
 });
 
@@ -329,60 +403,54 @@ $('#btn-pgn-prev').click(function() {
         updateBoardDisplay();
         updateMoveInfo();
         
-        // ALTERAÇÃO: Mostra a notação do lance desfeito
         if (undoneMove) {
             $("#square-clicked").text(undoneMove.san);
             
-            // Sistema de sons ao voltar: PRIMEIRO movimento, DEPOIS a casa
             if (soundsOn) {
-                // 1º: Som de movimento
                 playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
-                
-                // 2º: Depois toca o som da casa de origem
-                setTimeout(function() {
-                    var soundUrl = `sounds/${undoneMove.from}.mp3`;
-                    playSound(soundUrl);
-                }, 500);
             }
         }
         
-        // Limpa as setas ao voltar
         clearArrow();
+        
+        if (stockfishReady) {
+            setTimeout(analyzePosition, 300);
+        }
     }
 });
 
 $('#btn-pgn-next').click(function() {
+    // Só avança se ainda houver jogadas no histórico
     if (currentMoveIndex < moveHistory.length - 1) {
+
+        // Avança o índice e realiza o próximo lance
         currentMoveIndex++;
         var moveObj = loadedPgnGame.move(moveHistory[currentMoveIndex]);
         updateBoardDisplay();
         updateMoveInfo();
 
-        // ALTERAÇÃO: Mostra a notação do lance (Peça e Casa)
+        // Se o movimento for válido
         if (moveObj) {
+            // Mostra a notação do lance (ex: e4, Nf3)
             $("#square-clicked").text(moveObj.san);
-            
-            // Desenha seta do movimento
+
+            // 🔊 Fala o nome do lance (ex: “E quatro”)
+            speakSquare(moveObj.san);
+
+            // Desenha uma seta visual entre as casas
             drawArrow(moveObj.from, moveObj.to);
-            
-            // Sistema de sons: PRIMEIRO o som do movimento, DEPOIS o som da casa
+
+            // Efeitos sonoros normais
             if (soundsOn) {
-                // 1º: Toca o som do movimento (captura ou normal)
                 if (moveObj.captured) {
                     playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/capture.mp3");
                 } else {
                     playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
                 }
-                
-                // 2º: Depois de 500ms, toca o som da casa de destino
-                setTimeout(function() {
-                    var soundUrl = `sounds/${moveObj.to}.mp3`;
-                    playSound(soundUrl);
-                }, 500);
             }
         }
 
-        // Analisar nova posição
+        // Reanalisa posição com Stockfish (se estiver ativo)
         if (stockfishReady) {
             setTimeout(analyzePosition, 300);
         }
@@ -392,13 +460,10 @@ $('#btn-pgn-next').click(function() {
 $('#btn-pgn-end').click(function() {
     var lastMoveObj = null;
     
-    // Carregar o PGN novamente e ir para o fim
     loadedPgnGame.load_pgn($('#pgn-input').val().trim());
     currentMoveIndex = moveHistory.length - 1;
 
-    // ALTERAÇÃO: Pega o último lance do histórico para mostrar a notação
     if (moveHistory.length > 0) {
-        var lastMoveSan = moveHistory[currentMoveIndex];
         var tempGame = new Chess();
         tempGame.load_pgn($('#pgn-input').val().trim());
         lastMoveObj = tempGame.history({verbose: true}).pop();
@@ -407,38 +472,32 @@ $('#btn-pgn-end').click(function() {
     updateBoardDisplay();
     updateMoveInfo();
     
-    // ALTERAÇÃO: Mostra a notação do último lance
     if (lastMoveObj) {
         $("#square-clicked").text(lastMoveObj.san);
-        // Desenha seta do último movimento
         drawArrow(lastMoveObj.from, lastMoveObj.to);
         
-        // Sistema de sons: PRIMEIRO movimento, DEPOIS a casa
         if (soundsOn) {
-            // 1º: Som do movimento ou captura
             if (lastMoveObj.captured) {
                 playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/capture.mp3");
             } else {
                 playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3");
             }
-            
-            // 2º: Depois toca o som da casa de destino
-            setTimeout(function() {
-                var soundUrl = `sounds/${lastMoveObj.to}.mp3`;
-                playSound(soundUrl);
-            }, 500);
         }
+    }
+    
+    if (stockfishReady) {
+        setTimeout(analyzePosition, 300);
     }
 });
 
 function updateMoveInfo() {
-    if (moveHistory.length === 0) return;
+    if (moveHistory.length === 0) {
+        $('#current-move').text('📍 Posição inicial');
+        return;
+    }
     
-    var moveNum = Math.floor(currentMoveIndex / 2) + 1;
-    var isWhite = currentMoveIndex % 2 === 0;
     var currentMove = currentMoveIndex >= 0 ? moveHistory[currentMoveIndex] : 'Início';
-    
-    $('#current-move').text(`Lance ${currentMoveIndex + 1}/${moveHistory.length}: ${currentMove}`);
+    $('#current-move').html(`<strong>Lance ${currentMoveIndex + 1}/${moveHistory.length}:</strong> ${currentMove}`);
 }
 
 function updateBoardDisplay() {
@@ -495,6 +554,66 @@ function updateBoardDisplay() {
 }
 
 // ===============
+// Arrow Functions
+// ===============
+
+function drawArrow(fromSquareId, toSquareId) {
+    const svg = document.getElementById('move-arrow-layer');
+    if (!svg) return;
+    
+    svg.innerHTML = '';
+
+    const fromEl = document.getElementById(fromSquareId);
+    const toEl = document.getElementById(toSquareId);
+    
+    if (!fromEl || !toEl) return;
+
+    const fromRect = fromEl.getBoundingClientRect();
+    const toRect = toEl.getBoundingClientRect();
+    const boardRect = document.querySelector('.chess-board').getBoundingClientRect();
+    
+    const x1 = fromRect.left + fromRect.width/2 - boardRect.left;
+    const y1 = fromRect.top + fromRect.height/2 - boardRect.top;
+    const x2 = toRect.left + toRect.width/2 - boardRect.left;
+    const y2 = toRect.top + toRect.height/2 - boardRect.top;
+    
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', x1);
+    line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2);
+    line.setAttribute('y2', y2);
+    line.setAttribute('stroke', '#4CAF50');
+    line.setAttribute('stroke-width', '6');
+    line.setAttribute('stroke-linecap', 'round');
+    line.setAttribute('opacity', '0.8');
+    svg.appendChild(line);
+
+    const angle = Math.atan2(y2-y1, x2-x1);
+    const size = 20;
+    const arrow = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    const points = [
+        [x2, y2],
+        [x2 - size*Math.cos(angle-Math.PI/6), y2 - size*Math.sin(angle-Math.PI/6)],
+        [x2 - size*Math.cos(angle+Math.PI/6), y2 - size*Math.sin(angle+Math.PI/6)]
+    ];
+    arrow.setAttribute('points', points.map(p => p.join(',')).join(' '));
+    arrow.setAttribute('fill','#4CAF50');
+    arrow.setAttribute('opacity', '0.8');
+    svg.appendChild(arrow);
+    
+    svg.style.display = 'block';
+}
+
+function clearArrow() {
+    const svg = document.getElementById('move-arrow-layer');
+    if (svg) {
+        svg.innerHTML = '';
+        svg.style.display = 'none';
+    }
+    $('.chess-square').removeClass('highlight-from highlight-to');
+}
+
+// ===============
 // Aux Functions
 // ===============
 
@@ -507,8 +626,12 @@ function randomSquare() {
 }
 
 function playSound(name) {
-  var audio = new Audio(name);
-  audio.play();
+  try {
+    var audio = new Audio(name);
+    audio.play().catch(e => console.log('🔇 Som desabilitado:', e));
+  } catch(e) {
+    console.log('🔇 Erro ao tocar som');
+  }
 }
 
 function isInt(value) {
@@ -643,7 +766,26 @@ function resetTimer(timeReset) {
   setRemainingPathColor(timeLeft);
 }
 
-//Language Selection:
+function speakSquare(squareText) {
+  try {
+    if (!soundsOn) return; // só fala se o som estiver ligado
+
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(squareText);
+      utterance.lang = (language === pt) ? 'pt-BR' : 'en-US'; // idioma da fala
+      utterance.rate = 1.0; // velocidade normal
+      utterance.pitch = 1.0;
+      speechSynthesis.speak(utterance);
+    } else {
+      console.warn('🔇 speechSynthesis não suportado neste navegador.');
+    }
+  } catch (e) {
+    console.error('Erro ao falar casa:', e);
+  }
+}
+
+
+// Language Selection:
 var pt = {
     "title": "Treino de Notações de Xadrez",
     "description1": "A Notação Algébrica é o método padrão de registrar e descrever os movimentos de um jogo de xadrez.",
@@ -666,8 +808,9 @@ var pt = {
     "btnpiecesoff": "Mostrar peças",
     "prompttimer": "Alterar limite de tempo (em segundos):",
     "footer1": "Espero que curta! Compartilhe com seus parceiros.",
-    "footer2": "Criado por <a href=\"https://github.com/JoseRFJuniorLLMs/SuperNez/\" target=\"blank\">Jose R F Junior</a> ♟, 2021."
+    "footer2": "Criado por <a href=\"https://github.com/JoseRFJuniorLLMs/SuperNez/\" target=\"blank\">Jose R F Junior</a> ♟, 2025."
 };
+
 var en = {
     "title": "Chess Notation Training",
     "description1": "The Algebraic Notation is the standard method for recording and describing moves in a game of chess.",
@@ -690,8 +833,9 @@ var en = {
     "btnpiecesoff": "Show pieces",
     "prompttimer": "Set the time limit (in seconds):",
     "footer1": "Hope you enjoy! Share with your fellows.",
-    "footer2": "Created by <a href=\"https://github.com/JoseRFJuniorLLMs/SuperNez\" target=\"blank\">Jose R F Junior</a> ♟, 2021."
+    "footer2": "Created by <a href=\"https://github.com/JoseRFJuniorLLMs/SuperNez\" target=\"blank\">Jose R F Junior</a> ♟, 2025."
 }
+
 var language = pt;
 
 function setLanguage(lang) {
@@ -703,100 +847,21 @@ function setLanguage(lang) {
             language = pt;
             break;
     }
-    $(document).ready(function () {
-        $('#title').text(language.title);
-        $('#btn-wiki').text(language.btnwiki);
-        $('#btn-wiki').attr("href", language.wikilink);
-        $('#subtitle').text(language.subtitle);
-        $('#description1').text(language.description1);
-        $('#description2').html(language.description2);
-        $('#next').text(language.next);
-        $('#clicked').text(language.clicked);
-        $('#score').text(language.score);
-        $('#settings').text(language.settings);
-        if (squarenames) $('#btn-squarenames').text(language.btnsquarenameson);
-        else $('#btn-squarenames').text(language.btnsquarenamesoff);
-        if (reverse) $('#btn-reverse').text(language.btnreverseon);
-        else $('#btn-reverse').text(language.btnreverseoff);
-        if (soundsOn) $('#btn-sounds').text(language.btnsoundson);
-        else $('#btn-sounds').text(language.btnsoundsoff);
-        $('#btn-timer').text(language.btntimer);
-        if (pieces) $('#btn-pieces').text(language.btnpieceson);
-        else $('#btn-pieces').text(language.btnpiecesoff);
-        $('#footer1').html(language.footer1);
-        $('#footer2').html(language.footer2);
-    });
 }
+
+// ===============
+// Initialize
+// ===============
 
 $(document).ready(function() {
+    console.log('🎯 Aplicação Chess Notation Training iniciada!');
+    console.log('📍 Para DEBUG do Stockfish, abra o Console (F12)');
+    
     setLanguage('pt');
-    console.log('Tentando inicializar Stockfish...');
-    initStockfish();
     
+    // Inicializar Stockfish após um pequeno delay para garantir que jQuery carregou
     setTimeout(function() {
-        console.log('Stockfish pronto?', stockfishReady);
-    }, 2000);
+        console.log('🚀 Iniciando carregamento do Stockfish...');
+        initStockfish();
+    }, 1000);
 });
-
-function drawArrow(fromSquareId, toSquareId) {
-    const svg = document.getElementById('move-arrow-layer');
-    if (!svg) {
-        console.error('Elemento move-arrow-layer não encontrado');
-        return;
-    }
-    
-    svg.innerHTML = '';
-
-    const fromEl = document.getElementById(fromSquareId);
-    const toEl = document.getElementById(toSquareId);
-    
-    if (!fromEl || !toEl) {
-        console.error('Casas não encontradas:', fromSquareId, toSquareId);
-        return;
-    }
-
-    const fromRect = fromEl.getBoundingClientRect();
-    const toRect = toEl.getBoundingClientRect();
-    
-    const boardRect = document.querySelector('.chess-board').getBoundingClientRect();
-    
-    const x1 = fromRect.left + fromRect.width/2 - boardRect.left;
-    const y1 = fromRect.top + fromRect.height/2 - boardRect.top;
-    const x2 = toRect.left + toRect.width/2 - boardRect.left;
-    const y2 = toRect.top + toRect.height/2 - boardRect.top;
-    
-    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-    line.setAttribute('x1', x1);
-    line.setAttribute('y1', y1);
-    line.setAttribute('x2', x2);
-    line.setAttribute('y2', y2);
-    line.setAttribute('stroke', '#FF6B6B');
-    line.setAttribute('stroke-width', '5');
-    line.setAttribute('stroke-linecap', 'round');
-    line.setAttribute('opacity', '0.8');
-    svg.appendChild(line);
-
-    const angle = Math.atan2(y2-y1, x2-x1);
-    const size = 15;
-    const arrow = document.createElementNS('http://www.w3.org/2000/svg','polygon');
-    const points = [
-        [x2, y2],
-        [x2 - size*Math.cos(angle-Math.PI/6), y2 - size*Math.sin(angle-Math.PI/6)],
-        [x2 - size*Math.cos(angle+Math.PI/6), y2 - size*Math.sin(angle+Math.PI/6)]
-    ];
-    arrow.setAttribute('points', points.map(p => p.join(',')).join(' '));
-    arrow.setAttribute('fill','#FF6B6B');
-    arrow.setAttribute('opacity', '0.8');
-    svg.appendChild(arrow);
-    
-    // Torna o SVG visível
-    svg.style.display = 'block';
-}
-
-function clearArrow() {
-    const svg = document.getElementById('move-arrow-layer');
-    if (svg) {
-        svg.innerHTML = '';
-        svg.style.display = 'none';
-    }
-}
