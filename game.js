@@ -346,81 +346,8 @@ $("#btn-reverse").click(function () {
 // ===============
 // PGN Functions
 // ===============
-$('#btn-load-pgn').click(function () {
-    var pgnText = $('#pgn-input').val().trim();
 
-    if (!pgnText) {
-        $('#pgn-status').html('⚠️ <strong>Por favor, cole um PGN válido.</strong>');
-        return;
-    }
-
-    try {
-        loadedPgnGame = new Chess();
-        if (loadedPgnGame.load_pgn(pgnText)) {
-            moveHistory = loadedPgnGame.history(); //
-
-            // 1. Pega TODO o cabeçalho do PGN (ANTES DE RESETAR!)
-            const header = loadedPgnGame.header(); //
-            
-            // 2. Agora sim, reseta o jogo para a posição inicial
-            loadedPgnGame.reset(); //
-            currentMoveIndex = -1; //
-            currentOpeningName = ""; //
-                       
-            // 3. Define os valores (com um padrão caso não existam)
-            const white = header['White'] || 'Jogador (Brancas)'; //
-            const black = header['Black'] || 'Jogador (Pretas)'; //
-            const event = header['Event'] || 'Partida Casual'; //
-            const site = header['Site'] || 'Local Desconhecido'; //
-            const date = header['Date'] || 'Ano Desconhecido'; //
-            const result = header['Result'] || '*'; //
-
-            // 4. Formata a nova caixa de #pgn-status
-            const statusHtml = `
-                <strong>${event}</strong><br>
-                <small>${site.split(',')[0]}, ${date.split('.')[0]}</small>
-                <hr style="border-color:#4a4946; border-top:0; margin: 8px 0;">
-                ⚪ <strong>${white}</strong><br>
-                ⚫ <strong>${black}</strong><br>
-                Resultado: <strong>${result}</strong>
-                <br>Total de Lances: <strong>${moveHistory.length}</strong>
-            `;
-            $('#pgn-status').html(statusHtml); //
-
-            // 5. Preenche os nomes dos jogadores no tabuleiro
-            $('#player-white-name').text(`⚪ ${white}`).show(); //
-            $('#player-black-name').text(`⚫ ${black}`).show(); //
-
-          
-            // O resto da função continua igual:
-            updateBoardDisplay(); //
-            updateOpeningName(); //
-            populateMoveList(loadedPgnGame.history({ verbose: true }));
-            updateMoveListHighlight(-1);
-
-            $('.pgn-navigation').show(); //
-            $('.stockfish-panel').show(); //
-
-            $("#square-clicked").text("-"); //
-            clearArrow(); //
-
-            if (stockfishReady) {
-                setTimeout(analyzePosition, 500); //
-            }
-
-            playSound("https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/game-start.mp3"); //
-        
-        } else {
-            $('#pgn-status').html('❌ <strong>Erro:</strong> PGN inválido. Verifique o formato.'); //
-            $('#player-white-name').hide(); //
-            $('#player-black-name').hide(); //
-        }
-    } catch (e) {
-        $('#pgn-status').html('❌ <strong>Erro ao processar PGN:</strong> ' + e.message); //
-        $('#player-white-name').hide(); //
-        $('#player-black-name').hide(); //
-    }
-});
+// FUNÇÃO DE CARREGAMENTO ANTIGA REMOVIDA DAQUI (estava causando o conflito)
 
 $('#btn-pgn-start').click(function () {
     loadedPgnGame.reset();
@@ -1341,7 +1268,7 @@ $('#btn-paste-pgn').on('click', function(e) {
     }
 });
 
-// === QUANDO CARREGAR O PGN → MOSTRAR A FOLHA DE PAPEL ===
+// === QUANDO CARREGAR O PGN → MOSTRAR A FOLHA DE PAPEL (Versão Correta) ===
 $('#btn-load-pgn').on('click', function() {
     const pgnText = $('#pgn-input').val().trim();
     
@@ -1351,10 +1278,11 @@ $('#btn-load-pgn').on('click', function() {
         loadedPgnGame = new Chess();
         if (loadedPgnGame.load_pgn(pgnText)) {
             moveHistory = loadedPgnGame.history();
+            const header = loadedPgnGame.header();
 
             // === PREENCHE A FOLHA DE PAPEL ===
             populateMoveList(loadedPgnGame.history({ verbose: true }));
-            $('#pgn-score-sheet').show();
+            $('#pgn-score-sheet').show(); // <--- ISTO AQUI MOSTRA A FOLHA!
             $('#pgn-move-list').scrollTop(0);
 
             // === Atualiza tudo ===
@@ -1364,8 +1292,22 @@ $('#btn-load-pgn').on('click', function() {
             updateOpeningName();
             updateMoveListHighlight(-1);
             $('.pgn-navigation').show();
+            $('#player-white-name').text(`⚪ ${header['White'] || 'Jogador (Brancas)'}`).show();
+            $('#player-black-name').text(`⚫ ${header['Black'] || 'Jogador (Pretas)'}`).show();
+            
+            // Atualiza status (copiado da função antiga)
+            const statusHtml = `
+                <strong>${header['Event'] || 'Partida Casual'}</strong><br>
+                <small>${(header['Site'] || 'Local Desconhecido').split(',')[0]}, ${(header['Date'] || 'Ano Desconhecido').split('.')[0]}</small>
+                <hr style="border-color:#4a4946; border-top:0; margin: 8px 0;">
+                ⚪ <strong>${header['White'] || 'Jogador (Brancas)'}</strong><br>
+                ⚫ <strong>${header['Black'] || 'Jogador (Pretas)'}</strong><br>
+                Resultado: <strong>${header['Result'] || '*'}</strong>
+                <br>Total de Lances: <strong>${moveHistory.length}</strong>
+            `;
+            $('#pgn-status').html(statusHtml);
 
-            // === Esconde botão de colar, mostra edição se quiser ===
+            // === Mostra botão de edição ===
             $('#btn-paste-pgn').text('✏️ Editar PGN').off('click').on('click', function(e) {
                 e.preventDefault();
                 const novo = prompt("Edite o PGN:", pgnText);
