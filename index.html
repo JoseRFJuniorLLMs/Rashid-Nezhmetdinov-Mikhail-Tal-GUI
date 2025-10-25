@@ -456,7 +456,21 @@
                 grid-row: 3 / 4;
             }
         }
+
+        .eval-label {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #000;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 1px 3px;
+            border-radius: 3px;
+            z-index: 5;
+        }
     </style>
+
 </head>
 
 <body>
@@ -576,28 +590,59 @@ Exemplo:
         </div>
 
         <div class="sidebar-right">
-
+            <!-- === PARTIDAS PRÉ-CARREGADAS === -->
             <div class="pgn-preloaded-section">
-                <label for="select-nez-game">Partidas (Nezhmetdinov):</label>
-                <select id="select-nez-game" class="pgn-preloaded-select">
-                    <option value="">Carregando...</option>
-                </select>
+                <h4 style="margin: 0 0 10px; color: #F0D9B5; font-size: 1em;">📂 Partidas Pré-carregadas</h4>
 
-                <label for="select-thal-game">Partidas (Tal):</label>
-                <select id="select-thal-game" class="pgn-preloaded-select">
-                    <option value="">Carregando...</option>
-                </select>
+                <button id="btn-load-preloaded" class="myButton" style="width: 100%; margin: 8px 0; padding: 10px;">
+                    Carregar (Nezhmetdinov & Tal)
+                </button>
+
+                <div id="preloaded-status" style="margin: 8px 0; font-size: 0.85em; color: #ffaa00; min-height: 1.2em;">
+                </div>
+
+                <div id="preloaded-selects" style="display: none;">
+                    <label for="select-nez-game" class="config-label">Nezhmetdinov:</label>
+                    <select id="select-nez-game" class="config-select">
+                        <option value="">Selecione uma partida...</option>
+                    </select>
+
+                    <label for="select-thal-game" class="config-label">Tal:</label>
+                    <select id="select-thal-game" class="config-select">
+                        <option value="">Selecione uma partida...</option>
+                    </select>
+                </div>
             </div>
-            <div class="pgn-nav-buttons">
-                <button class="pgn-nav-btn" id="btn-pgn-start">⏮ Início</button>
-                <button class="pgn-nav-btn" id="btn-pgn-prev">◀ Anterior</button>
-                <button class="pgn-nav-btn" id="btn-pgn-next">Próximo ▶</button>
-                <button class="pgn-nav-btn" id="btn-pgn-end">Fim ⏭</button>
+
+            <!-- === NAVEGAÇÃO + CONFIGURAÇÕES === -->
+            <div class="config-panel" style="margin-top: 20px; padding-top: 15px; border-top: 1px dotted #B58863;">
+                <!-- Botões de navegação -->
+                <div class="pgn-nav-buttons">
+                    <button class="pgn-nav-btn" id="btn-pgn-start" title="Início">⏮</button>
+                    <button class="pgn-nav-btn" id="btn-pgn-prev" title="Anterior">◀</button>
+                    <button class="pgn-nav-btn" id="btn-pgn-next" title="Próximo">▶</button>
+                    <button class="pgn-nav-btn" id="btn-pgn-end" title="Fim">⏭</button>
+                </div>
+
+                <!-- Inverter tabuleiro -->
+                <button id="btn-reverse" class="myButton config-btn" title="Inverter orientação do tabuleiro">
+                    🔄 Inverter Tabuleiro
+                </button>
+
+                <!-- Voz do lance -->
+                <div style="margin: 10px 0;">
+                    <label for="voice-select" class="config-label">🎤 Voz do lance:</label>
+                    <select id="voice-select" class="config-select">
+                        <option value="">Carregando vozes...</option>
+                    </select>
+                </div>
             </div>
+
+            <!-- === INFO DO JOGO === -->
             <div class="sidebar-game">
-                <span id="square-random"></span>
-                <span id="square-clicked"></span>
-                <span id="square-score"></span>
+                <div id="square-random"></div>
+                <div id="square-clicked"></div>
+                <div id="square-score"></div>
             </div>
         </div>
 

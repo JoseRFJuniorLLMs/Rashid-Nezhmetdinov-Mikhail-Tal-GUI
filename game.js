@@ -20,6 +20,8 @@ var stockfish = null;
 var stockfishReady = false;
 var isAnalyzing = false;
 var currentEvaluation = null;
+var pvData = []; // Array para armazenar dados de cada PV: {move: 'e2e4', score: '+0.32' ou 'M5'}
+var currentDepth = 0;
 
 // Initialize Stockfish - Versão Melhorada
 function initStockfish() {
@@ -767,21 +769,33 @@ function resetTimer(timeReset) {
 }
 
 function speakSquare(squareText) {
-  try {
-    if (!soundsOn) return; // só fala se o som estiver ligado
+    try {
+        if (!soundsOn) return;
 
-    if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(squareText);
-      utterance.lang = (language === pt) ? 'pt-BR' : 'en-US'; // idioma da fala
-      utterance.rate = 1.0; // velocidade normal
-      utterance.pitch = 1.0;
-      speechSynthesis.speak(utterance);
-    } else {
-      console.warn('🔇 speechSynthesis não suportado neste navegador.');
+        if ('speechSynthesis' in window) {
+            const synth = window.speechSynthesis;
+            const utterance = new SpeechSynthesisUtterance(squareText);
+            utterance.lang = (language === pt) ? 'pt-BR' : 'en-US';
+            utterance.rate = 1.0;
+            utterance.pitch = 1.0;
+
+            // === AQUI: ESCOLHA SUA VOZ FAVORITA ===
+            // Substitua 'pt-BR' pela lang da voz que você quer (ex: 'pt-BR')
+            const preferredVoice = synth.getVoices().find(voice => 
+                voice.lang === 'pt-BR' && voice.name.includes('Luciana')  // Ou 'Google', 'Francisca', etc.
+            );
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+                console.log('🗣️ Usando voz:', preferredVoice.name);
+            }
+
+            speechSynthesis.speak(utterance);
+        } else {
+            console.warn('🔇 speechSynthesis não suportado neste navegador.');
+        }
+    } catch (e) {
+        console.error('Erro ao falar casa:', e);
     }
-  } catch (e) {
-    console.error('Erro ao falar casa:', e);
-  }
 }
 
 
@@ -849,104 +863,197 @@ function setLanguage(lang) {
     }
 }
 
+   
 
+  // ================================================
+// SUBSTITUA A FUNÇÃO ANTIGA PELA FUNÇÃO ABAIXO
+// ================================================
 
-// ===============
-// Initialize
-// ===============
+// === BOTÃO PARA CARREGAR PARTIDAS PRÉ-CARREGADAS ===
+$('#btn-load-preloaded').on('click', function() {
+    const $btn = $(this);
+    const $status = $('#preloaded-status');
+    const $selectsContainer = $('#preloaded-selects');
+    const $nezSelect = $('#select-nez-game');
+    const $thalSelect = $('#select-thal-game');
 
-// ===============
-// Initialize
-// ===============
+    // Evita clique duplo
+    if ($btn.prop('disabled')) return;
 
-$(document).ready(function() {
-    console.log('🎯 Aplicação Chess Notation Training iniciada!');
-    console.log('📍 Para DEBUG do Stockfish, abra o Console (F12)');
-    
-    setLanguage('pt');
-    
-    // --- INÍCIO DO CÓDIGO NOVO ---
+    // Estado inicial
+    $btn.prop('disabled', true).text('Carregando...');
+    $status.html('Carregando nez.pgn e thal.pgn...').css('color', '#ffaa00');
+    $selectsContainer.hide();
 
-    /**
-     * Função para buscar um arquivo PGN, processá-lo e popular um dropdown.
-     * @param {string} filePath - O caminho para o arquivo PGN (ex: 'nez.pgn')
-     * @param {string} selectId - O ID do <select> (ex: '#select-nez-game')
-     */
-    function fetchAndPopulatePgn(filePath, selectId) {
-        const $select = $(selectId);
-        if (!$select.length) return; // Sai se o select não existir
+    // Limpa selects
+    $nezSelect.empty().append('<option value="">Carregando Nezhmetdinov...</option>');
+    $thalSelect.empty().append('<option value="">Carregando Tal...</option>');
 
-        // Busca o arquivo no servidor
-        fetch(filePath)
-            .then(response => {
-                if (!response.ok) {
-                    // Se der erro (ex: 404 - Arquivo não encontrado), avisa no console
-                    throw new Error(`Erro ao buscar ${filePath}: ${response.statusText}`);
-                }
-                return response.text(); // Pega o conteúdo do arquivo como texto
-            })
-            .then(pgnText => {
-                $select.empty(); // Limpa o "Carregando..."
-                $select.append($('<option>', { value: "", text: "Selecione uma partida..." }));
+    let loaded = 0;
+    const total = 2;
 
-                // Tenta separar o arquivo em múltiplos PGNs.
-                // Isso assume que cada PGN começa com [Event "..."
-                const games = pgnText.split(/(\[Event "[^"]*"][\s\S]*?(?=\n\n\[Event|$))/g);
-                
-                for (let i = 0; i < games.length; i++) {
-                    let pgnData = games[i].trim();
-                    
-                    // Ignora entradas vazias ou que não sejam PGNs
-                    if (!pgnData || !pgnData.startsWith("[Event")) continue; 
-                    
-                    // Tenta extrair um nome para a partida
-                    let gameName = `Partida ${i + 1}`; // Nome padrão
-                    const whiteMatch = pgnData.match(/\[White "([^"]+)"\]/);
-                    const blackMatch = pgnData.match(/\[Black "([^"]+)"\]/);
-                    const dateMatch = pgnData.match(/\[Date "([^"]+)"\]/);
-                    
-                    if (whiteMatch && blackMatch) {
-                        gameName = `${whiteMatch[1]} vs ${blackMatch[1]}`;
-                        if(dateMatch) {
-                             // Extrai apenas o ano para ficar mais limpo
-                             gameName += ` (${dateMatch[1].substring(0, 4)})`;
-                        }
-                    }
-
-                    // Adiciona a opção ao select
-                    $select.append($('<option>', {
-                        value: pgnData,  // O valor é o PGN completo
-                        text: gameName    // O texto é o nome que extraímos
-                    }));
-                }
-            })
-            .catch(error => {
-                // Se der erro, exibe no menu
-                console.error(error);
-                $select.empty();
-                $select.append($('<option>', { value: "", text: "Erro ao carregar PGNs" }));
-            });
+    function checkDone() {
+        loaded++;
+        if (loaded === total) {
+            $btn.prop('disabled', false).text('Recarregar Partidas');
+            $selectsContainer.show();
+            $status.html('Partidas carregadas com sucesso!').css('color', '#00ff00');
+        }
     }
 
-    // Carrega os PGNs
-    // *** ATENÇÃO: Se o seu arquivo for 'nez.pg', mude aqui ***
-    fetchAndPopulatePgn('nez.pgn', '#select-nez-game'); 
-    fetchAndPopulatePgn('thal.pgn', '#select-thal-game');
+    // === CARREGA NEZHMETDINOV ===
+    fetch('nez.pgn')
+        .then(r => {
+            if (!r.ok) throw new Error(`nez.pgn não encontrado (404)`);
+            return r.text();
+        })
+        .then(text => {
+            populateSelect(text, $nezSelect, 'Nezhmetdinov');
+            checkDone();
+        })
+        .catch(err => {
+            $nezSelect.empty().append('<option value="">Erro: ' + err.message + '</option>');
+            $status.html('Erro ao carregar nez.pgn').css('color', '#ff0000');
+            checkDone();
+        });
 
-    // Adiciona o "listener" para carregar o PGN quando o usuário selecionar
-    $('.pgn-preloaded-select').change(function() {
-        const selectedPgn = $(this).val(); // Pega o PGN da opção selecionada
+    // === CARREGA TAL ===
+    fetch('thal.pgn')
+        .then(r => {
+            if (!r.ok) throw new Error(`thal.pgn não encontrado (404)`);
+            return r.text();
+        })
+        .then(text => {
+            populateSelect(text, $thalSelect, 'Tal');
+            checkDone();
+        })
+        .catch(err => {
+            $thalSelect.empty().append('<option value="">Erro: ' + err.message + '</option>');
+            $status.html('Erro ao carregar thal.pgn').css('color', '#ff0000');
+            checkDone();
+        });
+});
+
+// === FUNÇÃO PARA POPULAR UM SELECT COM PGNs ===
+function populateSelect(pgnText, $select, playerName) {
+    $select.empty().append('<option value="">Selecione uma partida de ' + playerName + '...</option>');
+
+    const games = pgnText.split(/\n\s*\n(?=\[Event)/).filter(g => g.trim().startsWith('[Event'));
+    
+    if (games.length === 0) {
+        $select.append('<option value="">Nenhuma partida encontrada</option>');
+        return;
+    }
+
+    games.forEach((pgn, i) => {
+        const white = pgn.match(/\[White "([^"]+)"\]/)?.[1] || 'Brancas';
+        const black = pgn.match(/\[Black "([^"]+)"\]/)?.[1] || 'Pretas';
+        const date = pgn.match(/\[Date "([^"]+)"\]/)?.[1]?.split('.')[0] || '';
+        const name = `${white} vs ${black}${date ? ' (' + date + ')' : ''}`;
         
-        if (selectedPgn) {
-            $('#pgn-input').val(selectedPgn); // Coloca o PGN no textarea
-            $('#btn-load-pgn').click(); // Simula o clique no botão "Carregar PGN"
+        $select.append(`<option value="${pgn.replace(/"/g, '&quot;')}">${name}</option>`);
+    });
+}
+
+// === LISTAR E ESCOLHER VOZES PARA SPEECH SYNTHESIS ===
+function listVoices() {
+    if ('speechSynthesis' in window) {
+        const synth = window.speechSynthesis;
+        
+        // Evento pra quando as vozes carregarem (é assíncrono)
+        synth.onvoiceschanged = function() {
+            const voices = synth.getVoices();
+            console.log('🎤 VOZES DISPONÍVEIS NO SEU BROWSER:');
+            console.log('=====================================');
             
-            // Reseta o outro select para não ficar confuso
-            $('.pgn-preloaded-select').not(this).val('');
-        }
+            voices.forEach((voice, index) => {
+                const isDefault = voice.default ? ' (PADRÃO)' : '';
+                const isLocal = voice.localService ? ' (INSTALADA LOCAL)' : ' (REMOTA)';
+                console.log(`${index}: ${voice.name} (${voice.lang}) ${isDefault} ${isLocal}`);
+            });
+            console.log('=====================================');
+            
+            // Dica: Escolha uma voz PT-BR mais natural
+            const ptVoices = voices.filter(v => v.lang.startsWith('pt')).map(v => v.name);
+            console.log('🔥 VOZES EM PORTUGUÊS:', ptVoices.join(', '));
+        };
+        
+        // Carrega as vozes na hora
+        synth.getVoices();
+    } else {
+        console.log('❌ Seu browser não suporta speechSynthesis (use Chrome/Firefox)');
+    }
+}
+
+// Chama a função quando a página carregar
+listVoices();
+
+// === EVENTO: QUANDO ESCOLHE UMA PARTIDA ===
+$('#select-nez-game, #select-thal-game').on('change', function() {
+    const pgn = $(this).val();
+    if (pgn) {
+        $('#pgn-input').val(pgn);
+        $('#btn-load-pgn').click();
+    }
+});
+
+// === COMBO DE VOZES ===
+let availableVoices = [];
+let selectedVoiceIndex = null;
+
+function populateVoiceList() {
+    if (!('speechSynthesis' in window)) {
+        $('#voice-select').html('<option value="">Speech não suportado</option>');
+        return;
+    }
+
+    const synth = window.speechSynthesis;
+    availableVoices = synth.getVoices().filter(v => v.lang.includes('pt') || v.lang.includes('en')); // Só PT/EN pra simplificar
+
+    const $select = $('#voice-select');
+    $select.empty();
+
+    if (availableVoices.length === 0) {
+        $select.append('<option value="">Nenhuma voz encontrada</option>');
+        return;
+    }
+
+    // Opção padrão
+    $select.append('<option value="">Voz padrão do navegador</option>');
+
+    // Adiciona vozes
+    availableVoices.forEach((voice, index) => {
+        const isDefault = voice.default ? ' (Padrão)' : '';
+        $select.append(`<option value="${index}">${voice.name} (${voice.lang})${isDefault}</option>`);
     });
 
-    // --- FIM DO CÓDIGO NOVO ---
+    // Seleciona uma PT-BR boa automaticamente
+    const preferredIndex = availableVoices.findIndex(v => v.lang === 'pt-BR' && (v.name.includes('Luciana') || v.name.includes('Google')));
+    if (preferredIndex !== -1) {
+        $select.val(preferredIndex);
+        selectedVoiceIndex = preferredIndex;
+    }
+}
+
+// Carrega vozes quando prontas (pode demorar 1-2s no Chrome)
+if ('speechSynthesis' in window) {
+    const synth = window.speechSynthesis;
+    if (synth.getVoices().length > 0) {
+        populateVoiceList();
+    } else {
+        synth.onvoiceschanged = populateVoiceList;
+    }
+}
+
+// Evento: Muda a voz escolhida
+$('#voice-select').on('change', function() {
+    selectedVoiceIndex = $(this).val() === "" ? null : parseInt($(this).val());
+    console.log('🗣️ Voz selecionada:', selectedVoiceIndex !== null ? availableVoices[selectedVoiceIndex].name : 'Padrão');
+});
+
+// ================================================
+// NÃO MEXA NAS LINHAS ABAIXO
+// ================================================
     
     // Inicializar Stockfish após um pequeno delay para garantir que jQuery carregou
     // (Esta parte já existia no seu código)
@@ -954,4 +1061,4 @@ $(document).ready(function() {
         console.log('🚀 Iniciando carregamento do Stockfish...');
         initStockfish();
     }, 1000);
-});
+;
