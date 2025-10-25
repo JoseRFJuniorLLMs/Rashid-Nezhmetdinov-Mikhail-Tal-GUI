@@ -1329,3 +1329,155 @@ $('#btn-load-pgn').on('click', function() {
         alert("Erro ao processar PGN: " + e.message);
     }
 });
+
+// ================================================
+// STOCKFISH REAL - SUBSTITUA A FUNÇÃO initStockfish()
+// NO SEU game.js PELA VERSÃO ABAIXO
+// ================================================
+
+function initStockfish() {
+    console.log('🚀 Iniciando Stockfish REAL (não alternativo)...');
+
+    try {
+        // Método 1: Tenta Stockfish via CDN (Stockfish 16)
+        stockfish = new Worker('https://cdnjs.cloudflare.com/ajax/libs/stockfish.js/10.0.2/stockfish.js');
+        
+        var initTimeout = setTimeout(function() {
+            console.warn('⚠️ Timeout - Tentando método alternativo...');
+            tryStockfishWASM();
+        }, 5000);
+
+        stockfish.onmessage = function (event) {
+            var line = event.data;
+            console.log('📥 Stockfish:', line);
+
+            // Engine está pronto
+            if (line === 'uciok') {
+                clearTimeout(initTimeout);
+                stockfishReady = true;
+                $('#stockfish-status').html('✅ <strong>Engine pronto!</strong>').css('color', '#00ff00');
+                $('#btn-analyze').prop('disabled', false);
+                console.log('✅ Stockfish REAL inicializado com sucesso!');
+            }
+
+            // Informações de análise
+            if (line.startsWith('info') && line.includes('score')) {
+                parseStockfishInfo(line);
+            }
+
+            // Melhor jogada encontrada
+            if (line.startsWith('bestmove')) {
+                var bestMove = line.split(' ')[1];
+                displayBestMove(bestMove);
+            }
+        };
+
+        stockfish.onerror = function (error) {
+            clearTimeout(initTimeout);
+            console.error('❌ Erro no Stockfish CDN:', error);
+            tryStockfishWASM();
+        };
+
+        // Inicializar protocolo UCI
+        console.log('📤 Enviando comandos UCI...');
+        setTimeout(() => {
+            stockfish.postMessage('uci');
+            stockfish.postMessage('setoption name Hash value 128');
+            stockfish.postMessage('setoption name Threads value 2');
+            stockfish.postMessage('ucinewgame');
+        }, 500);
+
+        $('#stockfish-status').html('⏳ Inicializando Stockfish... <small>(aguarde)</small>').css('color', '#ffaa00');
+
+    } catch (e) {
+        console.error('❌ Erro ao criar Web Worker:', e);
+        tryStockfishWASM();
+    }
+}
+
+// ================================================
+// MÉTODO ALTERNATIVO: STOCKFISH WASM
+// ================================================
+function tryStockfishWASM() {
+    console.log('🔄 Tentando Stockfish WASM...');
+
+    try {
+        // Usa versão WASM do Stockfish (mais moderna)
+        var wasmSupported = typeof WebAssembly === 'object';
+        
+        if (wasmSupported) {
+            console.log('✅ WebAssembly suportado, carregando Stockfish WASM...');
+            
+            // Cria worker inline com Stockfish
+            var workerCode = `
+                importScripts('https://unpkg.com/stockfish.wasm@0.11.0/stockfish.js');
+                
+                var stockfish = null;
+                
+                Stockfish().then(function(sf) {
+                    stockfish = sf;
+                    self.postMessage('uciok');
+                });
+                
+                self.onmessage = function(e) {
+                    if (stockfish) {
+                        if (e.data === 'uci') {
+                            self.postMessage('uciok');
+                        } else {
+                            stockfish.postMessage(e.data);
+                        }
+                    }
+                };
+            `;
+            
+            var blob = new Blob([workerCode], { type: 'application/javascript' });
+            stockfish = new Worker(URL.createObjectURL(blob));
+            
+            stockfish.onmessage = function(event) {
+                var line = event.data;
+                console.log('📥 Stockfish WASM:', line);
+                
+                if (line === 'uciok') {
+                    stockfishReady = true;
+                    $('#stockfish-status').html('✅ <strong>Engine pronto (WASM)</strong>').css('color', '#00ff00');
+                    $('#btn-analyze').prop('disabled', false);
+                }
+                
+                if (line.startsWith('info') && line.includes('score')) {
+                    parseStockfishInfo(line);
+                }
+                
+                if (line.startsWith('bestmove')) {
+                    var bestMove = line.split(' ')[1];
+                    displayBestMove(bestMove);
+                }
+            };
+            
+            stockfish.postMessage('uci');
+            
+        } else {
+            console.error('❌ WebAssembly não suportado');
+            showStockfishError();
+        }
+        
+    } catch (e) {
+        console.error('❌ Todos os métodos falharam:', e);
+        showStockfishError();
+    }
+}
+
+// ================================================
+// MOSTRAR ERRO
+// ================================================
+function showStockfishError() {
+    $('#stockfish-status').html('❌ <strong>Engine não disponível</strong><br><small>Tente usar Chrome ou Firefox atualizado</small>').css('color', '#ff0000');
+    $('#btn-analyze').prop('disabled', true).text('Engine Indisponível');
+    $('#btn-visual-analysis').prop('disabled', true);
+    
+    alert('⚠️ Não foi possível carregar o Stockfish.\n\nPor favor:\n1. Use Chrome ou Firefox atualizado\n2. Verifique sua conexão com internet\n3. Desabilite bloqueadores de script');
+}
+
+// ================================================
+// NÃO USAR tryAlternativeStockfish() ANTIGO!
+// Apague ou comente a função tryAlternativeStockfish
+// ================================================
