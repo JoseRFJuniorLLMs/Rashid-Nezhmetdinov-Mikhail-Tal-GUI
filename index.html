@@ -129,12 +129,54 @@
             margin-bottom: 10px;
         }
 
-        #pgn-status {
-            margin-top: 10px;
-            font-size: 0.9em;
-            color: #B58863;
-            line-height: 1.5;
+        /* * ===============================================
+         * *** INÍCIO DA CORREÇÃO CSS ***
+         * ===============================================
+         */
+
+        /* Estilos para os Nomes dos Jogadores no Tabuleiro */
+        .player-name-display {
+            width: 100%;
+            padding: 8px 0;
+            font-size: 1.1em;
+            font-weight: 500;
+            color: #F0D9B5;
+            background-color: #2a2926;
+            /* Fundo escuro para emoldurar */
+            border: 1px solid #B58863;
+            border-radius: 4px;
+            box-sizing: border-box;
+            /* Importante para o padding */
+            margin: 5px 0;
+            min-height: 1.5em;
+            /* Garante altura mesmo vazio */
+            display: none;
+            /* Começa escondido */
+            text-align: center;
         }
+
+        /* Estilos para o painel de status do PGN (melhorado) */
+        #pgn-status {
+            text-align: left;
+            font-size: 0.9em;
+            color: #ccc;
+            /* Cor mais suave */
+            line-height: 1.6;
+            background-color: #2a2926;
+            border: 1px solid #B58863;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        #pgn-status strong {
+            color: #F0D9B5;
+        }
+
+        /* * ===============================================
+         * *** FIM DA CORREÇÃO CSS ***
+         * ===============================================
+         */
 
         .pgn-navigation {
             display: none;
@@ -500,11 +542,16 @@ Exemplo:
                     <button id="btn-analyze" disabled>Analisar Posição</button>
                 </div>
 
+                <div id="multi-pv-list" style="margin-top:8px; font-size:0.9em; max-height:200px; overflow-y:auto;"></div>
+
 
             </div>
         </div>
 
         <div class="chess-board">
+            
+            <div id="player-black-name" class="player-name-display"></div>
+            
             <svg id="move-arrow-layer" xmlns="http://www.w3.org/2000/svg"></svg>
 
             <div class="chess-row" id="r8">
@@ -587,10 +634,11 @@ Exemplo:
                 <div class="chess-square dark" id="g1"><span class="notation">g1</span></div>
                 <div class="chess-square light" id="h1"><span class="notation">h1</span></div>
             </div>
-        </div>
 
+            <div id="player-white-name" class="player-name-display"></div>
+
+        </div>
         <div class="sidebar-right">
-            <!-- === PARTIDAS PRÉ-CARREGADAS === -->
             <div class="pgn-preloaded-section">
                 <h4 style="margin: 0 0 10px; color: #F0D9B5; font-size: 1em;">📂 Partidas Pré-carregadas</h4>
 
@@ -598,7 +646,8 @@ Exemplo:
                     Carregar (Nezhmetdinov & Tal)
                 </button>
 
-                <div id="preloaded-status" style="margin: 8px 0; font-size: 0.85em; color: #ffaa00; min-height: 1.2em;">
+                <div id="preloaded-status"
+                    style="margin: 8px 0; font-size: 0.85em; color: #ffaa00; min-height: 1.2em;">
                 </div>
 
                 <div id="preloaded-selects" style="display: none;">
@@ -614,9 +663,7 @@ Exemplo:
                 </div>
             </div>
 
-            <!-- === NAVEGAÇÃO + CONFIGURAÇÕES === -->
             <div class="config-panel" style="margin-top: 20px; padding-top: 15px; border-top: 1px dotted #B58863;">
-                <!-- Botões de navegação -->
                 <div class="pgn-nav-buttons">
                     <button class="pgn-nav-btn" id="btn-pgn-start" title="Início">⏮</button>
                     <button class="pgn-nav-btn" id="btn-pgn-prev" title="Anterior">◀</button>
@@ -624,21 +671,22 @@ Exemplo:
                     <button class="pgn-nav-btn" id="btn-pgn-end" title="Fim">⏭</button>
                 </div>
 
-                <!-- Inverter tabuleiro -->
                 <button id="btn-reverse" class="myButton config-btn" title="Inverter orientação do tabuleiro">
                     🔄 Inverter Tabuleiro
                 </button>
 
-                <!-- Voz do lance -->
                 <div style="margin: 10px 0;">
                     <label for="voice-select" class="config-label">🎤 Voz do lance:</label>
                     <select id="voice-select" class="config-select">
                         <option value="">Carregando vozes...</option>
                     </select>
                 </div>
+
+                <h4 id="opening-name"
+                    style="color: #F0D9B5; margin: 5px 0 10px; min-height: 1.2em; font-style: italic; font-weight: 500;">
+                </h4>
             </div>
 
-            <!-- === INFO DO JOGO === -->
             <div class="sidebar-game">
                 <div id="square-random"></div>
                 <div id="square-clicked"></div>
