@@ -2,8 +2,7 @@
  * ==============================================
  * MÓDULO: JOGAR CONTRA STOCKFISH
  * ==============================================
- * Arquivo separado para gerenciar o modo de jogo
- * Não interfere com o modo de análise de PGN
+ * Com drag-and-drop, setas e marcações estilo Chess.com
  */
 
 const PlayVsStockfish = (function() {
@@ -19,6 +18,8 @@ const PlayVsStockfish = (function() {
     let stockfishWorker = null;
     let waitingForMove = false;
     let difficulty = 'medium';
+    let draggedPiece = null;
+    let draggedFrom = null;
     
     const DIFFICULTY_SETTINGS = {
         easy: { depth: 5, time: 1000, skill: 5 },
@@ -109,15 +110,18 @@ const PlayVsStockfish = (function() {
         $('#opening-name').hide();
         $('#opening-history-box').hide();
 
+        // Limpar setas antigas
+        clearMoveArrow();
+
         // Mostrar UI do modo jogo
         showGameUI();
         updateBoardFromGame();
-        enableBoardClicks();
+        enableBoardInteraction();
 
         if (userColor === 'b') {
             setTimeout(() => getStockfishMove(), 500);
         } else {
-            updateGameStatus('Sua vez! Clique em uma peça para mover.');
+            updateGameStatus('Sua vez! Arraste ou clique nas peças para mover.');
         }
 
         console.log(`🎮 Jogo iniciado: Usuário=${userColor}, Dificuldade=${difficulty}`);
@@ -165,19 +169,36 @@ const PlayVsStockfish = (function() {
     }
 
     // =====================================
-    // INTERAÇÃO COM TABULEIRO
+    // INTERAÇÃO COM TABULEIRO (DRAG + CLICK)
     // =====================================
-    function enableBoardClicks() {
-        $('.chess-square').off('click.playmode').on('click.playmode', handleSquareClick);
+    function enableBoardInteraction() {
+        // Desabilitar interações antigas
+        $('.chess-square').off('click.playmode mousedown.playmode dragstart.playmode drop.playmode dragover.playmode');
+
+        // Click para selecionar/mover
+        $('.chess-square').on('click.playmode', handleSquareClick);
+
+        // Drag and Drop
+        $('.chess-square').on('mousedown.playmode', handleMouseDown);
+        $('.chess-square').on('dragover.playmode', handleDragOver);
+        $('.chess-square').on('drop.playmode', handleDrop);
+
+        // Prevenir comportamento padrão de drag do browser
+        $('.chess-square').on('dragstart.playmode', function(e) {
+            e.preventDefault();
+        });
     }
 
-    function disableBoardClicks() {
-        $('.chess-square').off('click.playmode');
+    function disableBoardInteraction() {
+        $('.chess-square').off('click.playmode mousedown.playmode dragstart.playmode drop.playmode dragover.playmode mousemove.playmode mouseup.playmode');
+        $(document).off('mousemove.playmode mouseup.playmode');
     }
 
-    function handleSquareClick() {
+    // ===== CLICK HANDLER =====
+    function handleSquareClick(e) {
         if (!isActive || waitingForMove || gameInstance.game_over()) return;
         if (gameInstance.turn() !== userColor) return;
+        if (draggedPiece) return; // Ignore clicks durante drag
 
         const clickedSquare = $(this).attr('id');
         const piece = gameInstance.get(clickedSquare);
@@ -200,18 +221,125 @@ const PlayVsStockfish = (function() {
         }
     }
 
+    // ===== DRAG HANDLERS =====
+    function handleMouseDown(e) {
+        if (!isActive || waitingForMove || gameInstance.game_over()) return;
+        if (gameInstance.turn() !== userColor) return;
+
+        const square = $(this).attr('id');
+        const piece = gameInstance.get(square);
+
+        if (piece && piece.color === userColor) {
+            e.preventDefault();
+            draggedFrom = square;
+            
+            // Criar elemento visual da peça sendo arrastada
+            const $square = $(this);
+            const bgImage = $square.css('background-image');
+            
+            draggedPiece = $('<div>')
+                .css({
+                    position: 'fixed',
+                    width: '60px',
+                    height: '60px',
+                    backgroundImage: bgImage,
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                    pointerEvents: 'none',
+                    zIndex: 10000,
+                    opacity: 0.8,
+                    left: e.pageX - 30,
+                    top: e.pageY - 30
+                })
+                .appendTo('body');
+
+            // Mostrar movimentos válidos
+            selectSquare(square);
+
+            // Listeners globais para movimento e soltar
+            $(document).on('mousemove.playmode', handleMouseMove);
+            $(document).on('mouseup.playmode', handleMouseUp);
+        }
+    }
+
+    function handleMouseMove(e) {
+        if (draggedPiece) {
+            draggedPiece.css({
+                left: e.pageX - 30,
+                top: e.pageY - 30
+            });
+        }
+    }
+
+    function handleMouseUp(e) {
+        if (!draggedPiece) return;
+
+        // Encontrar casa alvo
+        const targetSquare = document.elementFromPoint(e.clientX, e.clientY);
+        const $target = $(targetSquare).closest('.chess-square');
+
+        if ($target.length && draggedFrom) {
+            const toSquare = $target.attr('id');
+            const move = attemptMove(draggedFrom, toSquare);
+            
+            if (move) {
+                afterUserMove(move);
+            }
+        }
+
+        // Limpar drag
+        if (draggedPiece) {
+            draggedPiece.remove();
+            draggedPiece = null;
+        }
+        draggedFrom = null;
+        
+        $(document).off('mousemove.playmode mouseup.playmode');
+        
+        // Se não moveu, manter seleção
+        if (!move) {
+            // Seleção já está ativa, não fazer nada
+        } else {
+            clearSelection();
+        }
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+    }
+
+    // ===== SELEÇÃO E MOVIMENTOS =====
     function selectSquare(square) {
         clearSelection();
         selectedSquare = square;
         
         const moves = gameInstance.moves({ square: square, verbose: true });
         
-        $(`#${square}`).addClass('selected-piece');
-        moves.forEach(m => $(`#${m.to}`).addClass('possible-move'));
+        // Marcar casa selecionada (círculo amarelo)
+        $(`#${square}`).addClass('game-selected-square');
+        
+        // Marcar movimentos válidos com círculos
+        moves.forEach(m => {
+            const $targetSquare = $(`#${m.to}`);
+            const hasPiece = gameInstance.get(m.to);
+            
+            if (hasPiece) {
+                // Casa com peça inimiga - círculo de captura maior
+                $targetSquare.addClass('game-capture-square');
+            } else {
+                // Casa vazia - círculo pequeno
+                $targetSquare.addClass('game-possible-move');
+            }
+        });
     }
 
     function clearSelection() {
-        $('.chess-square').removeClass('selected-piece possible-move square-highlight-from square-highlight-to');
+        $('.chess-square').removeClass('game-selected-square game-possible-move game-capture-square');
         selectedSquare = null;
     }
 
@@ -234,7 +362,7 @@ const PlayVsStockfish = (function() {
     function afterUserMove(move) {
         clearSelection();
         updateBoardFromGame();
-        highlightMove(move.from, move.to);
+        drawMoveArrow(move.from, move.to);
         addMoveToList(move);
         playMoveSound(move);
 
@@ -242,7 +370,7 @@ const PlayVsStockfish = (function() {
 
         waitingForMove = true;
         updateGameStatus('🤖 Stockfish pensando...');
-        disableBoardClicks();
+        disableBoardInteraction();
         
         setTimeout(() => getStockfishMove(), 300);
     }
@@ -286,20 +414,20 @@ const PlayVsStockfish = (function() {
         
         if (move) {
             updateBoardFromGame();
-            highlightMove(from, to);
+            drawMoveArrow(from, to);
             addMoveToList(move);
             playMoveSound(move);
 
             if (!checkGameOver()) {
                 waitingForMove = false;
-                enableBoardClicks();
+                enableBoardInteraction();
                 updateGameStatus('Sua vez!');
             }
         }
     }
 
     // =====================================
-    // ATUALIZAÇÃO DO TABULEIRO (CORRIGIDO)
+    // ATUALIZAÇÃO DO TABULEIRO
     // =====================================
     function updateBoardFromGame() {
         $('.chess-square').css('background-image', 'none');
@@ -319,7 +447,6 @@ const PlayVsStockfish = (function() {
             'K': 'https://images.chesscomfiles.com/chess-themes/pieces/classic/150/wk.png'
         };
 
-        // Parsear FEN manualmente (compatível com chess.js 0.10.2)
         const fen = gameInstance.fen();
         const position = fen.split(' ')[0];
         const ranks = position.split('/');
@@ -352,10 +479,62 @@ const PlayVsStockfish = (function() {
         }
     }
 
-    function highlightMove(from, to) {
-        clearSelection();
-        $(`#${from}`).addClass('square-highlight-from');
-        $(`#${to}`).addClass('square-highlight-to');
+    // =====================================
+    // SETA DE MOVIMENTO (Estilo Chess.com)
+    // =====================================
+    function drawMoveArrow(fromSquare, toSquare) {
+        const svg = document.getElementById('move-arrow-layer');
+        if (!svg) return;
+
+        svg.innerHTML = '';
+        svg.style.display = 'block';
+
+        const fromEl = document.getElementById(fromSquare);
+        const toEl = document.getElementById(toSquare);
+        if (!fromEl || !toEl) return;
+
+        const fromRect = fromEl.getBoundingClientRect();
+        const toRect = toEl.getBoundingClientRect();
+        const boardRect = document.querySelector('.chess-board').getBoundingClientRect();
+
+        const x1 = fromRect.left + fromRect.width / 2 - boardRect.left;
+        const y1 = fromRect.top + fromRect.height / 2 - boardRect.top;
+        const x2 = toRect.left + toRect.width / 2 - boardRect.left;
+        const y2 = toRect.top + toRect.height / 2 - boardRect.top;
+
+        // Linha da seta (verde estilo Chess.com)
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x1);
+        line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2);
+        line.setAttribute('y2', y2);
+        line.setAttribute('stroke', '#9bca00');
+        line.setAttribute('stroke-width', '8');
+        line.setAttribute('stroke-linecap', 'round');
+        line.setAttribute('opacity', '0.8');
+        svg.appendChild(line);
+
+        // Ponta da seta
+        const angle = Math.atan2(y2 - y1, x2 - x1);
+        const arrowSize = 22;
+        const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        const points = [
+            [x2, y2],
+            [x2 - arrowSize * Math.cos(angle - Math.PI / 6), y2 - arrowSize * Math.sin(angle - Math.PI / 6)],
+            [x2 - arrowSize * Math.cos(angle + Math.PI / 6), y2 - arrowSize * Math.sin(angle + Math.PI / 6)]
+        ];
+        arrow.setAttribute('points', points.map(p => p.join(',')).join(' '));
+        arrow.setAttribute('fill', '#9bca00');
+        arrow.setAttribute('opacity', '0.8');
+        svg.appendChild(arrow);
+    }
+
+    function clearMoveArrow() {
+        const svg = document.getElementById('move-arrow-layer');
+        if (svg) {
+            svg.innerHTML = '';
+            svg.style.display = 'none';
+        }
     }
 
     // =====================================
@@ -384,20 +563,20 @@ const PlayVsStockfish = (function() {
         if (gameInstance.in_checkmate()) {
             const winner = gameInstance.turn() === 'w' ? 'Pretas' : 'Brancas';
             updateGameStatus(`🏆 Xeque-mate! ${winner} venceram!`);
-            disableBoardClicks();
+            disableBoardInteraction();
             playSound('https://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/game-end.mp3');
             return true;
         }
         
         if (gameInstance.in_stalemate()) {
             updateGameStatus('🤝 Afogamento! Empate.');
-            disableBoardClicks();
+            disableBoardInteraction();
             return true;
         }
         
         if (gameInstance.in_draw()) {
             updateGameStatus('🤝 Empate!');
-            disableBoardClicks();
+            disableBoardInteraction();
             return true;
         }
 
@@ -411,7 +590,7 @@ const PlayVsStockfish = (function() {
         if (!confirm('Deseja realmente sair do jogo em andamento?')) return;
 
         isActive = false;
-        disableBoardClicks();
+        disableBoardInteraction();
         $('#game-mode-ui').remove();
 
         $('.pgn-navigation').show();
@@ -419,6 +598,7 @@ const PlayVsStockfish = (function() {
         $('.pgn-loader-section').show();
 
         clearSelection();
+        clearMoveArrow();
         $('.chess-square').css('background-image', 'none');
 
         console.log('🚪 Saiu do modo de jogo');

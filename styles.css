@@ -640,3 +640,69 @@ a {
     border-bottom: none;
 }
 
+/* ===================================== */
+/* ESTILOS PARA MODO DE JOGO */
+/* ===================================== */
+
+/* Casa selecionada - círculo amarelo no centro */
+.game-selected-square::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30%;
+    height: 30%;
+    background-color: rgba(255, 215, 0, 0.6);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* Movimento válido - círculo pequeno no centro */
+.game-possible-move::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 22%;
+    height: 22%;
+    background-color: rgba(0, 0, 0, 0.15);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* Movimento de captura - anel maior */
+.game-capture-square::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85%;
+    height: 85%;
+    border: 4px solid rgba(0, 0, 0, 0.15);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 5;
+    box-sizing: border-box;
+}
+
+/* Cursor durante drag */
+.chess-square {
+    cursor: grab;
+}
+
+.chess-square:active {
+    cursor: grabbing;
+}
+
+/* Prevenir seleção de texto durante drag */
+.chess-square {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
