@@ -586,40 +586,112 @@
             font-size: 0.95em;
         }
 
-        /* ===================================== */
-        /* EFEITO DE MOVIMENTO COM TRILHA/RASTRO */
-        /* ===================================== */
-        @keyframes piece-move-trail {
-            0% {
-                transform: scale(1);
-                opacity: 0.8;
-                box-shadow: 0 0 20px 10px rgba(0, 191, 255, 0.8);
-            }
+ /* ===================================== */
+/* EFEITO DE MOVIMENTO COM TRILHA/RASTRO FORTE */
+/* ===================================== */
+@keyframes piece-move-trail {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 40px 20px rgba(0, 191, 255, 1) inset,
+                    0 0 40px 20px rgba(0, 191, 255, 1);
+    }
+    50% {
+        transform: scale(1.15);
+        opacity: 0.8;
+        box-shadow: 0 0 60px 30px rgba(0, 191, 255, 1) inset,
+                    0 0 60px 30px rgba(0, 191, 255, 1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+        box-shadow: 0 0 80px 40px rgba(0, 191, 255, 0.3) inset,
+                    0 0 80px 40px rgba(0, 191, 255, 0.3);
+    }
+}
 
-            50% {
-                transform: scale(1.1);
-                opacity: 0.6;
-                box-shadow: 0 0 40px 20px rgba(0, 191, 255, 0.6);
-            }
+@keyframes destination-pulse {
+    0% {
+        box-shadow: 0 0 30px 15px rgba(0, 191, 255, 0.5) inset,
+                    0 0 30px 15px rgba(0, 191, 255, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 70px 35px rgba(0, 191, 255, 1) inset,
+                    0 0 70px 35px rgba(0, 191, 255, 1);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 191, 255, 0) inset,
+                    0 0 0 0 rgba(0, 191, 255, 0);
+    }
+}
 
-            100% {
-                transform: scale(1);
-                opacity: 0;
-                box-shadow: 0 0 0 0 rgba(0, 191, 255, 0);
-            }
-        }
+.square-move-origin {
+    animation: piece-move-trail 0.6s ease-out forwards !important;
+    position: relative !important;
+    z-index: 25 !important;
+}
 
-        .square-move-origin {
-            animation: piece-move-trail 0.5s ease-out forwards !important;
-            position: relative !important;
-            z-index: 20 !important;
-        }
+.square-move-destination {
+    animation: destination-pulse 0.8s ease-out forwards !important;
+    position: relative !important;
+    z-index: 25 !important;
+}
 
-        .square-move-destination {
-            animation: blue-pulse-shadow 0.6s ease-out 0.3s forwards !important;
-            position: relative !important;
-            z-index: 20 !important;
-        }
+
+/* ===================================== */
+/* MENSAGEM DE QUALIDADE DO LANCE (estilo ChessVia) */
+/* ===================================== */
+.move-quality-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: rgba(0, 0, 0, 0.92);
+    color: white;
+    padding: 25px 40px;
+    border-radius: 15px;
+    font-size: 2em;
+    font-weight: bold;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    border: 3px solid;
+    text-align: center;
+    animation: popupAppear 1.2s ease-out forwards;
+}
+
+@keyframes popupAppear {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    15% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+    85% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.95);
+    }
+}
+
+.move-quality-popup .quality-icon {
+    font-size: 1.5em;
+    margin-right: 15px;
+    display: inline-block;
+}
+
+.move-quality-popup .quality-text {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
     </style>
 
 </head>

@@ -587,44 +587,229 @@
         }
 
         /* ===================================== */
-        /* EFEITO DE MOVIMENTO COM TRILHA/RASTRO */
+        /* EFEITO DE MOVIMENTO COM TRILHA/RASTRO FORTE */
         /* ===================================== */
         @keyframes piece-move-trail {
             0% {
                 transform: scale(1);
-                opacity: 0.8;
-                box-shadow: 0 0 20px 10px rgba(0, 191, 255, 0.8);
+                opacity: 1;
+                box-shadow: 0 0 40px 20px rgba(0, 191, 255, 1) inset,
+                    0 0 40px 20px rgba(0, 191, 255, 1);
             }
 
             50% {
-                transform: scale(1.1);
-                opacity: 0.6;
-                box-shadow: 0 0 40px 20px rgba(0, 191, 255, 0.6);
+                transform: scale(1.15);
+                opacity: 0.8;
+                box-shadow: 0 0 60px 30px rgba(0, 191, 255, 1) inset,
+                    0 0 60px 30px rgba(0, 191, 255, 1);
             }
 
             100% {
                 transform: scale(1);
                 opacity: 0;
-                box-shadow: 0 0 0 0 rgba(0, 191, 255, 0);
+                box-shadow: 0 0 80px 40px rgba(0, 191, 255, 0.3) inset,
+                    0 0 80px 40px rgba(0, 191, 255, 0.3);
+            }
+        }
+
+        @keyframes destination-pulse {
+            0% {
+                box-shadow: 0 0 30px 15px rgba(0, 191, 255, 0.5) inset,
+                    0 0 30px 15px rgba(0, 191, 255, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 0 70px 35px rgba(0, 191, 255, 1) inset,
+                    0 0 70px 35px rgba(0, 191, 255, 1);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 191, 255, 0) inset,
+                    0 0 0 0 rgba(0, 191, 255, 0);
             }
         }
 
         .square-move-origin {
-            animation: piece-move-trail 0.5s ease-out forwards !important;
+            animation: piece-move-trail 0.6s ease-out forwards !important;
             position: relative !important;
-            z-index: 20 !important;
+            z-index: 25 !important;
         }
 
         .square-move-destination {
-            animation: blue-pulse-shadow 0.6s ease-out 0.3s forwards !important;
+            animation: destination-pulse 0.8s ease-out forwards !important;
             position: relative !important;
-            z-index: 20 !important;
+            z-index: 25 !important;
+        }
+
+
+        /* ===================================== */
+        /* MENSAGEM DE QUALIDADE DO LANCE (estilo ChessVia) */
+        /* ===================================== */
+        .move-quality-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: rgba(0, 0, 0, 0.92);
+            color: white;
+            padding: 25px 40px;
+            border-radius: 15px;
+            font-size: 2em;
+            font-weight: bold;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border: 3px solid;
+            text-align: center;
+            animation: popupAppear 1.2s ease-out forwards;
+        }
+
+        @keyframes popupAppear {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+
+            15% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.05);
+            }
+
+            85% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.95);
+            }
+        }
+
+        .move-quality-popup .quality-icon {
+            font-size: 1.5em;
+            margin-right: 15px;
+            display: inline-block;
+        }
+
+        .move-quality-popup .quality-text {
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* ===================================== */
+        /* PAINÉIS LATERAIS COLAPSÁVEIS */
+        /* ===================================== */
+
+        .sidebar-left,
+        .sidebar-right {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar-left.collapsed {
+            transform: translateX(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .sidebar-right.collapsed {
+            transform: translateX(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Botões de toggle (setas) */
+        .toggle-sidebar-btn {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(to bottom, #2a5934 5%, #1e4026 100%);
+            color: white;
+            border: 2px solid #3d7a4a;
+            border-radius: 8px;
+            padding: 15px 8px;
+            cursor: pointer;
+            z-index: 1000;
+            font-size: 1.5em;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .toggle-sidebar-btn:hover {
+            background: linear-gradient(to bottom, #3d7a4a 5%, #2a5934 100%);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .toggle-left-btn {
+            left: 10px;
+        }
+
+        .toggle-right-btn {
+            right: 10px;
+        }
+
+        .toggle-left-btn.hidden {
+            left: -100px;
+            opacity: 0;
+        }
+
+        .toggle-right-btn.hidden {
+            right: -100px;
+            opacity: 0;
+        }
+
+        /* Ajuste do grid quando painéis estão colapsados */
+        .main.left-collapsed {
+            grid-template-columns: 0% 70% 30%;
+        }
+
+        .main.right-collapsed {
+            grid-template-columns: 30% 70% 0%;
+        }
+
+        .main.both-collapsed {
+            grid-template-columns: 0% 100% 0%;
+        }
+
+        /* Tabuleiro responsivo */
+        .chess-board.expanded {
+            max-width: 90vmin;
+            max-height: 90vmin;
+        }
+
+        .chess-square.expanded {
+            width: 11vmin !important;
+            height: 11vmin !important;
+            min-width: 60px;
+            min-height: 60px;
         }
     </style>
 
 </head>
 
 <body>
+        <!-- Botões de toggle dos painéis -->
+    <button id="toggle-left" class="toggle-sidebar-btn toggle-left-btn" title="Mostrar/Ocultar Painel Esquerdo">
+        ◀
+    </button>
+    <button id="toggle-right" class="toggle-sidebar-btn toggle-right-btn" title="Mostrar/Ocultar Painel Direito">
+        ▶
+    </button>
+
+                <div class="pgn-nav-buttons">
+                    <button class="pgn-nav-btn" id="btn-pgn-start" title="Início">⮜</button>
+                    <button class="pgn-nav-btn" id="btn-pgn-prev" title="Anterior">◀</button>
+                    <button class="pgn-nav-btn" id="btn-pgn-next" title="Próximo">▶</button>
+                    <button class="pgn-nav-btn" id="btn-pgn-end" title="Fim">⭲</button>
+                     <button id="btn-reverse" class="myButton config-btn" title="Inverter orientação do tabuleiro">
+                    🔄 Inverter Tabuleiro
+                </button>
+                </div>
+
+
     <div class="main">
         <div class="sidebar-left">
             <div class="pgn-loader-section">
@@ -743,12 +928,12 @@
             </div>
 
             <div id="player-white-name" class="player-name-display"></div>
-        </div>
+            
+          </div>
 
         <div class="sidebar-right">
             <div class="pgn-preloaded-section">
-                <h4 style="margin: 0 0 10px; color: #F0D9B5; font-size: 1em;">📂 Partidas Pré-carregadas</h4>
-
+               
                 <button id="btn-load-preloaded" class="myButton" style="width: 100%; margin: 8px 0; padding: 10px;">
                     Carregar (Nezhmetdinov & Tal)
                 </button>
@@ -770,16 +955,7 @@
             </div>
 
             <div class="config-panel" style="margin-top: 20px; padding-top: 15px; border-top: 1px dotted #B58863;">
-                <div class="pgn-nav-buttons">
-                    <button class="pgn-nav-btn" id="btn-pgn-start" title="Início">⮜</button>
-                    <button class="pgn-nav-btn" id="btn-pgn-prev" title="Anterior">◀</button>
-                    <button class="pgn-nav-btn" id="btn-pgn-next" title="Próximo">▶</button>
-                    <button class="pgn-nav-btn" id="btn-pgn-end" title="Fim">⭲</button>
-                </div>
-
-                <button id="btn-reverse" class="myButton config-btn" title="Inverter orientação do tabuleiro">
-                    🔄 Inverter Tabuleiro
-                </button>
+    
 
                 <div style="margin: 10px 0;">
                     <label for="voice-select" class="config-label">🎤 Voz do lance:</label>
@@ -821,9 +997,211 @@
 
 
             <div id="square-clicked"></div>
+            <!-- Painel de Estatísticas da Partida COLAPSÁVEL -->
+            <div id="game-stats-panel" style="display: none; margin-top: 15px;">
+                <!-- Botão para expandir/recolher -->
+                <button id="toggle-stats"
+                    style="width: 100%; padding: 10px; background: linear-gradient(to bottom, #2a5934 5%, #1e4026 100%); color: white; border: 1px solid #3d7a4a; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.95em; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span>📊 Estatísticas da Partida</span>
+                    <span id="stats-arrow">▼</span>
+                </button>
 
-            <!--<div id="multi-pv-list" style="margin-top:8px; font-size:0.9em; max-height:200px; overflow-y:auto;">
-            </div>-->
+                <div id="stats-content" style="display: none;">
+                    <!-- Cabeçalho com jogadores e accuracy -->
+                    <div
+                        style="background: #f7f7f7; border: 1px solid #B58863; border-radius: 8px; padding: 12px; margin-bottom: 8px;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <div style="flex: 1; text-align: left;">
+                                <div id="white-player-name"
+                                    style="font-size: 0.95em; font-weight: bold; color: #333; margin-bottom: 3px;">
+                                    Brancas</div>
+                                <div style="color: #666; font-size: 0.75em;">White</div>
+                            </div>
+                            <div
+                                style="background: #2a5934; color: white; padding: 6px 12px; border-radius: 15px; font-weight: bold; font-size: 0.85em;">
+                                VS</div>
+                            <div style="flex: 1; text-align: right;">
+                                <div id="black-player-name"
+                                    style="font-size: 0.95em; font-weight: bold; color: #333; margin-bottom: 3px;">
+                                    Pretas</div>
+                                <div style="color: #666; font-size: 0.75em;">Black</div>
+                            </div>
+                        </div>
+
+                        <!-- Accuracy Score -->
+                        <div style="display: flex; justify-content: space-around; align-items: center;">
+                            <div style="text-align: center;">
+                                <div
+                                    style="background: white; border: 2px solid #4CAF50; border-radius: 12px; padding: 10px 15px; display: inline-block; min-width: 60px;">
+                                    <div id="white-accuracy"
+                                        style="font-size: 1.5em; font-weight: bold; color: #2a5934;">0</div>
+                                </div>
+                                <div
+                                    style="margin-top: 6px; display: flex; justify-content: center; gap: 10px; font-size: 0.85em;">
+                                    <span id="white-good-moves" style="color: #4CAF50; font-weight: bold;">0</span>
+                                    <span id="white-bad-moves" style="color: #E53935; font-weight: bold;">0</span>
+                                </div>
+                            </div>
+
+                            <div style="text-align: center;">
+                                <div style="font-size: 0.8em; color: #666;">⏱️</div>
+                                <div style="font-weight: bold; color: #333; margin-top: 3px; font-size: 0.8em;">Accuracy
+                                </div>
+                            </div>
+
+                            <div style="text-align: center;">
+                                <div
+                                    style="background: #2a2926; border: 2px solid #666; border-radius: 12px; padding: 10px 15px; display: inline-block; min-width: 60px;">
+                                    <div id="black-accuracy" style="font-size: 1.5em; font-weight: bold; color: white;">
+                                        0</div>
+                                </div>
+                                <div
+                                    style="margin-top: 6px; display: flex; justify-content: center; gap: 10px; font-size: 0.85em;">
+                                    <span id="black-good-moves" style="color: #4CAF50; font-weight: bold;">0</span>
+                                    <span id="black-bad-moves" style="color: #E53935; font-weight: bold;">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Painel de Detalhes dos Lances -->
+                    <div
+                        style="background: #f7f7f7; border: 1px solid #B58863; border-radius: 8px; padding: 12px; font-size: 0.9em;">
+                        <div
+                            style="background: #2a5934; color: white; padding: 8px; border-radius: 6px 6px 0 0; margin: -12px -12px 12px -12px; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span
+                                    style="background: #4CAF50; padding: 4px 10px; border-radius: 12px; font-size: 0.85em; font-weight: bold;">Good</span>
+                                <span
+                                    style="width: 8px; height: 8px; background: #4CAF50; border-radius: 50%; display: inline-block;"></span>
+                            </div>
+                            <div style="display: flex; gap: 12px; font-size: 0.85em;">
+                                <div
+                                    style="background: white; color: #2a5934; padding: 4px 10px; border-radius: 12px; font-weight: bold;">
+                                    W</div>
+                                <div
+                                    style="background: #2a2926; color: white; padding: 4px 10px; border-radius: 12px; font-weight: bold;">
+                                    B</div>
+                            </div>
+                        </div>
+
+                        <div id="move-stats-list">
+                            <div class="stat-row"
+                                style="display: flex; justify-content: space-between; align-items: center; padding: 6px 3px; border-bottom: 1px solid #e0e0e0;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span
+                                        style="width: 26px; height: 26px; background: #1BADA6; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9em;">!!</span>
+                                    <span style="color: #333; font-weight: 500; font-size: 0.9em;">Brilliant</span>
+                                </div>
+                                <div
+                                    style="display: flex; gap: 25px; font-weight: bold; color: #333; font-size: 0.9em;">
+                                    <span id="white-brilliant">0</span>
+                                    <span id="black-brilliant">0</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-row"
+                                style="display: flex; justify-content: space-between; align-items: center; padding: 6px 3px; border-bottom: 1px solid #e0e0e0;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span
+                                        style="width: 26px; height: 26px; background: #5C9ECC; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9em;">!</span>
+                                    <span style="color: #333; font-weight: 500; font-size: 0.9em;">Great</span>
+                                </div>
+                                <div
+                                    style="display: flex; gap: 25px; font-weight: bold; color: #333; font-size: 0.9em;">
+                                    <span id="white-great">0</span>
+                                    <span id="black-great">0</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-row"
+                                style="display: flex; justify-content: space-between; align-items: center; padding: 6px 3px; border-bottom: 1px solid #e0e0e0;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span
+                                        style="width: 26px; height: 26px; background: #96BC4B; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9em;">✓</span>
+                                    <span style="color: #333; font-weight: 500; font-size: 0.9em;">Best</span>
+                                </div>
+                                <div
+                                    style="display: flex; gap: 25px; font-weight: bold; color: #333; font-size: 0.9em;">
+                                    <span id="white-best">0</span>
+                                    <span id="black-best">0</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-row"
+                                style="display: flex; justify-content: space-between; align-items: center; padding: 6px 3px; border-bottom: 1px solid #e0e0e0;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span
+                                        style="width: 26px; height: 26px; background: #96BC4B; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9em;">⚡</span>
+                                    <span style="color: #333; font-weight: 500; font-size: 0.9em;">Excellent</span>
+                                </div>
+                                <div
+                                    style="display: flex; gap: 25px; font-weight: bold; color: #333; font-size: 0.9em;">
+                                    <span id="white-excellent">0</span>
+                                    <span id="black-excellent">0</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-row"
+                                style="display: flex; justify-content: space-between; align-items: center; padding: 6px 3px; border-bottom: 1px solid #e0e0e0;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span
+                                        style="width: 26px; height: 26px; background: #96AF8B; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9em;">▽</span>
+                                    <span style="color: #333; font-weight: 500; font-size: 0.9em;">Good</span>
+                                </div>
+                                <div
+                                    style="display: flex; gap: 25px; font-weight: bold; color: #333; font-size: 0.9em;">
+                                    <span id="white-good">0</span>
+                                    <span id="black-good">0</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-row"
+                                style="display: flex; justify-content: space-between; align-items: center; padding: 6px 3px; border-bottom: 1px solid #e0e0e0;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span
+                                        style="width: 26px; height: 26px; background: #F0C15C; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9em;">?!</span>
+                                    <span style="color: #333; font-weight: 500; font-size: 0.9em;">Inaccuracy</span>
+                                </div>
+                                <div
+                                    style="display: flex; gap: 25px; font-weight: bold; color: #333; font-size: 0.9em;">
+                                    <span id="white-inaccuracy">0</span>
+                                    <span id="black-inaccuracy">0</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-row"
+                                style="display: flex; justify-content: space-between; align-items: center; padding: 6px 3px; border-bottom: 1px solid #e0e0e0;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span
+                                        style="width: 26px; height: 26px; background: #E58F2A; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9em;">?</span>
+                                    <span style="color: #333; font-weight: 500; font-size: 0.9em;">Mistake</span>
+                                </div>
+                                <div
+                                    style="display: flex; gap: 25px; font-weight: bold; color: #333; font-size: 0.9em;">
+                                    <span id="white-mistake">0</span>
+                                    <span id="black-mistake">0</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-row"
+                                style="display: flex; justify-content: space-between; align-items: center; padding: 6px 3px;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span
+                                        style="width: 26px; height: 26px; background: #CA3431; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9em;">✕</span>
+                                    <span style="color: #333; font-weight: 500; font-size: 0.9em;">Blunder</span>
+                                </div>
+                                <div
+                                    style="display: flex; gap: 25px; font-weight: bold; color: #333; font-size: 0.9em;">
+                                    <span id="white-blunder">0</span>
+                                    <span id="black-blunder">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="setting-buttons">
@@ -832,6 +1210,9 @@
     </div>
 
     <footer>
+  
+
+               
         <div id="footer2">Criado por Jose R F Junior, web2ajax@gmail.com ♟, 2025</div>
     </footer>
 

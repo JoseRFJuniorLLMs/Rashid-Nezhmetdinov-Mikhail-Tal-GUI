@@ -319,7 +319,7 @@ function drawMultiPVArrow(fromSquareId, toSquareId, color, index) {
         const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         const scoreText = pv.score.replace('+', '').replace('-', ''); // Remove sinais
         const textWidth = scoreText.length * 7 + 6;
-        
+
         rect.setAttribute('x', badgeX - textWidth / 2);
         rect.setAttribute('y', badgeY - 9);
         rect.setAttribute('width', textWidth);
@@ -397,7 +397,7 @@ $('#btn-pgn-prev').click(async function () {
             const fenCurrent = loadedPgnGame.fen();
             previousEvaluations[currentMoveIndex] = await quickEval(fenCurrent);
         }
-        
+
         var undoneMove = loadedPgnGame.undo();
         currentMoveIndex--;
         updateBoardDisplay();
@@ -414,14 +414,29 @@ $('#btn-pgn-prev').click(async function () {
 
 $('#btn-pgn-next').click(async function () {
     if (currentMoveIndex < moveHistory.length - 1) {
-        
+
         // Análise ANTES do movimento
         if (previousEvaluations[currentMoveIndex] === undefined && stockfishReady) {
             const fenBefore = loadedPgnGame.fen();
             previousEvaluations[currentMoveIndex] = await quickEval(fenBefore);
         }
-        
-        // Faz o movimento
+
+        // ⭐ NOVO: Pega informações do próximo movimento ANTES de executar
+        const nextMoveIndex = currentMoveIndex + 1;
+        const tempGame = new Chess();
+        tempGame.load_pgn($('#pgn-input').val().trim());
+        const allMoves = tempGame.history({ verbose: true });
+        const nextMove = allMoves[nextMoveIndex];
+
+        // ⭐ APLICA O EFEITO VISUAL ANTES DO MOVIMENTO
+        if (nextMove) {
+            applySquareEffect(nextMove.from, nextMove.to);
+        }
+
+        // Pequeno delay para ver o efeito começar
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        // Agora faz o movimento
         currentMoveIndex++;
         var moveObj = loadedPgnGame.move(moveHistory[currentMoveIndex]);
         updateBoardDisplay();
@@ -440,40 +455,41 @@ $('#btn-pgn-next').click(async function () {
                 }
             }
         }
-        
+
         // Análise DEPOIS do movimento
         let quality = null;
-        
+
         if (stockfishReady && moveObj) {
             const fenAfter = loadedPgnGame.fen();
             previousEvaluations[currentMoveIndex] = await quickEval(fenAfter);
-            
-            if (previousEvaluations[currentMoveIndex - 1] !== undefined && 
+
+            if (previousEvaluations[currentMoveIndex - 1] !== undefined &&
                 previousEvaluations[currentMoveIndex] !== undefined) {
-                
+
                 quality = evaluateMoveQuality(
                     previousEvaluations[currentMoveIndex - 1],
                     previousEvaluations[currentMoveIndex],
                     moveObj.color
                 );
-                
+
                 if (quality) {
                     const $moveSpan = $(`.move-san[data-move-index="${currentMoveIndex}"]`);
-                    
+
                     if ($moveSpan.length > 0) {
                         $moveSpan.attr('data-quality', quality.label);
                         $moveSpan.attr('data-quality-icon', quality.icon);
                         $moveSpan.find('.quality-badge').remove();
                         $moveSpan.append(`<span class="quality-badge" style="color:${quality.color}; font-weight:bold; margin-left:4px;">${quality.icon}</span>`);
                     }
+                    showMoveQualityPopup(quality);
+                    updateGameStats(quality, moveObj.color);
                 }
             }
         }
-        
-        // Desenha seta com badge de qualidade e marca casas
+
+        // Desenha seta com badge de qualidade
         if (moveObj) {
             drawArrow(moveObj.from, moveObj.to, quality);
-            applySquareEffect(moveObj.from, moveObj.to);
         }
     }
 });
@@ -483,14 +499,14 @@ function quickEval(fen) {
     return new Promise((resolve) => {
         let resolved = false;
         const localPvData = [];
-        
+
         const handler = (event) => {
             const line = event.data;
-            
+
             if (line.startsWith('info') && line.includes('score')) {
                 const scoreCp = line.match(/score cp (-?\d+)/)?.[1];
                 const scoreMate = line.match(/score mate (-?\d+)/)?.[1];
-                
+
                 if (scoreCp) {
                     localPvData[0] = { score: (parseInt(scoreCp) / 100).toFixed(2) };
                 } else if (scoreMate) {
@@ -498,11 +514,11 @@ function quickEval(fen) {
                     localPvData[0] = { score: mate > 0 ? `M${mate}` : `-M${Math.abs(mate)}` };
                 }
             }
-            
+
             if (line.startsWith('bestmove') && !resolved) {
                 resolved = true;
                 stockfish.removeEventListener('message', handler);
-                
+
                 let evalScore = 0;
                 if (localPvData[0] && localPvData[0].score) {
                     const score = localPvData[0].score;
@@ -515,12 +531,12 @@ function quickEval(fen) {
                 resolve(evalScore);
             }
         };
-        
+
         stockfish.addEventListener('message', handler);
         stockfish.postMessage('stop');
         stockfish.postMessage('position fen ' + fen);
         stockfish.postMessage('go depth 12');
-        
+
         setTimeout(() => {
             if (!resolved) {
                 resolved = true;
@@ -584,7 +600,7 @@ function goToMove(index) {
 // PGN LOADING
 // ===================================
 
-$('#btn-load-pgn').on('click', function() {
+$('#btn-load-pgn').on('click', function () {
     const pgnText = $('#pgn-input').val().trim();
 
     if (!pgnText) return;
@@ -620,8 +636,13 @@ $('#btn-load-pgn').on('click', function() {
                 <br>Total de Lances: <strong>${moveHistory.length}</strong>
             `;
             $('#pgn-status').html(statusHtml);
+            initializeGameStats();
 
-            $('#btn-paste-pgn').text('✏️ Editar PGN').off('click').on('click', function(e) {
+            setTimeout(() => {
+                collapseSidebars();
+            }, 500);
+
+            $('#btn-paste-pgn').text('✏️ Editar PGN').off('click').on('click', function (e) {
                 e.preventDefault();
                 const novo = prompt("Edite o PGN:", pgnText);
                 if (novo && novo !== pgnText) {
@@ -638,7 +659,7 @@ $('#btn-load-pgn').on('click', function() {
     }
 });
 
-$('#btn-paste-pgn').on('click', function(e) {
+$('#btn-paste-pgn').on('click', function (e) {
     e.preventDefault();
 
     const pgn = prompt("Cole o PGN completo da partida aqui:", "");
@@ -720,7 +741,7 @@ function updateMoveListHighlight(index) {
     }
 }
 
-$('#pgn-move-list').on('click', '.move-san', function() {
+$('#pgn-move-list').on('click', '.move-san', function () {
     const moveIndex = $(this).data('move-index');
 
     if (moveIndex !== undefined && moveIndex !== -1) {
@@ -731,7 +752,7 @@ $('#pgn-move-list').on('click', '.move-san', function() {
             if (moveObj) {
                 $("#square-clicked").text(moveObj.san);
             }
-        } catch (e) {}
+        } catch (e) { }
     }
 });
 
@@ -823,7 +844,7 @@ function drawArrow(fromSquareId, toSquareId, quality = null) {
 
     // Remove marcações antigas
     $('.chess-square').removeClass('square-highlight-from square-highlight-to');
-    
+
     // Marca as casas (estilo Chess.com)
     fromEl.classList.add('square-highlight-from');
     toEl.classList.add('square-highlight-to');
@@ -839,7 +860,7 @@ function drawArrow(fromSquareId, toSquareId, quality = null) {
 
     // Define cor da seta baseada na qualidade
     let arrowColor = '#4CAF50'; // Verde padrão
-    
+
     if (quality) {
         arrowColor = quality.color;
     }
@@ -969,12 +990,12 @@ function updateOpeningName() {
 
 function loadOpeningBook() {
     $.getJSON("openings.json")
-        .done(function(data) {
+        .done(function (data) {
             OPENING_BOOK = data;
             console.log("✅ Livro de aberturas carregado!");
             updateOpeningName();
         })
-        .fail(function(jqxhr, textStatus, error) {
+        .fail(function (jqxhr, textStatus, error) {
             console.error("❌ Erro ao carregar openings.json: " + textStatus + ", " + error);
         });
 }
@@ -1229,7 +1250,7 @@ $("#btn-reverse").click(function () {
 // ANALYSIS BUTTONS
 // ===================================
 
-$('#btn-analyze').off('click').on('click', function() {
+$('#btn-analyze').off('click').on('click', function () {
     if (!stockfishReady) {
         alert('Engine ainda não está pronto. Aguarde.');
         return;
@@ -1267,7 +1288,7 @@ $('#btn-visual-analysis').off('click').on('click', function () {
     }
 });
 
-$('#btn-pgn-prev, #btn-pgn-next, #btn-pgn-start, #btn-pgn-end').click(function() {
+$('#btn-pgn-prev, #btn-pgn-next, #btn-pgn-start, #btn-pgn-end').click(function () {
     const svg = document.getElementById('analysis-tree-layer');
     if (svg) {
         svg.innerHTML = '';
@@ -1420,11 +1441,11 @@ function resetTimer(timeReset) {
 // INITIALIZATION
 // ===================================
 
-$(document).ready(function() {
+$(document).ready(function () {
     loadOpeningBook();
     initStockfish();
 
-   const checkStockfish = setInterval(() => {
+    const checkStockfish = setInterval(() => {
         if (stockfish && stockfishReady) {
             clearInterval(checkStockfish);
             PlayVsStockfish.init(stockfish);
@@ -1432,7 +1453,7 @@ $(document).ready(function() {
         }
     }, 500);
 
-    $('#pgn-move-list').on('click', '.move-san', function() {
+    $('#pgn-move-list').on('click', '.move-san', function () {
         const moveIndex = $(this).data('move-index');
 
         if (moveIndex !== undefined && moveIndex !== -1) {
@@ -1443,11 +1464,11 @@ $(document).ready(function() {
                 if (moveObj) {
                     $("#square-clicked").text(moveObj.san);
                 }
-            } catch (e) {}
+            } catch (e) { }
         }
     });
 
-    $('#opening-name').on('click', '#opening-info-icon', function(e) {
+    $('#opening-name').on('click', '#opening-info-icon', function (e) {
         e.stopPropagation();
         $('#opening-history-box').slideToggle(200);
     });
@@ -1500,24 +1521,282 @@ function populateMoveList(history) {
 function applySquareEffect(fromSquare, toSquare) {
     // Remove efeitos anteriores
     $('.chess-square').removeClass('square-move-origin square-move-destination square-move-effect');
-    
+
     // Aplica efeito na origem
     setTimeout(() => {
         $(`#${fromSquare}`).addClass('square-move-origin');
-        
+
         // Remove após animação
         setTimeout(() => {
             $(`#${fromSquare}`).removeClass('square-move-origin');
         }, 500);
     }, 10);
-    
+
     // Aplica efeito no destino (com delay)
     setTimeout(() => {
         $(`#${toSquare}`).addClass('square-move-destination');
-        
+
         // Remove após animação
         setTimeout(() => {
             $(`#${toSquare}`).removeClass('square-move-destination');
         }, 900);
     }, 300);
 }
+
+// ===================================
+// MOVE QUALITY POPUP
+// ===================================
+
+function showMoveQualityPopup(quality) {
+    if (!quality) return;
+
+    // Tradução dos textos
+    const qualityTexts = {
+        'brilliant': 'BRILHANTE',
+        'greatmove': 'ÓTIMO LANCE',
+        'bestmove': 'MELHOR LANCE',
+        'excellent': 'EXCELENTE',
+        'good': 'BOM LANCE',
+        'inaccuracy': 'IMPRECISÃO',
+        'mistake': 'ERRO',
+        'blunder': 'ERRO GRAVE'
+    };
+
+    const text = qualityTexts[quality.label] || quality.label.toUpperCase();
+
+    // Remove popups anteriores
+    $('.move-quality-popup').remove();
+
+    // Cria o popup
+    const $popup = $(`
+        <div class="move-quality-popup" style="border-color: ${quality.color};">
+            <span class="quality-icon">${quality.icon}</span>
+            <span class="quality-text">${text}</span>
+        </div>
+    `);
+
+    // Adiciona ao body
+    $('body').append($popup);
+
+    // Remove após a animação (1.2s)
+    setTimeout(() => {
+        $popup.remove();
+    }, 1200);
+}
+
+// ===================================
+// GAME STATISTICS
+// ===================================
+
+let gameStats = {
+    white: {
+        brilliant: 0,
+        great: 0,
+        best: 0,
+        excellent: 0,
+        good: 0,
+        inaccuracy: 0,
+        mistake: 0,
+        blunder: 0
+    },
+    black: {
+        brilliant: 0,
+        great: 0,
+        best: 0,
+        excellent: 0,
+        good: 0,
+        inaccuracy: 0,
+        mistake: 0,
+        blunder: 0
+    }
+};
+
+function updateGameStats(quality, color) {
+    if (!quality || !quality.label) return;
+
+    const side = color === 'w' ? 'white' : 'black';
+    const label = quality.label;
+
+    if (gameStats[side][label] !== undefined) {
+        gameStats[side][label]++;
+        updateStatsDisplay();
+    }
+}
+
+function updateStatsDisplay() {
+    // Atualiza contadores individuais
+    $('#white-brilliant').text(gameStats.white.brilliant);
+    $('#white-great').text(gameStats.white.great);
+    $('#white-best').text(gameStats.white.best);
+    $('#white-excellent').text(gameStats.white.excellent);
+    $('#white-good').text(gameStats.white.good);
+    $('#white-inaccuracy').text(gameStats.white.inaccuracy);
+    $('#white-mistake').text(gameStats.white.mistake);
+    $('#white-blunder').text(gameStats.white.blunder);
+
+    $('#black-brilliant').text(gameStats.black.brilliant);
+    $('#black-great').text(gameStats.black.great);
+    $('#black-best').text(gameStats.black.best);
+    $('#black-excellent').text(gameStats.black.excellent);
+    $('#black-good').text(gameStats.black.good);
+    $('#black-inaccuracy').text(gameStats.black.inaccuracy);
+    $('#black-mistake').text(gameStats.black.mistake);
+    $('#black-blunder').text(gameStats.black.blunder);
+
+    // Calcula lances bons e ruins
+    const whiteGood = gameStats.white.brilliant + gameStats.white.great + gameStats.white.best + gameStats.white.excellent + gameStats.white.good;
+    const whiteBad = gameStats.white.inaccuracy + gameStats.white.mistake + gameStats.white.blunder;
+    const blackGood = gameStats.black.brilliant + gameStats.black.great + gameStats.black.best + gameStats.black.excellent + gameStats.black.good;
+    const blackBad = gameStats.black.inaccuracy + gameStats.black.mistake + gameStats.black.blunder;
+
+    $('#white-good-moves').text(whiteGood);
+    $('#white-bad-moves').text(whiteBad);
+    $('#black-good-moves').text(blackGood);
+    $('#black-bad-moves').text(blackBad);
+
+    // Calcula accuracy (percentual de lances bons)
+    const whiteTotal = whiteGood + whiteBad;
+    const blackTotal = blackGood + blackBad;
+
+    const whiteAccuracy = whiteTotal > 0 ? Math.round((whiteGood / whiteTotal) * 100) : 0;
+    const blackAccuracy = blackTotal > 0 ? Math.round((blackGood / blackTotal) * 100) : 0;
+
+    $('#white-accuracy').text(whiteAccuracy);
+    $('#black-accuracy').text(blackAccuracy);
+}
+
+function resetGameStats() {
+    gameStats = {
+        white: { brilliant: 0, great: 0, best: 0, excellent: 0, good: 0, inaccuracy: 0, mistake: 0, blunder: 0 },
+        black: { brilliant: 0, great: 0, best: 0, excellent: 0, good: 0, inaccuracy: 0, mistake: 0, blunder: 0 }
+    };
+    updateStatsDisplay();
+}
+
+function initializeGameStats() {
+    const header = loadedPgnGame.header();
+    $('#white-player-name').text(header['White'] || 'Brancas');
+    $('#black-player-name').text(header['Black'] || 'Pretas');
+    $('#game-stats-panel').show();
+    resetGameStats();
+}
+
+// ===================================
+// TOGGLE STATISTICS PANEL
+// ===================================
+
+$(document).ready(function () {
+    $('#toggle-stats').click(function () {
+        $('#stats-content').slideToggle(300);
+        const $arrow = $('#stats-arrow');
+        const isVisible = $('#stats-content').is(':visible');
+        $arrow.text(isVisible ? '▲' : '▼');
+        $(this).css('background', isVisible
+            ? 'linear-gradient(to bottom, #1e4026 5%, #2a5934 100%)'
+            : 'linear-gradient(to bottom, #2a5934 5%, #1e4026 100%)'
+        );
+    });
+});
+
+// ===================================
+// COLLAPSIBLE SIDEBARS
+// ===================================
+
+let leftSidebarCollapsed = false;
+let rightSidebarCollapsed = false;
+
+function updateMainGridClass() {
+    const $main = $('.main');
+    $main.removeClass('left-collapsed right-collapsed both-collapsed');
+
+    if (leftSidebarCollapsed && rightSidebarCollapsed) {
+        $main.addClass('both-collapsed');
+        $('.chess-board').addClass('expanded');
+        $('.chess-square').addClass('expanded');
+    } else if (leftSidebarCollapsed) {
+        $main.addClass('left-collapsed');
+        $('.chess-board').removeClass('expanded');
+        $('.chess-square').removeClass('expanded');
+    } else if (rightSidebarCollapsed) {
+        $main.addClass('right-collapsed');
+        $('.chess-board').removeClass('expanded');
+        $('.chess-square').removeClass('expanded');
+    } else {
+        $('.chess-board').removeClass('expanded');
+        $('.chess-square').removeClass('expanded');
+    }
+}
+
+function collapseSidebars() {
+    leftSidebarCollapsed = true;
+    rightSidebarCollapsed = true;
+
+    $('.sidebar-left').addClass('collapsed');
+    $('.sidebar-right').addClass('collapsed');
+
+    $('#toggle-left').removeClass('hidden').html('▶');
+    $('#toggle-right').removeClass('hidden').html('◀');
+
+    updateMainGridClass();
+}
+
+function expandSidebars() {
+    leftSidebarCollapsed = false;
+    rightSidebarCollapsed = false;
+
+    $('.sidebar-left').removeClass('collapsed');
+    $('.sidebar-right').removeClass('collapsed');
+
+    $('#toggle-left').html('◀');
+    $('#toggle-right').html('▶');
+
+    updateMainGridClass();
+}
+
+$('#toggle-left').click(function () {
+    leftSidebarCollapsed = !leftSidebarCollapsed;
+
+    if (leftSidebarCollapsed) {
+        $('.sidebar-left').addClass('collapsed');
+        $(this).html('▶');
+    } else {
+        $('.sidebar-left').removeClass('collapsed');
+        $(this).html('◀');
+    }
+
+    updateMainGridClass();
+});
+
+$('#toggle-right').click(function () {
+    rightSidebarCollapsed = !rightSidebarCollapsed;
+
+    if (rightSidebarCollapsed) {
+        $('.sidebar-right').addClass('collapsed');
+        $(this).html('◀');
+    } else {
+        $('.sidebar-right').removeClass('collapsed');
+        $(this).html('▶');
+    }
+
+    updateMainGridClass();
+});
+
+// Atalhos de teclado
+$(document).keydown(function (e) {
+    // [ para toggle esquerdo
+    if (e.key === '[') {
+        $('#toggle-left').click();
+    }
+    // ] para toggle direito
+    if (e.key === ']') {
+        $('#toggle-right').click();
+    }
+    // \ para toggle ambos
+    if (e.key === '\\') {
+        if (leftSidebarCollapsed || rightSidebarCollapsed) {
+            expandSidebars();
+        } else {
+            collapseSidebars();
+        }
+    }
+});

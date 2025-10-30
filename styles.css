@@ -728,3 +728,14 @@ a {
     position: relative;
     z-index: 10;
 }
+
+#toggle-stats:hover {
+    background: linear-gradient(to bottom, #3d7a4a 5%, #2a5934 100%) !important;
+    transform: scale(1.02);
+    transition: all 0.2s ease;
+}
+
+#stats-content {
+    overflow: hidden;
+}
+

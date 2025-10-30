@@ -421,7 +421,22 @@ $('#btn-pgn-next').click(async function () {
             previousEvaluations[currentMoveIndex] = await quickEval(fenBefore);
         }
         
-        // Faz o movimento
+        // ⭐ NOVO: Pega informações do próximo movimento ANTES de executar
+        const nextMoveIndex = currentMoveIndex + 1;
+        const tempGame = new Chess();
+        tempGame.load_pgn($('#pgn-input').val().trim());
+        const allMoves = tempGame.history({ verbose: true });
+        const nextMove = allMoves[nextMoveIndex];
+        
+        // ⭐ APLICA O EFEITO VISUAL ANTES DO MOVIMENTO
+        if (nextMove) {
+            applySquareEffect(nextMove.from, nextMove.to);
+        }
+        
+        // Pequeno delay para ver o efeito começar
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Agora faz o movimento
         currentMoveIndex++;
         var moveObj = loadedPgnGame.move(moveHistory[currentMoveIndex]);
         updateBoardDisplay();
@@ -466,14 +481,14 @@ $('#btn-pgn-next').click(async function () {
                         $moveSpan.find('.quality-badge').remove();
                         $moveSpan.append(`<span class="quality-badge" style="color:${quality.color}; font-weight:bold; margin-left:4px;">${quality.icon}</span>`);
                     }
+                    showMoveQualityPopup(quality);
                 }
             }
         }
         
-        // Desenha seta com badge de qualidade e marca casas
+        // Desenha seta com badge de qualidade
         if (moveObj) {
             drawArrow(moveObj.from, moveObj.to, quality);
-            applySquareEffect(moveObj.from, moveObj.to);
         }
     }
 });
@@ -1520,4 +1535,45 @@ function applySquareEffect(fromSquare, toSquare) {
             $(`#${toSquare}`).removeClass('square-move-destination');
         }, 900);
     }, 300);
+}
+
+// ===================================
+// MOVE QUALITY POPUP
+// ===================================
+
+function showMoveQualityPopup(quality) {
+    if (!quality) return;
+    
+    // Tradução dos textos
+    const qualityTexts = {
+        'brilliant': 'BRILHANTE',
+        'greatmove': 'ÓTIMO LANCE',
+        'bestmove': 'MELHOR LANCE',
+        'excellent': 'EXCELENTE',
+        'good': 'BOM LANCE',
+        'inaccuracy': 'IMPRECISÃO',
+        'mistake': 'ERRO',
+        'blunder': 'ERRO GRAVE'
+    };
+    
+    const text = qualityTexts[quality.label] || quality.label.toUpperCase();
+    
+    // Remove popups anteriores
+    $('.move-quality-popup').remove();
+    
+    // Cria o popup
+    const $popup = $(`
+        <div class="move-quality-popup" style="border-color: ${quality.color};">
+            <span class="quality-icon">${quality.icon}</span>
+            <span class="quality-text">${text}</span>
+        </div>
+    `);
+    
+    // Adiciona ao body
+    $('body').append($popup);
+    
+    // Remove após a animação (1.2s)
+    setTimeout(() => {
+        $popup.remove();
+    }, 1200);
 }
