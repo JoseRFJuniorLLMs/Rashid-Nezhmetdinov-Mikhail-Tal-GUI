@@ -473,6 +473,7 @@ $('#btn-pgn-next').click(async function () {
         // Desenha seta com badge de qualidade e marca casas
         if (moveObj) {
             drawArrow(moveObj.from, moveObj.to, quality);
+            applySquareEffect(moveObj.from, moveObj.to);
         }
     }
 });
@@ -573,6 +574,10 @@ function goToMove(index) {
     updateMoveInfo();
     updateMoveListHighlight(currentMoveIndex);
     clearArrow();
+    if (index >= 0) {
+        const moveObj = loadedPgnGame.history({ verbose: true })[index];
+        applySquareEffect(moveObj.from, moveObj.to);
+    }
 }
 
 // ===================================
@@ -1490,4 +1495,29 @@ function populateMoveList(history) {
     });
 
     if ($currentRow) $moveList.append($currentRow);
+}
+
+function applySquareEffect(fromSquare, toSquare) {
+    // Remove efeitos anteriores
+    $('.chess-square').removeClass('square-move-origin square-move-destination square-move-effect');
+    
+    // Aplica efeito na origem
+    setTimeout(() => {
+        $(`#${fromSquare}`).addClass('square-move-origin');
+        
+        // Remove após animação
+        setTimeout(() => {
+            $(`#${fromSquare}`).removeClass('square-move-origin');
+        }, 500);
+    }, 10);
+    
+    // Aplica efeito no destino (com delay)
+    setTimeout(() => {
+        $(`#${toSquare}`).addClass('square-move-destination');
+        
+        // Remove após animação
+        setTimeout(() => {
+            $(`#${toSquare}`).removeClass('square-move-destination');
+        }, 900);
+    }, 300);
 }

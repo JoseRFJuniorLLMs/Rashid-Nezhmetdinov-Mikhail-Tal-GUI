@@ -585,6 +585,41 @@
             color: #F0D9B5;
             font-size: 0.95em;
         }
+
+        /* ===================================== */
+        /* EFEITO DE MOVIMENTO COM TRILHA/RASTRO */
+        /* ===================================== */
+        @keyframes piece-move-trail {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+                box-shadow: 0 0 20px 10px rgba(0, 191, 255, 0.8);
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.6;
+                box-shadow: 0 0 40px 20px rgba(0, 191, 255, 0.6);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0;
+                box-shadow: 0 0 0 0 rgba(0, 191, 255, 0);
+            }
+        }
+
+        .square-move-origin {
+            animation: piece-move-trail 0.5s ease-out forwards !important;
+            position: relative !important;
+            z-index: 20 !important;
+        }
+
+        .square-move-destination {
+            animation: blue-pulse-shadow 0.6s ease-out 0.3s forwards !important;
+            position: relative !important;
+            z-index: 20 !important;
+        }
     </style>
 
 </head>
