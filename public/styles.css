@@ -706,3 +706,25 @@ a {
     -moz-user-select: none;
     -ms-user-select: none;
 }
+
+/* ===================================== */
+/* EFEITO DE SOMBRA AZUL PULSANTE AO CHEGAR */
+/* ===================================== */
+
+@keyframes blue-pulse-shadow {
+    0% {
+        box-shadow: 0 0 8px 4px rgba(0, 191, 255, 0.6) inset, 0 0 8px 4px rgba(0, 191, 255, 0.6);
+    }
+    50% {
+        box-shadow: 0 0 20px 10px rgba(0, 191, 255, 0.9) inset, 0 0 20px 10px rgba(0, 191, 255, 0.9);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 191, 255, 0) inset, 0 0 0 0 rgba(0, 191, 255, 0);
+    }
+}
+
+.square-move-effect {
+    animation: blue-pulse-shadow 1s ease-out forwards !important;
+    position: relative;
+    z-index: 10;
+}
