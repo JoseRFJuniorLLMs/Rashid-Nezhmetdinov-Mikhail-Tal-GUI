@@ -418,7 +418,8 @@ $('#btn-pgn-next').click(async function () {
         // Análise ANTES do movimento
         if (previousEvaluations[currentMoveIndex] === undefined && stockfishReady) {
             const fenBefore = loadedPgnGame.fen();
-            previousEvaluations[currentMoveIndex] = await quickEval(fenBefore);
+            const depthBefore = currentMoveIndex < 10 ? 18 : 12;
+            previousEvaluations[currentMoveIndex] = await quickEval(fenBefore, depthBefore);
         }
 
         // ⭐ NOVO: Pega informações do próximo movimento ANTES de executar
@@ -461,9 +462,13 @@ $('#btn-pgn-next').click(async function () {
 
         if (stockfishReady && moveObj) {
             const fenAfter = loadedPgnGame.fen();
-            previousEvaluations[currentMoveIndex] = await quickEval(fenAfter);
+            // Usa profundidade maior nas aberturas (primeiros 10 lances)
+            const depth = currentMoveIndex < 10 ? 18 : 12;
+            previousEvaluations[currentMoveIndex] = await quickEval(fenAfter, depth);
 
-            if (previousEvaluations[currentMoveIndex - 1] !== undefined &&
+            // ✅ Só avalia qualidade após os primeiros 8 lances (fase de abertura)
+            if (currentMoveIndex >= 8 &&
+                previousEvaluations[currentMoveIndex - 1] !== undefined &&
                 previousEvaluations[currentMoveIndex] !== undefined) {
 
                 quality = evaluateMoveQuality(
@@ -495,7 +500,7 @@ $('#btn-pgn-next').click(async function () {
 });
 
 // Adicione esta função NOVA no game.js
-function quickEval(fen) {
+function quickEval(fen, depth = 12) {
     return new Promise((resolve) => {
         let resolved = false;
         const localPvData = [];
@@ -535,7 +540,7 @@ function quickEval(fen) {
         stockfish.addEventListener('message', handler);
         stockfish.postMessage('stop');
         stockfish.postMessage('position fen ' + fen);
-        stockfish.postMessage('go depth 12');
+        stockfish.postMessage('go depth ' + depth); 
 
         setTimeout(() => {
             if (!resolved) {
